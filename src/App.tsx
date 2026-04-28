@@ -40,15 +40,15 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-screen max-w-md mx-auto bg-gray-50 overflow-hidden font-sans shadow-xl relative">
-      <div className="flex-1 overflow-y-auto pb-20 scrollbar-hide">
+      <div className="flex-1 relative scrollbar-hide">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="h-full"
+            className="absolute inset-0 overflow-y-auto pb-20 scrollbar-hide"
           >
             {renderContent()}
           </motion.div>
