@@ -32,6 +32,7 @@ const SERVICES = [
   
   { id: 13, label: '科普预约', icon: Microscope, category: 'special', color: 'bg-violet-50 text-violet-500' },
   { id: 14, label: '小小科学家', icon: FlaskConical, category: 'special', color: 'bg-cyan-50 text-cyan-500' },
+  { id: 17, label: '特约维修', icon: Wrench, category: 'life', color: 'bg-blue-50 text-blue-600' },
 ];
 
 function ElderlyServicePoster() {
