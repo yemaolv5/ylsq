@@ -48,7 +48,7 @@ export default function Profile() {
           </div>
           <div className="bg-gray-50/80 rounded-2xl p-4 flex justify-between items-center border border-gray-100/50">
             <div>
-              <div className="text-sm font-black text-gray-800">老缸房社区</div>
+              <div className="text-sm font-black text-gray-800">老缸房社区-同心园小区</div>
               <div className="text-xs text-gray-400 mt-1 font-medium font-mono tracking-tight">5号楼 - 1单元 - 1203室</div>
             </div>
             <button className="text-[#FF8C00] text-xs font-black flex items-center bg-white px-3 py-1.5 rounded-full shadow-sm active:scale-95 transition-transform">
@@ -130,9 +130,9 @@ export default function Profile() {
           </div>
           <div className="space-y-4">
             <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">1. 为老版界面上线</h4>
+               <h4 className="text-xs font-black text-gray-800 mb-1">1. 长者版界面上线</h4>
                <p className="text-[10px] text-gray-500 leading-relaxed">
-                 新增“为老版”切换功能，针对年长居民优化了大字展示、简洁布局及核心助老服务（呼救、助餐、挂号等）。
+                 新增“长者版”切换功能，针对年长居民优化了大字展示、简洁布局及核心助老服务（呼救、助餐、挂号等）。
                </p>
             </div>
             <div className="border-l-2 border-orange-100 pl-4 py-1">

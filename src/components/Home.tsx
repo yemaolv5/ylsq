@@ -520,8 +520,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
           onClick={onToggleSeniorMode}
           className="flex items-center space-x-1 bg-orange-50 py-1.5 px-3 rounded-full border border-orange-100 active:scale-95 transition-transform ml-2"
         >
-          <Baby size={16} className="text-orange-500" />
-          <span className="text-[10px] font-black text-orange-600 uppercase">为老版</span>
+          <span className="text-[10px] font-black text-orange-600 uppercase">长者版</span>
         </button>
       </div>
 
