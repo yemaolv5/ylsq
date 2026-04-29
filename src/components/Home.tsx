@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical } from 'lucide-react';
+import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical, Baby, LayoutGrid, Heart, Smartphone } from 'lucide-react';
 import { motion, AnimatePresence, Reorder } from 'motion/react';
 
-export default function Home({ onOpenSnapReport }: { onOpenSnapReport: () => void }) {
+interface HomeProps {
+  onOpenSnapReport: () => void;
+  isSeniorMode: boolean;
+  onToggleSeniorMode: () => void;
+}
+
+export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMode }: HomeProps) {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [sections, setSections] = useState([
     'property_governance',
@@ -54,6 +60,86 @@ export default function Home({ onOpenSnapReport }: { onOpenSnapReport: () => voi
     { label: '卫生站', phone: '010-11223344' },
     { label: '安保中心', phone: '010-55667788' },
   ];
+
+  const seniorLinks = [
+    { label: '一键呼救', icon: Phone, color: 'bg-red-500 text-white', desc: '紧急联系人' },
+    { label: '助餐服务', icon: Heart, color: 'bg-orange-500 text-white', desc: '预约午餐' },
+    { label: '预约挂号', icon: ShieldCheck, color: 'bg-blue-500 text-white', desc: '医院就诊' },
+    { label: '随手拍', icon: Smartphone, color: 'bg-emerald-500 text-white', desc: '反映问题' },
+  ];
+
+  if (isSeniorMode) {
+    return (
+      <div className="flex flex-col h-full bg-[#FFF9F5] pb-24 overflow-y-auto">
+        <div className="bg-white px-6 pt-12 pb-6 flex items-center justify-between shadow-sm">
+          <div>
+            <h1 className="text-3xl font-black text-gray-900 leading-none">下午好</h1>
+            <p className="text-lg font-bold text-orange-500 mt-2">陈大文 老先生</p>
+          </div>
+          <button 
+            onClick={onToggleSeniorMode}
+            className="flex flex-col items-center space-y-1 bg-gray-100 p-3 rounded-2xl active:scale-95 transition-transform"
+          >
+            <LayoutGrid size={24} className="text-gray-500" />
+            <span className="text-xs font-bold text-gray-600">退出关怀</span>
+          </button>
+        </div>
+
+        <div className="px-6 py-6 space-y-6">
+          <div className="grid grid-cols-1 gap-4">
+            {seniorLinks.map((link, idx) => (
+              <motion.button
+                key={idx}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                   if (link.label === '随手拍') onOpenSnapReport();
+                }}
+                className={`${link.color} p-6 rounded-[32px] flex items-center shadow-xl shadow-gray-200/50`}
+              >
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mr-6">
+                  <link.icon size={40} />
+                </div>
+                <div className="text-left">
+                  <div className="text-2xl font-black">{link.label}</div>
+                  <div className="text-sm font-bold opacity-80 mt-1">{link.desc}</div>
+                </div>
+                <ChevronRight className="ml-auto opacity-50" size={24} />
+              </motion.button>
+            ))}
+          </div>
+
+          <div className="bg-white p-6 rounded-[32px] border-2 border-orange-100">
+             <h3 className="text-xl font-black text-gray-800 mb-4 flex items-center">
+                <div className="w-2 h-6 bg-orange-500 rounded-full mr-2" />
+                我的日常
+             </h3>
+             <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-orange-50 rounded-2xl">
+                   <div className="flex items-center space-x-3">
+                      <span className="text-2xl">🥘</span>
+                      <span className="text-lg font-bold">今日午餐(已订)</span>
+                   </div>
+                   <span className="text-orange-600 font-bold">11:30送达</span>
+                </div>
+                <div className="flex items-center justify-between p-4 bg-blue-50 rounded-2xl">
+                   <div className="flex items-center space-x-3">
+                      <span className="text-2xl">💊</span>
+                      <span className="text-lg font-bold">餐后服药提醒</span>
+                   </div>
+                   <span className="text-blue-600 font-bold">13:00</span>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <div className="px-6 pb-10">
+           <button className="w-full bg-white border-4 border-orange-500 text-orange-600 py-6 rounded-[32px] text-2xl font-black shadow-lg">
+              一键呼叫社区热线
+           </button>
+        </div>
+      </div>
+    );
+  }
 
   const renderSection = (id: string) => {
     switch (id) {
@@ -241,6 +327,13 @@ export default function Home({ onOpenSnapReport }: { onOpenSnapReport: () => voi
           <Cloud size={16} className="text-blue-400" />
           <span className="text-xs font-medium">24°C 晴</span>
         </div>
+        <button 
+          onClick={onToggleSeniorMode}
+          className="flex items-center space-x-1 bg-orange-50 py-1.5 px-3 rounded-full border border-orange-100 active:scale-95 transition-transform ml-2"
+        >
+          <Baby size={16} className="text-orange-500" />
+          <span className="text-[10px] font-black text-orange-600 uppercase">为老版</span>
+        </button>
       </div>
 
       {/* Fixed: Banner Carousel */}

@@ -17,11 +17,16 @@ type Tab = 'home' | 'service' | 'neighbor' | 'profile';
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [isSnapReportOpen, setIsSnapReportOpen] = useState(false);
+  const [isSeniorMode, setIsSeniorMode] = useState(false);
 
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
-        return <Home onOpenSnapReport={() => setIsSnapReportOpen(true)} />;
+        return <Home 
+          onOpenSnapReport={() => setIsSnapReportOpen(true)} 
+          isSeniorMode={isSeniorMode}
+          onToggleSeniorMode={() => setIsSeniorMode(!isSeniorMode)}
+        />;
       case 'service':
         return <Service />;
       case 'neighbor':
