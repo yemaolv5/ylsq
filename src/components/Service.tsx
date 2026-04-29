@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Search, Calendar, MapPin, CreditCard, Wrench, Key, Utensils, Users, ShoppingBag, Heart, ShieldCheck, Microscope, FlaskConical, Baby, X, Gavel } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Calendar, MapPin, CreditCard, Wrench, Key, Utensils, Users, ShoppingBag, Heart, ShieldCheck, Microscope, FlaskConical, Baby, X, Gavel, Star, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 const CATEGORIES = [
@@ -34,7 +34,147 @@ const SERVICES = [
   { id: 14, label: '小小科学家', icon: FlaskConical, category: 'special', color: 'bg-cyan-50 text-cyan-500' },
   { id: 17, label: '特约维修', icon: Wrench, category: 'life', color: 'bg-blue-50 text-blue-600' },
   { id: 18, label: '共享维修\n服务价目', icon: Wrench, category: 'life', color: 'bg-orange-50 text-orange-600', posterType: 'maintenance' },
+  { id: 19, label: '社区达人\n申请', icon: Star, category: 'special', color: 'bg-amber-50 text-amber-600', isApplication: true },
 ];
+
+function CommunityTalentApplication({ onBack }: { onBack: () => void }) {
+  const [status, setStatus] = useState<'form' | 'submitting' | 'pending'>('form');
+  const [formData, setFormData] = useState({ name: '', role: '', expertise: '', intro: '' });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('submitting');
+    setTimeout(() => setStatus('pending'), 1500);
+  };
+
+  if (status === 'submitting') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+          className="w-12 h-12 border-4 border-amber-100 border-t-amber-600 rounded-full"
+        />
+        <p className="text-sm font-bold text-gray-500">正在提交申请...</p>
+      </div>
+    );
+  }
+
+  if (status === 'pending') {
+    return (
+      <div className="p-8 flex flex-col items-center justify-center min-h-[80vh] text-center space-y-6 text-gray-900">
+        <div className="w-24 h-24 bg-amber-50 rounded-full flex items-center justify-center mb-4">
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="text-amber-500"
+          >
+            <Calendar size={48} />
+          </motion.div>
+        </div>
+        <h2 className="text-2xl font-black">审核中</h2>
+        <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
+          您的“社区达人”申请已收到，工作人员将在3个工作日内完成资料审核，请耐心等待。
+        </p>
+        
+        <div className="w-full bg-orange-50 p-6 rounded-3xl border border-orange-100 mt-8">
+           <p className="text-xs font-bold text-orange-600 mb-4">长时间未审核？可直拨社区热线反映：</p>
+           <a 
+             href="tel:021-12345678" 
+             className="w-full bg-orange-500 text-white py-4 rounded-2xl font-black flex items-center justify-center space-x-2 shadow-lg shadow-orange-100 active:scale-95 transition-transform"
+           >
+             <Phone size={18} fill="currentColor" />
+             <span>联系社区直拨</span>
+           </a>
+        </div>
+
+        <button onClick={onBack} className="text-sm font-bold text-gray-400 mt-4">返回服务列表</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 pb-20 text-gray-900">
+      <div className="flex items-center space-x-3 mb-8">
+         <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600">
+            <Star size={20} fill="currentColor" />
+         </div>
+         <div>
+            <h2 className="text-xl font-black">申请社区达人</h2>
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Share Your Expertise</p>
+         </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-gray-500 ml-1">真实姓名</label>
+            <input 
+              required
+              type="text" 
+              placeholder="请输入您的姓名"
+              className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-amber-500"
+              value={formData.name}
+              onChange={e => setFormData({...formData, name: e.target.value})}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-gray-500 ml-1">擅长类别</label>
+            <select 
+              required
+              className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-amber-500 appearance-none"
+              value={formData.role}
+              onChange={e => setFormData({...formData, role: e.target.value})}
+            >
+              <option value="">请选择类别</option>
+              <option value="维修">居家维修</option>
+              <option value="健康">健康咨询</option>
+              <option value="艺术">文化艺术</option>
+              <option value="教育">课业辅导</option>
+              <option value="其他">其他特长</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-gray-500 ml-1">专业标签 (逗号分隔)</label>
+            <input 
+              required
+              type="text" 
+              placeholder="如：修灯具, 水电维修, 开锁"
+              className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-amber-500"
+              value={formData.expertise}
+              onChange={e => setFormData({...formData, expertise: e.target.value})}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-gray-500 ml-1">个人简介</label>
+            <textarea 
+              required
+              rows={4}
+              placeholder="介绍一下您的工作经验或社区服务经历..."
+              className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-amber-500"
+              value={formData.intro}
+              onChange={e => setFormData({...formData, intro: e.target.value})}
+            />
+          </div>
+        </div>
+
+        <div className="bg-amber-50 p-4 rounded-2xl flex items-start space-x-3">
+           <ShieldCheck size={18} className="text-amber-600 shrink-0 mt-0.5" />
+           <p className="text-[10px] text-amber-700 leading-relaxed font-medium">
+             申请通过后，您的资料将展示在“社区共享达人”板块，方便邻里联系。我们承诺保护您的个人隐私信息。
+           </p>
+        </div>
+
+        <button 
+          type="submit"
+          className="w-full bg-amber-500 text-white py-5 rounded-[24px] text-sm font-black shadow-xl shadow-amber-100 mt-4 active:scale-95 transition-transform"
+        >
+          提交认证申请
+        </button>
+      </form>
+    </div>
+  );
+}
 
 function SharedMaintenancePoster() {
   const sections = [
@@ -230,11 +370,33 @@ function ElderlyServicePoster() {
 
 export default function Service() {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | null>(null);
+  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | 'application' | null>(null);
+  const [showToast, setShowToast] = useState(false);
 
   const filteredServices = activeCategory === 'all' 
     ? SERVICES 
     : SERVICES.filter(s => s.category === activeCategory);
+
+  const isActive = (service: any) => {
+    return (
+      ('isPoster' in service && service.isPoster) || 
+      ('posterType' in service && service.posterType === 'maintenance') || 
+      ('isApplication' in service && service.isApplication)
+    );
+  };
+
+  const handleServiceClick = (service: any) => {
+    if ('isPoster' in service && service.isPoster) {
+      setActivePoster('elderly');
+    } else if ('posterType' in service && service.posterType === 'maintenance') {
+      setActivePoster('maintenance');
+    } else if ('isApplication' in service && service.isApplication) {
+      setActivePoster('application');
+    } else {
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2000);
+    }
+  };
 
   return (
     <div className="flex flex-col h-full bg-gray-50 pb-20 relative">
@@ -280,25 +442,33 @@ export default function Service() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               key={service.id} 
-              onClick={() => {
-                if ('isPoster' in service && service.isPoster) {
-                  setActivePoster('elderly');
-                } else if ('posterType' in service && service.posterType === 'maintenance') {
-                  setActivePoster('maintenance');
-                }
-              }}
+              onClick={() => handleServiceClick(service)}
               className="flex flex-col items-center space-y-2 active:scale-95 transition-transform"
             >
-              <div className={`w-14 h-14 ${service.color} rounded-2xl flex items-center justify-center shadow-sm`}>
+              <div className={`w-14 h-14 ${service.color} rounded-2xl flex items-center justify-center shadow-sm ${!isActive(service) ? 'grayscale contrast-50 opacity-60' : ''}`}>
                 <service.icon size={28} />
               </div>
-              <span className="text-[11px] text-gray-600 font-medium text-center leading-tight whitespace-pre-line">
+              <span className={`text-[11px] font-medium text-center leading-tight whitespace-pre-line ${!isActive(service) ? 'text-gray-400' : 'text-gray-600'}`}>
                 {service.label}
               </span>
             </motion.button>
           ))}
         </div>
       </div>
+
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] bg-gray-800/90 text-white px-6 py-2.5 rounded-full text-xs font-bold backdrop-blur-md shadow-xl"
+          >
+            🚧 该功能开发中...
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Poster Modal */}
       <AnimatePresence>
@@ -316,7 +486,13 @@ export default function Service() {
               >
                 <X size={24} />
               </button>
-              {activePoster === 'elderly' ? <ElderlyServicePoster /> : <SharedMaintenancePoster />}
+              {activePoster === 'elderly' && <ElderlyServicePoster />}
+              {activePoster === 'maintenance' && <SharedMaintenancePoster />}
+              {activePoster === 'application' && (
+                <div className="bg-white min-h-screen">
+                  <CommunityTalentApplication onBack={() => setActivePoster(null)} />
+                </div>
+              )}
             </div>
           </motion.div>
         )}

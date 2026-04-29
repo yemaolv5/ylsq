@@ -172,7 +172,13 @@ export default function Profile() {
                </p>
             </div>
             <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">8. 系统性能与兼容性优化</h4>
+               <h4 className="text-xs font-black text-gray-800 mb-1">8. 新增社区达人申请入口</h4>
+               <p className="text-[10px] text-gray-500 leading-relaxed">
+                 在服务模块中新增“社区达人”申请功能，居民可在线提交个人专长与资料。支持多状态进度查询，并提供“直拨热线”辅助审核提速。
+               </p>
+            </div>
+            <div className="border-l-2 border-orange-100 pl-4 py-1">
+               <h4 className="text-xs font-black text-gray-800 mb-1">9. 系统性能与兼容性优化</h4>
                <p className="text-[10px] text-gray-500 leading-relaxed">
                  全站图片引入防盗链优化，解决部分第三方图源404问题；优化了各模块的平滑过渡动画体验。
                </p>

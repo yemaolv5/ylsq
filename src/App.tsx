@@ -34,7 +34,11 @@ export default function App() {
       case 'profile':
         return <Profile />;
       default:
-        return <Home />;
+        return <Home 
+          onOpenSnapReport={() => setIsSnapReportOpen(true)} 
+          isSeniorMode={isSeniorMode}
+          onToggleSeniorMode={() => setIsSeniorMode(!isSeniorMode)}
+        />;
     }
   };
 
