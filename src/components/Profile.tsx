@@ -148,7 +148,13 @@ export default function Profile() {
                </p>
             </div>
             <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">4. 系统性能与兼容性优化</h4>
+               <h4 className="text-xs font-black text-gray-800 mb-1">4. 新增法律援助模块</h4>
+               <p className="text-[10px] text-gray-500 leading-relaxed">
+                 首页新增法律援助专栏，展示典型助民案例，并支持通过“一键咨询”直接致电李律师进行法律垂询。
+               </p>
+            </div>
+            <div className="border-l-2 border-orange-100 pl-4 py-1">
+               <h4 className="text-xs font-black text-gray-800 mb-1">5. 系统性能与兼容性优化</h4>
                <p className="text-[10px] text-gray-500 leading-relaxed">
                  全站图片引入防盗链优化，解决部分第三方图源404问题；优化了各模块的平滑过渡动画体验。
                </p>

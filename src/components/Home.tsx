@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical, Baby, LayoutGrid, Heart, Smartphone } from 'lucide-react';
+import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical, Baby, LayoutGrid, Heart, Smartphone, Gavel, Scale } from 'lucide-react';
 import { motion, AnimatePresence, Reorder } from 'motion/react';
 
 interface HomeProps {
@@ -13,6 +13,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
   const [sections, setSections] = useState([
     'property_governance',
     'hot_services',
+    'legal_aid',
     'announcements',
     'community_dynamics',
     'discussion',
@@ -204,6 +205,55 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
                     <span className="text-[10px] mt-2 font-bold text-gray-700">{item.label}</span>
                  </div>
                ))}
+            </div>
+          </div>
+        );
+      case 'legal_aid':
+        return (
+          <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100 relative group">
+            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
+            <div className="flex items-center justify-between mb-4 px-1">
+              <div className="flex items-center space-x-2">
+                <div className="w-1 h-3.5 bg-slate-600 rounded-full" />
+                <h3 className="font-extrabold text-gray-900 text-sm">社区法律援助</h3>
+              </div>
+              <button className="text-[10px] text-slate-400 font-bold">查看案例</button>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-3 mb-5">
+              <div className="bg-slate-50/50 p-3 rounded-2xl border border-slate-100/50">
+                <div className="flex items-center space-x-2 mb-1.5">
+                  <Scale size={14} className="text-slate-600" />
+                  <span className="text-[11px] font-black text-slate-800 tracking-tight">典型案例：遗产继承咨询</span>
+                </div>
+                <p className="text-[10px] text-gray-400 leading-relaxed italic">协助起草合法遗嘱，成功规避潜在家庭财务纠纷。</p>
+              </div>
+              <div className="bg-slate-50/50 p-3 rounded-2xl border border-slate-100/50">
+                <div className="flex items-center space-x-2 mb-1.5">
+                  <Scale size={14} className="text-slate-600" />
+                  <span className="text-[11px] font-black text-slate-800 tracking-tight">典型案例：物业维修调解</span>
+                </div>
+                <p className="text-[10px] text-gray-400 leading-relaxed italic">明确权责认定，促成业主与物业就漏水赔偿达成一致。</p>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-slate-700 to-slate-900 rounded-2xl p-4 text-white flex items-center justify-between shadow-lg shadow-slate-100">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-md">
+                   <Gavel size={20} className="text-slate-100" />
+                </div>
+                <div>
+                  <h4 className="font-black text-xs">李律师</h4>
+                  <p className="text-[9px] opacity-60 font-bold">金牌法律顾问</p>
+                </div>
+              </div>
+              <a 
+                href="tel:13312341234"
+                className="bg-white text-slate-900 px-3 py-2 rounded-xl text-[10px] font-black flex items-center space-x-1 active:scale-95 transition-transform"
+              >
+                <Phone size={12} fill="currentColor" />
+                <span>一键直播咨询</span>
+              </a>
             </div>
           </div>
         );
