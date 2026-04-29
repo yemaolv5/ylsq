@@ -160,7 +160,19 @@ export default function Profile() {
                </p>
             </div>
             <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">6. 系统性能与兼容性优化</h4>
+               <h4 className="text-xs font-black text-gray-800 mb-1">6. 新增共享维修服务</h4>
+               <p className="text-[10px] text-gray-500 leading-relaxed">
+                 在社区服务中新增详细的“共享维修服务价目表”，覆盖电路灯具、水路卫浴及门窗五金三大类，价格透明公开。
+               </p>
+            </div>
+            <div className="border-l-2 border-orange-100 pl-4 py-1">
+               <h4 className="text-xs font-black text-gray-800 mb-1">7. 新增社区共享达人</h4>
+               <p className="text-[10px] text-gray-500 leading-relaxed">
+                 首页新增共享服务卡片，推荐水电、保洁、康复等多领域的社区好手，支持查看专长、评分及邻里评价。
+               </p>
+            </div>
+            <div className="border-l-2 border-orange-100 pl-4 py-1">
+               <h4 className="text-xs font-black text-gray-800 mb-1">8. 系统性能与兼容性优化</h4>
                <p className="text-[10px] text-gray-500 leading-relaxed">
                  全站图片引入防盗链优化，解决部分第三方图源404问题；优化了各模块的平滑过渡动画体验。
                </p>

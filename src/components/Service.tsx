@@ -33,7 +33,97 @@ const SERVICES = [
   { id: 13, label: '科普预约', icon: Microscope, category: 'special', color: 'bg-violet-50 text-violet-500' },
   { id: 14, label: '小小科学家', icon: FlaskConical, category: 'special', color: 'bg-cyan-50 text-cyan-500' },
   { id: 17, label: '特约维修', icon: Wrench, category: 'life', color: 'bg-blue-50 text-blue-600' },
+  { id: 18, label: '共享维修\n服务价目', icon: Wrench, category: 'life', color: 'bg-orange-50 text-orange-600', posterType: 'maintenance' },
 ];
+
+function SharedMaintenancePoster() {
+  const sections = [
+    {
+      title: '电路灯具类维修',
+      items: [
+        { id: 1, name: '更换普通灯泡、节能灯、筒灯灯泡', price: '10', unit: '个', desc: '简单徒手更换，无需接线打孔' },
+        { id: 2, name: '更换灯座、灯芯、灯头', price: '20', unit: '个', desc: '含拆旧、基础接线，不含打孔' },
+        { id: 3, name: '更换普通开关、五孔插座', price: '25', unit: '个', desc: '含拆旧、接线、固定，不含墙面开槽' },
+        { id: 4, name: '更换客厅/卧室/浴霸/厨房灯', price: '40', unit: '个', desc: '含拆旧、接线、固定、调试' },
+        { id: 5, name: '更换空气开关、漏电保护器', price: '30', unit: '个', desc: '含接线调试' },
+      ]
+    },
+    {
+      title: '水路卫浴类维修',
+      items: [
+        { id: 1, name: '更换普通单冷水龙头', price: '30', unit: '个', desc: '含拆旧、安装、试水，不含生料带' },
+        { id: 2, name: '更换混水龙头、花洒套装', price: '70', unit: '套', desc: '含拆装、试水、调试' },
+        { id: 3, name: '更换三角阀、进水软管、厨宝漏水', price: '30', unit: '个', desc: '含拆旧、安装' },
+        { id: 4, name: '普通马桶疏通（轻微堵塞）', price: '70', unit: '次', desc: '硬物堵塞、主管道堵塞需加价' },
+        { id: 5, name: '马桶水箱维修、更换配件', price: '80', unit: '次', desc: '含拆装配件、试水，不含马桶主体' },
+        { id: 6, name: '明管漏水维修、接头更换', price: '70', unit: '次', desc: '不含管材，暗管漏水需额外加价' },
+        { id: 7, name: '洗手盆、洗菜盆漏水维修', price: '50', unit: '次', desc: '含密封、调试' },
+        { id: 8, name: '清洗暖气滤网', price: '30', unit: '次', desc: '对暖气滤网拆卸、清洗、疏通' },
+        { id: 9, name: '更换暖气阀门、分水器', price: '80', unit: '次', desc: '含拆除、更换' },
+      ]
+    },
+    {
+      title: '门窗五金类维修',
+      items: [
+        { id: 1, name: '维修门窗合页、铰链、调试推拉', price: '40', unit: '扇', desc: '含润滑、调试，不含合页更换' },
+        { id: 2, name: '更换室内门锁芯、门把手', price: '60', unit: '个', desc: '含拆旧、安装，不含防盗门锁体' },
+      ]
+    }
+  ];
+
+  return (
+    <div className="bg-slate-50 p-5 pb-10 min-h-screen font-sans">
+      <div className="text-center mb-8 pt-4">
+        <div className="inline-flex items-center space-x-2 text-slate-800 mb-2 font-black tracking-widest text-lg uppercase">
+          <Wrench size={24} className="text-blue-600" />
+          <span>共享维修服务</span>
+        </div>
+        <div className="text-slate-400 text-[10px] font-bold opacity-80 letter-spacing-[0.2em] mb-4">—— 东 街 物 业 服 务 中 心 ——</div>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tighter leading-tight">
+          服务价目表
+        </h1>
+      </div>
+
+      <div className="space-y-8">
+        {sections.map((section, idx) => (
+          <div key={idx} className="space-y-3">
+            <div className="flex items-center space-x-2 px-2">
+              <div className="w-1 h-4 bg-blue-600 rounded-full" />
+              <h3 className="font-black text-gray-900 text-sm">{section.title}</h3>
+            </div>
+            <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 divide-y divide-slate-50">
+              {section.items.map((item, i) => (
+                <div key={i} className="p-4 flex justify-between items-start space-x-4">
+                  <div className="flex-1 space-y-1">
+                    <h4 className="font-bold text-gray-800 text-xs leading-relaxed">{item.name}</h4>
+                    <p className="text-[10px] text-gray-400 italic">备注：{item.desc}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <div className="font-black text-blue-600 text-sm">¥{item.price}</div>
+                    <div className="text-[9px] text-gray-400 font-bold">/{item.unit}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-10 p-6 bg-white rounded-[40px] border-2 border-blue-100 shadow-xl shadow-blue-50 flex flex-col items-center">
+         <div className="text-[10px] font-black text-blue-400 tracking-widest uppercase mb-1">报修联系电话</div>
+         <a href="tel:15548837989" className="font-black text-3xl text-blue-600 tabular-nums">15548837989</a>
+         <div className="mt-4 flex items-center space-x-2 text-[10px] text-gray-400 font-bold">
+            <ShieldCheck size={14} className="text-blue-600" />
+            <span>专业技师 • 价格透明 • 售后保障</span>
+         </div>
+      </div>
+
+      <div className="mt-8 text-center">
+        <p className="text-[10px] text-gray-400 font-medium">※ 人工费不含材料费，特殊复杂情况请现场咨询师傅</p>
+      </div>
+    </div>
+  );
+}
 
 function ElderlyServicePoster() {
   const categories = [
@@ -140,7 +230,7 @@ function ElderlyServicePoster() {
 
 export default function Service() {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [showPoster, setShowPoster] = useState(false);
+  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | null>(null);
 
   const filteredServices = activeCategory === 'all' 
     ? SERVICES 
@@ -192,7 +282,9 @@ export default function Service() {
               key={service.id} 
               onClick={() => {
                 if ('isPoster' in service && service.isPoster) {
-                  setShowPoster(true);
+                  setActivePoster('elderly');
+                } else if ('posterType' in service && service.posterType === 'maintenance') {
+                  setActivePoster('maintenance');
                 }
               }}
               className="flex flex-col items-center space-y-2 active:scale-95 transition-transform"
@@ -210,7 +302,7 @@ export default function Service() {
 
       {/* Poster Modal */}
       <AnimatePresence>
-        {showPoster && (
+        {activePoster && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -219,12 +311,12 @@ export default function Service() {
           >
             <div className="relative">
               <button 
-                onClick={() => setShowPoster(false)}
+                onClick={() => setActivePoster(null)}
                 className="fixed top-6 right-6 z-[60] bg-black/10 hover:bg-black/20 text-black rounded-full p-2 backdrop-blur-md transition-colors"
               >
                 <X size={24} />
               </button>
-              <ElderlyServicePoster />
+              {activePoster === 'elderly' ? <ElderlyServicePoster /> : <SharedMaintenancePoster />}
             </div>
           </motion.div>
         )}

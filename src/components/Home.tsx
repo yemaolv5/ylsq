@@ -1,6 +1,24 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical, Baby, LayoutGrid, Heart, Smartphone, Gavel, Scale } from 'lucide-react';
+import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical, Baby, LayoutGrid, Heart, Smartphone, Gavel, Scale, Wrench, X, Star, User } from 'lucide-react';
 import { motion, AnimatePresence, Reorder } from 'motion/react';
+
+interface Review {
+  userName: string;
+  avatar: string;
+  rating: number;
+  content: string;
+  time: string;
+}
+
+interface Provider {
+  id: number;
+  name: string;
+  role: string;
+  avatar: string;
+  satisfaction: string;
+  expertise: string[];
+  reviews: Review[];
+}
 
 interface HomeProps {
   onOpenSnapReport: () => void;
@@ -13,6 +31,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
   const [sections, setSections] = useState([
     'property_governance',
     'hot_services',
+    'shared_providers',
     'legal_aid',
     'announcements',
     'community_dynamics',
@@ -65,9 +84,50 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
   const seniorLinks = [
     { label: '一键呼救', icon: Phone, color: 'bg-red-500 text-white', desc: '紧急联系人' },
     { label: '助餐服务', icon: Heart, color: 'bg-orange-500 text-white', desc: '预约午餐' },
+    { label: '共享维修', icon: Wrench, color: 'bg-blue-600 text-white', desc: '疏通修灯' },
     { label: '预约挂号', icon: ShieldCheck, color: 'bg-blue-500 text-white', desc: '医院就诊' },
     { label: '随手拍', icon: Smartphone, color: 'bg-emerald-500 text-white', desc: '反映问题' },
   ];
+
+  const sharedProviders: Provider[] = [
+    {
+      id: 1,
+      name: '张师傅',
+      role: '高级水电工',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=worker1',
+      satisfaction: '4.9',
+      expertise: ['电路维修', '灯具更换', '水管疏通'],
+      reviews: [
+        { userName: '李阿姨', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=r1', rating: 5, content: '张师傅来得很准时，不仅修好了漏水，还帮帮我把阀门也检查了一遍，非常细心！', time: '1天前' },
+        { userName: '王大伯', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=r2', rating: 5, content: '价格透明，技术过硬，推荐。', time: '3天前' }
+      ]
+    },
+    {
+      id: 2,
+      name: '王大姐',
+      role: '专业保洁',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=worker2',
+      satisfaction: '4.8',
+      expertise: ['深度开荒', '收纳整理', '玻璃擦拭'],
+      reviews: [
+        { userName: '陈先生', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=r3', rating: 5, content: '家里收拾得一尘不染，效率极高。', time: '1周前' }
+      ]
+    },
+    {
+      id: 3,
+      name: '李医生',
+      role: '社区康复师',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=worker3',
+      satisfaction: '5.0',
+      expertise: ['老年康复', '推拿按摩', '健康讲座'],
+      reviews: [
+        { userName: '赵奶奶', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=r4', rating: 5, content: '李医生的手法很专业，按完之后腰腿舒服多了。', time: '2天前' }
+      ]
+    }
+  ];
+
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
+  const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);
 
   if (isSeniorMode) {
     return (
@@ -94,6 +154,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {
                    if (link.label === '随手拍') onOpenSnapReport();
+                   if (link.label === '共享维修') setIsMaintenanceOpen(true);
                 }}
                 className={`${link.color} p-6 rounded-[32px] flex items-center shadow-xl shadow-gray-200/50`}
               >
@@ -138,6 +199,52 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
               一键呼叫社区热线
            </button>
         </div>
+
+        {/* Maintenance Modal for Seniors */}
+        <AnimatePresence>
+          {isMaintenanceOpen && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] bg-white flex flex-col p-6 overflow-y-auto"
+            >
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-3xl font-black text-gray-900">维修价目表</h2>
+                <button onClick={() => setIsMaintenanceOpen(false)} className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                  <X size={24} />
+                </button>
+              </div>
+
+              <div className="space-y-8 pb-32">
+                 <div className="space-y-4">
+                    <h3 className="text-xl font-black text-blue-600">电路灯具类</h3>
+                    <div className="bg-white rounded-3xl border-2 border-gray-100 divide-y divide-gray-100">
+                       <div className="p-4 flex justify-between items-center"><span className="font-bold">换普通灯泡</span><span className="font-black text-xl">¥10</span></div>
+                       <div className="p-4 flex justify-between items-center"><span className="font-bold">换开关插座</span><span className="font-black text-xl">¥25</span></div>
+                       <div className="p-4 flex justify-between items-center"><span className="font-bold">换客厅大灯</span><span className="font-black text-xl">¥40</span></div>
+                    </div>
+                 </div>
+
+                 <div className="space-y-4">
+                    <h3 className="text-xl font-black text-blue-600">水路卫浴类</h3>
+                    <div className="bg-white rounded-3xl border-2 border-gray-100 divide-y divide-gray-100">
+                       <div className="p-4 flex justify-between items-center"><span className="font-bold">换水龙头</span><span className="font-black text-xl">¥30</span></div>
+                       <div className="p-4 flex justify-between items-center"><span className="font-bold">疏通马桶</span><span className="font-black text-xl">¥70</span></div>
+                       <div className="p-4 flex justify-between items-center"><span className="font-bold">换花洒套装</span><span className="font-black text-xl">¥70</span></div>
+                    </div>
+                 </div>
+              </div>
+
+              <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-100">
+                 <a href="tel:15548837989" className="w-full bg-blue-600 text-white py-6 rounded-[32px] text-2xl font-black flex items-center justify-center space-x-3 shadow-xl">
+                    <Phone size={28} fill="currentColor" />
+                    <span>呼叫维修师傅</span>
+                 </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   }
@@ -208,7 +315,39 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
             </div>
           </div>
         );
-      case 'legal_aid':
+      case 'shared_providers':
+        return (
+          <div className="bg-white p-4 rounded-3xl shadow-md border border-gray-100 relative group">
+            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
+            <div className="flex items-center justify-between mb-4 px-1">
+              <div className="flex items-center space-x-2">
+                <div className="w-1 h-3.5 bg-blue-500 rounded-full" />
+                <h3 className="font-extrabold text-gray-900 text-sm">社区共享达人</h3>
+              </div>
+              <span className="text-[10px] text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full font-bold">身边的好手</span>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-3">
+              {sharedProviders.map((provider) => (
+                <button 
+                  key={provider.id}
+                  onClick={() => setSelectedProvider(provider)}
+                  className="flex flex-col items-center group active:scale-95 transition-transform"
+                >
+                  <div className="relative mb-2">
+                    <img src={provider.avatar} className="w-16 h-16 rounded-full border-2 border-white shadow-sm ring-1 ring-gray-100" alt="" referrerPolicy="no-referrer" />
+                    <div className="absolute -bottom-1 -right-1 bg-white px-1 py-0.5 rounded-md border border-gray-100 flex items-center shadow-xs">
+                      <Star size={8} className="text-orange-500 fill-orange-500 mr-0.5" />
+                      <span className="text-[8px] font-black">{provider.satisfaction}</span>
+                    </div>
+                  </div>
+                  <div className="text-[11px] font-black text-gray-800">{provider.name}</div>
+                  <div className="text-[9px] text-gray-400 mt-0.5">{provider.role}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
         return (
           <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100 relative group">
             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
@@ -443,7 +582,106 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
           </Reorder.Item>
         ))}
       </Reorder.Group>
+
+      {/* Provider Modal Overlay */}
+      <AnimatePresence>
+        {selectedProvider && (
+           <ProviderModal 
+              provider={selectedProvider} 
+              onClose={() => setSelectedProvider(null)} 
+           />
+        )}
+      </AnimatePresence>
     </div>
+  );
+}
+
+function ProviderModal({ provider, onClose }: { provider: Provider; onClose: () => void }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4"
+      onClick={onClose}
+    >
+      <motion.div 
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "100%" }}
+        className="bg-white w-full max-w-lg rounded-t-[40px] sm:rounded-[40px] p-8 max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-between items-start mb-8">
+           <div className="flex items-center space-x-4">
+              <img src={provider.avatar} className="w-20 h-20 rounded-3xl border-4 border-gray-50 shadow-sm" alt="" referrerPolicy="no-referrer" />
+              <div>
+                 <h3 className="text-2xl font-black text-gray-900">{provider.name}</h3>
+                 <p className="text-sm font-bold text-blue-600">{provider.role}</p>
+                 <div className="flex items-center mt-1 text-orange-500">
+                    <Star size={16} fill="currentColor" />
+                    <span className="ml-1 text-sm font-black">满意度 {provider.satisfaction}</span>
+                 </div>
+              </div>
+           </div>
+           <button onClick={onClose} className="p-2 bg-gray-100 rounded-full text-gray-400 hover:text-gray-600">
+              <X size={24} />
+           </button>
+        </div>
+
+        <div className="space-y-6">
+           <div>
+              <h4 className="text-sm font-black text-gray-800 mb-3 flex items-center">
+                 <div className="w-1 h-3.5 bg-blue-500 rounded-full mr-2" />
+                 擅长领域
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                 {provider.expertise.map((item, idx) => (
+                    <span key={idx} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-xl text-xs font-bold ring-1 ring-blue-100">
+                       {item}
+                    </span>
+                 ))}
+              </div>
+           </div>
+
+           <div>
+              <h4 className="text-sm font-black text-gray-800 mb-4 flex items-center">
+                 <div className="w-1 h-3.5 bg-blue-500 rounded-full mr-2" />
+                 业主评价 ({provider.reviews.length})
+              </h4>
+              <div className="space-y-4">
+                 {provider.reviews.map((review, idx) => (
+                    <div key={idx} className="bg-gray-50 rounded-2xl p-4">
+                       <div className="flex justify-between items-start mb-2">
+                          <div className="flex items-center space-x-2">
+                             <img src={review.avatar} className="w-8 h-8 rounded-full" alt="" referrerPolicy="no-referrer" />
+                             <div>
+                                <div className="text-xs font-black text-gray-800">{review.userName}</div>
+                                <div className="flex text-orange-500">
+                                   {[...Array(review.rating)].map((_, i) => <Star key={i} size={10} fill="currentColor" />)}
+                                </div>
+                             </div>
+                          </div>
+                          <span className="text-[10px] text-gray-400 font-bold">{review.time}</span>
+                       </div>
+                       <p className="text-xs text-gray-600 leading-relaxed font-medium">{review.content}</p>
+                    </div>
+                 ))}
+              </div>
+           </div>
+        </div>
+
+        <div className="mt-10 flex gap-3">
+           <button className="flex-1 bg-gray-100 text-gray-800 py-4 rounded-[20px] text-sm font-black active:scale-95 transition-transform">
+              在线私聊
+           </button>
+           <button className="flex-1 bg-blue-600 text-white py-4 rounded-[20px] text-sm font-black shadow-lg shadow-blue-100 flex items-center justify-center space-x-2 active:scale-95 transition-transform">
+              <Phone size={18} fill="currentColor" />
+              <span>电话预约</span>
+           </button>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
