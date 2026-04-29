@@ -252,7 +252,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
                 className="bg-white text-slate-900 px-3 py-2 rounded-xl text-[10px] font-black flex items-center space-x-1 active:scale-95 transition-transform"
               >
                 <Phone size={12} fill="currentColor" />
-                <span>一键直播咨询</span>
+                <span>免费直拨咨询</span>
               </a>
             </div>
           </div>
