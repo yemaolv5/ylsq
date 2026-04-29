@@ -121,6 +121,40 @@ export default function Profile() {
              </button>
           ))}
         </div>
+
+        {/* Update Log */}
+        <div className="bg-white rounded-[32px] p-6 shadow-sm border border-white">
+          <div className="flex items-center space-x-2 mb-4">
+             <div className="w-1.5 h-4 bg-[#FF8C00] rounded-full" />
+             <h3 className="font-extrabold text-gray-900 text-sm">20260429 更新日志</h3>
+          </div>
+          <div className="space-y-4">
+            <div className="border-l-2 border-orange-100 pl-4 py-1">
+               <h4 className="text-xs font-black text-gray-800 mb-1">1. 为老版界面上线</h4>
+               <p className="text-[10px] text-gray-500 leading-relaxed">
+                 新增“为老版”切换功能，针对年长居民优化了大字展示、简洁布局及核心助老服务（呼救、助餐、挂号等）。
+               </p>
+            </div>
+            <div className="border-l-2 border-orange-100 pl-4 py-1">
+               <h4 className="text-xs font-black text-gray-800 mb-1">2. 随手拍功能升级</h4>
+               <p className="text-[10px] text-gray-500 leading-relaxed">
+                 重构随手拍模块，划分为“问政策”、“报诉求”、“查追踪”三大版块，支持多级分类上报与全流程状态查询。
+               </p>
+            </div>
+            <div className="border-l-2 border-orange-100 pl-4 py-1">
+               <h4 className="text-xs font-black text-gray-800 mb-1">3. 老缸房服务中心完善</h4>
+               <p className="text-[10px] text-gray-500 leading-relaxed">
+                 修复了服务详情图片显示问题，通过原生代码重绘了“为老服务中心项目表”，支持更清晰细腻的移动端浏览。
+               </p>
+            </div>
+            <div className="border-l-2 border-orange-100 pl-4 py-1">
+               <h4 className="text-xs font-black text-gray-800 mb-1">4. 系统性能与兼容性优化</h4>
+               <p className="text-[10px] text-gray-500 leading-relaxed">
+                 全站图片引入防盗链优化，解决部分第三方图源404问题；优化了各模块的平滑过渡动画体验。
+               </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
