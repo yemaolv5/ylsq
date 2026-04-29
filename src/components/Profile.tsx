@@ -23,7 +23,7 @@ export default function Profile() {
         
         <div className="flex items-center space-x-4 relative z-10">
           <div className="w-18 h-18 rounded-full border-4 border-white/30 overflow-hidden bg-white/20 shadow-xl">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar" className="w-full h-full" />
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar" className="w-full h-full" referrerPolicy="no-referrer" />
           </div>
           <div className="text-white">
             <h2 className="text-2xl font-black tracking-tight">陈大文</h2>

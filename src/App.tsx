@@ -10,16 +10,18 @@ import Home from './components/Home';
 import Service from './components/Service';
 import Neighborhood from './components/Neighborhood';
 import Profile from './components/Profile';
+import SnapReport from './components/SnapReport';
 
 type Tab = 'home' | 'service' | 'neighbor' | 'profile';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('home');
+  const [isSnapReportOpen, setIsSnapReportOpen] = useState(false);
 
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
-        return <Home />;
+        return <Home onOpenSnapReport={() => setIsSnapReportOpen(true)} />;
       case 'service':
         return <Service />;
       case 'neighbor':
@@ -91,6 +93,7 @@ export default function App() {
         <motion.button
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
+          onClick={() => setIsSnapReportOpen(true)}
           className="absolute bottom-20 right-4 w-12 h-12 bg-[#FF8C00] text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow z-40"
           id="fab-report"
           title="随手拍上报"
@@ -98,6 +101,13 @@ export default function App() {
           <Camera size={24} />
         </motion.button>
       )}
+
+      {/* Snap & Report Modal */}
+      <AnimatePresence>
+        {isSnapReportOpen && (
+          <SnapReport onClose={() => setIsSnapReportOpen(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
