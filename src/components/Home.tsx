@@ -31,6 +31,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
   const [sections, setSections] = useState([
     'property_governance',
     'hot_services',
+    'volunteer_recruitment',
     'shared_providers',
     'legal_aid',
     'announcements',
@@ -249,6 +250,8 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
     );
   }
 
+  const [showQrModal, setShowQrModal] = useState(false);
+
   const renderSection = (id: string) => {
     switch (id) {
       case 'property_governance':
@@ -312,6 +315,54 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
                     <span className="text-[10px] mt-2 font-bold text-gray-700">{item.label}</span>
                  </div>
                ))}
+            </div>
+          </div>
+        );
+      case 'volunteer_recruitment':
+        return (
+          <div className="bg-emerald-900 rounded-[32px] p-6 text-white relative overflow-hidden shadow-xl shadow-emerald-100 group">
+            <div className="absolute top-4 right-4 opacity-30 group-hover:opacity-50 transition-opacity"><GripVertical size={16} /></div>
+            <Heart size={140} className="absolute -right-10 -bottom-10 opacity-10 rotate-12" />
+            
+            <div className="relative z-10 flex flex-col h-full">
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center">
+                  <span className="text-lg">🤝</span>
+                </div>
+                <h3 className="font-black text-lg tracking-tight">社区志愿者招募</h3>
+              </div>
+
+              <div className="flex space-x-3 mb-6 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
+                {[
+                  { title: '环保卫士', img: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=200&q=80' },
+                  { title: '关爱孤寡', img: 'https://images.unsplash.com/photo-1579208570378-8c970854bc23?auto=format&fit=crop&w=200&q=80' },
+                  { title: '文明引导', img: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=200&q=80' }
+                ].map((act, i) => (
+                  <div key={i} className="flex-shrink-0 w-28 text-center">
+                    <div className="h-20 rounded-2xl overflow-hidden mb-1.5 ring-2 ring-white/10">
+                      <img src={act.img} className="w-full h-full object-cover" alt="" />
+                    </div>
+                    <span className="text-[10px] font-bold opacity-80">{act.title}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-auto flex items-end justify-between">
+                <div>
+                  <p className="text-xs font-bold opacity-70 mb-1">已累计服务社区</p>
+                  <div className="flex items-baseline space-x-1">
+                    <span className="text-2xl font-black">1280+</span>
+                    <span className="text-[10px] font-bold opacity-60">小时</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowQrModal(true)}
+                  className="bg-white text-emerald-900 px-6 py-2.5 rounded-2xl text-xs font-black shadow-lg active:scale-95 transition-transform flex items-center space-x-2"
+                >
+                  <span>立即加入</span>
+                  <ChevronRight size={14} />
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -610,6 +661,62 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
            />
         )}
       </AnimatePresence>
+
+      {/* Volunteer QR Modal */}
+      <AnimatePresence>
+        {showQrModal && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-[3rem] w-full max-w-sm overflow-hidden shadow-2xl relative"
+            >
+              <button 
+                 onClick={() => setShowQrModal(false)}
+                 className="absolute top-6 right-6 p-2 bg-gray-100 hover:bg-gray-200 text-gray-500 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="p-8 pt-12 text-center">
+                <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                  <Heart size={32} fill="currentColor" />
+                </div>
+                <h3 className="text-xl font-black text-gray-900 mb-2">加入志愿者大家庭</h3>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-8">Scan to Join WeChat Group</p>
+                
+                <div className="bg-gray-50 p-6 rounded-[2.5rem] mb-8 relative group">
+                  <div className="aspect-square bg-white rounded-3xl flex items-center justify-center p-4 shadow-inner ring-1 ring-gray-100">
+                    <img 
+                      src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://weixin.qq.com/r/volunteer_group" 
+                      alt="Group QR Code" 
+                      className="w-full h-full object-contain opacity-80"
+                    />
+                  </div>
+                  <div className="absolute -bottom-3 inset-x-0 flex justify-center">
+                    <div className="bg-emerald-600 text-white px-4 py-1 rounded-full text-[10px] font-black shadow-lg">微信扫一扫</div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <p className="text-[10px] text-gray-500 font-medium leading-relaxed italic">
+                    “微光汇聚，终成星河”。期待您的加入，共同打造更温暖的老缸房社区。
+                  </p>
+                  <button 
+                    onClick={() => setShowQrModal(false)}
+                    className="w-full bg-emerald-900 text-white py-4 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-transform"
+                  >
+                    我知道了
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      <div className="h-24" />
     </div>
   );
 }
