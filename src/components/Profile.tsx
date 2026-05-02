@@ -1,6 +1,92 @@
-import { User, Home, Wrench, Calendar, Settings, ChevronRight, Bell, Shield, Info, QrCode, PlusCircle } from 'lucide-react';
+import { useState } from 'react';
+import { User, Home, Wrench, Calendar, Settings, ChevronRight, ChevronDown, ChevronUp, Bell, Shield, Info, QrCode, PlusCircle, Ticket, Gift, MousePointer2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+
+interface Benefit {
+  id: string;
+  title: string;
+  store: string;
+  benefit: string;
+  totalCount: number;
+  usedCount: number;
+  validDate: string;
+  theme: string;
+  icon: any;
+}
 
 export default function Profile() {
+  const [benefits, setBenefits] = useState<Benefit[]>([
+    {
+      id: 'hotel-1',
+      title: '住房优惠',
+      store: '如家酒店',
+      benefit: '8.0折入住',
+      totalCount: 3,
+      usedCount: 0,
+      validDate: '5.1 - 5.30',
+      theme: 'from-blue-500 to-indigo-600',
+      icon: Home
+    },
+    {
+      id: 'eggs-1',
+      title: '社区福利',
+      store: '老缸房社区',
+      benefit: '免费领取鸡蛋',
+      totalCount: 1,
+      usedCount: 0,
+      validDate: '至 5.09',
+      theme: 'from-orange-400 to-red-500',
+      icon: Gift
+    }
+  ]);
+
+  const handleUseBenefit = (id: string) => {
+    setBenefits(prev => prev.map(b => {
+      if (b.id === id && b.usedCount < b.totalCount) {
+        return { ...b, usedCount: b.usedCount + 1 };
+      }
+      return b;
+    }));
+  };
+
+  const [expandedDates, setExpandedDates] = useState<string[]>(['20260502']);
+
+  const toggleDate = (date: string) => {
+    setExpandedDates(prev => 
+      prev.includes(date) ? prev.filter(d => d !== date) : [...prev, date]
+    );
+  };
+
+  const updateLogs = [
+    {
+      date: '20260502',
+      items: [
+        {
+          title: '1. 更新日志体验优化',
+          desc: '重构了更新日志展示方式，支持按日期收起与展开，默认仅显示最新动态，界面更清爽。'
+        },
+        {
+          title: '2. 新增权益卡卡片',
+          desc: '在个人中心上线“社区权益卡”，居民可领取并使用周边商家优惠（如酒店折扣、民生福利等），支持次数核销与有效期管理。'
+        }
+      ]
+    },
+    {
+      date: '20260429',
+      items: [
+        { title: '1. 长者版界面上线', desc: '针对年长居民优化了大字展示、简洁布局及核心助老服务（呼救、助餐、挂号等）。' },
+        { title: '2. 随手拍功能升级', desc: '划分为“问政策”、“报诉求”、“查追踪”三版块，支持多级分类上报与全流程追踪。' },
+        { title: '3. 老缸房服务中心完善', desc: '重绘项表，支持清晰细腻的移动端浏览。' },
+        { title: '4. 新增法律援助模块', desc: '首页新增法律援助专栏，支持致电李律师进行法律垂询。' },
+        { title: '5. 新增特约维修服务', desc: '快速链接社区专业维修师傅，解决家庭水电维修难题。' },
+        { title: '6. 新增共享维修服务', desc: '新增详细价目表，价格透明公开，覆盖电路灯具、水路卫浴。' },
+        { title: '7. 新增社区共享达人', desc: '推荐水电、保洁、康复等领域的社区好手，支持查看评价。' },
+        { title: '8. 新增社区达人申请入口', desc: '居民可在线提交个人专长与资料，支持多状态进度查询。' },
+        { title: '9. 系统性能与兼容性优化', desc: '全站图片引入防盗链优化，优化模块平滑过渡动画体验。' }
+      ]
+    }
+  ];
+
   const records = [
     { label: '处理中', count: 2, color: 'text-blue-500' },
     { label: '已完成', count: 12, color: 'text-green-500' },
@@ -54,6 +140,79 @@ export default function Profile() {
             <button className="text-[#FF8C00] text-xs font-black flex items-center bg-white px-3 py-1.5 rounded-full shadow-sm active:scale-95 transition-transform">
               <PlusCircle size={14} className="mr-1" /> 添加成员
             </button>
+          </div>
+        </div>
+
+        {/* Equity Cards */}
+        <div className="bg-white rounded-3xl p-6 shadow-md shadow-gray-200/50 border border-white">
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center space-x-2">
+              <div className="w-1.5 h-4 bg-indigo-500 rounded-full" />
+              <h3 className="font-extrabold text-gray-900 text-base">我的权益卡</h3>
+            </div>
+            <span className="text-[10px] text-gray-400 font-bold">邻里专属优惠</span>
+          </div>
+          
+          <div className="space-y-4">
+            {benefits.map((benefit) => {
+              const isUsedUp = benefit.usedCount >= benefit.totalCount;
+              return (
+                <div 
+                  key={benefit.id} 
+                  className={`relative overflow-hidden rounded-3xl border transition-all duration-300 ${
+                    isUsedUp ? 'bg-gray-50 border-gray-100 grayscale opacity-70' : 'bg-white border-gray-50 hover:shadow-lg'
+                  }`}
+                >
+                  <div className="flex p-4">
+                    {/* Visual Card Part */}
+                    <div className={`w-28 h-20 bg-gradient-to-br ${benefit.theme} rounded-2xl flex flex-col items-center justify-center text-white relative shadow-sm overflow-hidden`}>
+                       <benefit.icon size={24} className="opacity-20 absolute -right-2 -bottom-2 transform -rotate-12" />
+                       <div className="text-[10px] font-bold opacity-80 uppercase tracking-tighter mb-0.5">{benefit.title}</div>
+                       <div className="text-lg font-black">{benefit.benefit}</div>
+                       <div className="absolute top-1 left-1.5 flex space-x-0.5">
+                          {[...Array(benefit.totalCount)].map((_, i) => (
+                             <div key={i} className={`w-1 h-1 rounded-full ${i < (benefit.totalCount - benefit.usedCount) ? 'bg-white' : 'bg-white/20'}`} />
+                          ))}
+                       </div>
+                    </div>
+
+                    {/* Content Part */}
+                    <div className="ml-4 flex-1 flex flex-col justify-between py-0.5">
+                       <div>
+                          <div className="flex justify-between items-start">
+                             <h4 className="text-sm font-black text-gray-800">{benefit.store}</h4>
+                             <span className="text-[10px] text-gray-400 font-bold">{benefit.validDate}</span>
+                          </div>
+                          <p className="text-[10px] text-gray-400 mt-1 font-medium">使用次数: {benefit.totalCount - benefit.usedCount}/{benefit.totalCount}</p>
+                       </div>
+
+                       <div className="flex justify-end">
+                          <button 
+                            disabled={isUsedUp}
+                            onClick={() => handleUseBenefit(benefit.id)}
+                            className={`px-4 py-1.5 rounded-xl text-[11px] font-black transition-all active:scale-95 flex items-center space-x-1.5 ${
+                              isUsedUp 
+                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                                : 'bg-indigo-50 text-indigo-600 shadow-sm shadow-indigo-100'
+                            }`}
+                          >
+                             {isUsedUp ? (
+                               '已使用完成'
+                             ) : (
+                               <>
+                                 <MousePointer2 size={12} />
+                                 <span>使用权益</span>
+                               </>
+                             )}
+                          </button>
+                       </div>
+                    </div>
+                  </div>
+                  {/* Decorative Ticket Perforation */}
+                  <div className="absolute left-28 top-0 bottom-0 w-4 border-l border-dashed border-gray-100 hidden sm:block" />
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -123,69 +282,48 @@ export default function Profile() {
         </div>
 
         {/* Update Log */}
-        <div className="bg-white rounded-[32px] p-6 shadow-sm border border-white">
-          <div className="flex items-center space-x-2 mb-4">
-             <div className="w-1.5 h-4 bg-[#FF8C00] rounded-full" />
-             <h3 className="font-extrabold text-gray-900 text-sm">20260429 更新日志</h3>
-          </div>
-          <div className="space-y-4">
-            <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">1. 长者版界面上线</h4>
-               <p className="text-[10px] text-gray-500 leading-relaxed">
-                 新增“长者版”切换功能，针对年长居民优化了大字展示、简洁布局及核心助老服务（呼救、助餐、挂号等）。
-               </p>
+        <div className="space-y-4">
+          {updateLogs.map((log) => (
+            <div key={log.date} className="bg-white rounded-[32px] p-6 shadow-sm border border-white overflow-hidden">
+              <button 
+                onClick={() => toggleDate(log.date)}
+                className="w-full flex items-center justify-between group"
+              >
+                <div className="flex items-center space-x-2">
+                  <div className="w-1.5 h-4 bg-[#FF8C00] rounded-full" />
+                  <h3 className="font-extrabold text-gray-900 text-sm">{log.date} 更新日志</h3>
+                </div>
+                <div className={`p-1 rounded-full transition-colors ${expandedDates.includes(log.date) ? 'bg-orange-50 text-orange-500' : 'bg-gray-50 text-gray-300 group-hover:bg-gray-100'}`}>
+                  {expandedDates.includes(log.date) ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </div>
+              </button>
+              
+              <AnimatePresence>
+                {expandedDates.includes(log.date) && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  >
+                    <div className="space-y-4 pt-6">
+                      {log.items.map((item, i) => (
+                        <div key={i} className="border-l-2 border-orange-100 pl-4 py-1">
+                          <h4 className="text-xs font-black text-gray-800 mb-1">{item.title}</h4>
+                          <p className="text-[10px] text-gray-500 leading-relaxed">
+                            {item.desc}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-            <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">2. 随手拍功能升级</h4>
-               <p className="text-[10px] text-gray-500 leading-relaxed">
-                 重构随手拍模块，划分为“问政策”、“报诉求”、“查追踪”三大版块，支持多级分类上报与全流程状态查询。
-               </p>
-            </div>
-            <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">3. 老缸房服务中心完善</h4>
-               <p className="text-[10px] text-gray-500 leading-relaxed">
-                 修复了服务详情图片显示问题，通过原生代码重绘了“为老服务中心项目表”，支持更清晰细腻的移动端浏览。
-               </p>
-            </div>
-            <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">4. 新增法律援助模块</h4>
-               <p className="text-[10px] text-gray-500 leading-relaxed">
-                 首页新增法律援助专栏，展示典型助民案例，并支持通过“免费咨询”直接致电李律师进行法律垂询。
-               </p>
-            </div>
-            <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">5. 新增特约维修服务</h4>
-               <p className="text-[10px] text-gray-500 leading-relaxed">
-                 在居家服务分类下新增“特约维修”入口，快速链接社区专业维修师傅，解决家庭水电等维修难题。
-               </p>
-            </div>
-            <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">6. 新增共享维修服务</h4>
-               <p className="text-[10px] text-gray-500 leading-relaxed">
-                 在社区服务中新增详细的“共享维修服务价目表”，覆盖电路灯具、水路卫浴及门窗五金三大类，价格透明公开。
-               </p>
-            </div>
-            <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">7. 新增社区共享达人</h4>
-               <p className="text-[10px] text-gray-500 leading-relaxed">
-                 首页新增共享服务卡片，推荐水电、保洁、康复等多领域的社区好手，支持查看专长、评分及邻里评价。
-               </p>
-            </div>
-            <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">8. 新增社区达人申请入口</h4>
-               <p className="text-[10px] text-gray-500 leading-relaxed">
-                 在服务模块中新增“社区达人”申请功能，居民可在线提交个人专长与资料。支持多状态进度查询，并提供“直拨热线”辅助审核提速。
-               </p>
-            </div>
-            <div className="border-l-2 border-orange-100 pl-4 py-1">
-               <h4 className="text-xs font-black text-gray-800 mb-1">9. 系统性能与兼容性优化</h4>
-               <p className="text-[10px] text-gray-500 leading-relaxed">
-                 全站图片引入防盗链优化，解决部分第三方图源404问题；优化了各模块的平滑过渡动画体验。
-               </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
+
