@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Calendar, MapPin, CreditCard, Wrench, Key, Utensils, Users, ShoppingBag, Heart, ShieldCheck, Microscope, FlaskConical, Baby, X, Gavel, Star, Phone } from 'lucide-react';
+import { Search, Calendar, MapPin, CreditCard, Wrench, Key, Utensils, Users, ShoppingBag, Heart, ShieldCheck, Microscope, FlaskConical, Baby, X, Gavel, Star, Phone, Stethoscope, Clock, Activity, Coffee, Hotel, Store, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 const CATEGORIES = [
@@ -14,6 +14,7 @@ const CATEGORIES = [
 const SERVICES = [
   { id: 1, label: '活动报名', icon: Calendar, category: 'life', color: 'bg-blue-50 text-blue-500' },
   { id: 2, label: '场地预约', icon: MapPin, category: 'life', color: 'bg-indigo-50 text-indigo-500' },
+  { id: 20, label: '15分钟\n生活圈', icon: Navigation, category: 'life', color: 'bg-indigo-50 text-indigo-600', isLifeCircle: true },
   { id: 3, label: '物业缴费', icon: CreditCard, category: 'life', color: 'bg-orange-50 text-orange-500' },
   { id: 4, label: '物业报修', icon: Wrench, category: 'life', color: 'bg-red-50 text-red-500' },
   { id: 5, label: '手机开门', icon: Key, category: 'life', color: 'bg-green-50 text-green-500' },
@@ -23,9 +24,12 @@ const SERVICES = [
   
   { id: 9, label: '政策指南', icon: ShieldCheck, category: 'gov', color: 'bg-blue-50 text-blue-600' },
   { id: 10, label: '办证进度', icon: Calendar, category: 'gov', color: 'bg-teal-50 text-teal-600' },
-  { id: 16, label: '法律援助', icon: Gavel, category: 'gov', color: 'bg-slate-50 text-slate-600' },
+  { id: 16, label: '法律援助', icon: Gavel, category: 'gov', color: 'bg-slate-50 text-slate-800', isLegalAid: true },
   
-  { id: 11, label: '预约问诊', icon: Heart, category: 'health', color: 'bg-rose-50 text-rose-500' },
+  { id: 17, label: '爱心助残\n超市', icon: ShoppingBag, category: 'life', color: 'bg-indigo-50 text-indigo-600', isCharityStore: true },
+  { id: 18, label: '社区食堂', icon: Utensils, category: 'life', color: 'bg-orange-50 text-orange-500', isCanteen: true },
+
+  { id: 11, label: '社区诊所', icon: Stethoscope, category: 'health', color: 'bg-rose-50 text-rose-500', isClinic: true },
   { id: 12, label: '智慧药柜', icon: ShoppingBag, category: 'health', color: 'bg-emerald-50 text-emerald-500' },
 
   { id: 15, label: '老缸房社区\n为老服务中心', icon: Baby, category: 'elderly', color: 'bg-orange-50 text-orange-600', isPoster: true },
@@ -176,7 +180,7 @@ function CommunityTalentApplication({ onBack }: { onBack: () => void }) {
   );
 }
 
-function SharedMaintenancePoster() {
+function SharedMaintenancePoster({ onBack }: { onBack: () => void }) {
   const sections = [
     {
       title: '电路灯具类维修',
@@ -212,7 +216,13 @@ function SharedMaintenancePoster() {
   ];
 
   return (
-    <div className="bg-slate-50 p-5 pb-10 min-h-screen font-sans">
+    <div className="bg-slate-50 p-5 pb-10 min-h-screen font-sans relative">
+      <button 
+        onClick={onBack}
+        className="absolute top-4 right-4 p-2 bg-white/50 hover:bg-white text-gray-800 rounded-full transition-colors z-20"
+      >
+        <X size={20} />
+      </button>
       <div className="text-center mb-8 pt-4">
         <div className="inline-flex items-center space-x-2 text-slate-800 mb-2 font-black tracking-widest text-lg uppercase">
           <Wrench size={24} className="text-blue-600" />
@@ -265,7 +275,7 @@ function SharedMaintenancePoster() {
   );
 }
 
-function ElderlyServicePoster() {
+function ElderlyServicePoster({ onBack }: { onBack: () => void }) {
   const categories = [
     { name: '生活照料类', items: [
       { id: 1, name: '日间照料', content: '提供日间托管、餐饮、休息、健康监测等服务', type: '按次', price: '25元／次' },
@@ -299,7 +309,13 @@ function ElderlyServicePoster() {
   ];
 
   return (
-    <div className="bg-[#FFF9F5] p-5 pb-10 min-h-screen font-sans">
+    <div className="bg-[#FFF9F5] p-5 pb-10 min-h-screen font-sans relative">
+      <button 
+        onClick={onBack}
+        className="absolute top-4 right-4 p-2 bg-[#FF8C00]/10 hover:bg-[#FF8C00]/20 text-[#FF8C00] rounded-full transition-colors z-20"
+      >
+        <X size={20} />
+      </button>
       <div className="text-center mb-8 pt-4">
         <div className="inline-flex items-center space-x-2 text-[#FF8C00] mb-2 font-bold tracking-widest text-lg">
           <Heart size={24} fill="currentColor" />
@@ -368,33 +384,580 @@ function ElderlyServicePoster() {
   );
 }
 
+function LifeCirclePoster({ onBack }: { onBack: () => void }) {
+  const [activeTab, setActiveTab] = useState('catering');
+  
+  const categories = [
+    { id: 'catering', label: '餐饮美食', icon: Coffee },
+    { id: 'market', label: '超市便利', icon: Store },
+    { id: 'hotel', label: '酒店住宿', icon: Hotel },
+  ];
+
+  const venues = {
+    catering: [
+      { name: '格拉丹草原火锅', distance: '320m', tag: '蒙餐', rating: '4.8' },
+      { name: '老呼市焙子大王', distance: '150m', tag: '特色早点', rating: '4.9' },
+      { name: '阿健食府', distance: '850m', tag: '融合菜', rating: '4.6' }
+    ],
+    market: [
+      { name: '家乐福超市', distance: '1.2km', tag: '大型商超', rating: '4.5' },
+      { name: '社区便利店', distance: '50m', tag: '生活便利', rating: '4.7' },
+      { name: '维多利商业广场', distance: '1.5km', tag: '综合购物', rating: '4.8' }
+    ],
+    hotel: [
+      { name: '如家精选酒店', distance: '450m', tag: '快捷连锁', rating: '4.4' },
+      { name: '呼和浩特大酒店', distance: '2.1km', tag: '高端酒店', rating: '4.7' },
+      { name: '青城宾馆', distance: '900m', tag: '政府定点', rating: '4.5' }
+    ]
+  };
+
+  return (
+    <div className="bg-[#F4F7FF] min-h-screen font-sans pb-10 relative">
+      <button 
+        onClick={onBack}
+        className="absolute top-6 right-6 p-2 bg-indigo-900/10 hover:bg-indigo-900/20 text-indigo-900 rounded-full transition-colors z-20"
+      >
+        <X size={20} />
+      </button>
+
+      <div className="bg-gradient-to-br from-indigo-500 to-blue-700 p-8 pt-12 text-white relative overflow-hidden">
+        <MapPin size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
+        <div className="relative z-10">
+          <div className="inline-flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full mb-4 backdrop-blur-md">
+            <Navigation size={14} />
+            <span className="text-[10px] font-black tracking-widest uppercase">15-Min Life Circle</span>
+          </div>
+          <h1 className="text-3xl font-black mb-2 tracking-tighter">15分钟生活圈</h1>
+          <p className="opacity-80 text-sm font-medium">以老缸房社区为中心，触手可及的便捷</p>
+        </div>
+      </div>
+
+      <div className="px-6 py-4 -mt-4">
+        <div className="bg-white rounded-[2rem] p-2 shadow-xl shadow-indigo-100 flex items-center mb-6">
+          {categories.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveTab(cat.id)}
+              className={`flex-1 flex items-center justify-center space-x-2 py-3 rounded-2xl transition-all ${activeTab === cat.id ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'text-gray-400'}`}
+            >
+              <cat.icon size={16} />
+              <span className="text-xs font-black">{cat.label}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="space-y-4">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-4"
+            >
+              {venues[activeTab as keyof typeof venues].map((venue, i) => (
+                <div key={i} className="bg-white rounded-3xl p-5 border border-gray-50 shadow-sm flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 shrink-0">
+                      {activeTab === 'catering' ? <Coffee size={24} /> : activeTab === 'market' ? <Store size={24} /> : <Hotel size={24} />}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-black text-gray-900 mb-1">{venue.name}</h4>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-[10px] bg-indigo-50 text-indigo-500 px-2 py-0.5 rounded-full font-bold">{venue.tag}</span>
+                        <div className="flex items-center space-x-1 text-[10px] text-amber-500 font-black">
+                          <Star size={10} fill="currentColor" />
+                          <span>{venue.rating}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] font-black text-indigo-600 mb-0.5">{venue.distance}</p>
+                    <p className="text-[9px] text-gray-400 font-medium">离社区中心</p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+      
+      <div className="mt-6 px-8 py-6 bg-slate-900 rounded-[3rem] mx-6 text-white relative group overflow-hidden">
+        <Navigation size={80} className="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-110 transition-transform duration-500" />
+        <h3 className="text-sm font-black mb-2">地图服务正在升级</h3>
+        <p className="text-[10px] opacity-60 leading-relaxed italic">
+          “智慧社区全图”功能即将上线，届时将支持商家在线预订及AR实景导航引路，敬请期待！
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function CommunityCanteenPoster({ onBack }: { onBack: () => void }) {
+  const menu = [
+    { name: '红烧狮子头', elder: 8, regular: 12, tags: ['招牌', '肉类'] },
+    { name: '西红柿炒鸡蛋', elder: 4, regular: 6, tags: ['营养', '素食'] },
+    { name: '清蒸鱼块', elder: 10, regular: 15, tags: ['高蛋白'] },
+    { name: '时令青菜', elder: 2, regular: 4, tags: ['清淡'] }
+  ];
+
+  return (
+    <div className="bg-[#FFFDF9] min-h-screen font-sans pb-10 relative">
+      <button 
+        onClick={onBack}
+        className="absolute top-6 right-6 p-2 bg-orange-900/10 hover:bg-orange-900/20 text-orange-900 rounded-full transition-colors z-20"
+      >
+        <X size={20} />
+      </button>
+
+      <div className="bg-gradient-to-br from-orange-400 to-red-500 p-8 pt-12 text-white relative overflow-hidden">
+        <Utensils size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
+        <div className="relative z-10">
+          <div className="inline-flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full mb-4 backdrop-blur-md">
+            <Utensils size={14} />
+            <span className="text-[10px] font-black tracking-widest uppercase">Community Canteen</span>
+          </div>
+          <h1 className="text-3xl font-black mb-2 tracking-tighter">老缸房社区食堂</h1>
+          <p className="opacity-80 text-sm font-medium">品质食材 • 守护邻里舌尖上的幸福</p>
+        </div>
+      </div>
+
+      <div className="p-6 -mt-6">
+        <div className="bg-white rounded-[2.5rem] p-6 shadow-xl shadow-orange-100 border border-orange-50/50 mb-8 space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+             <div className="flex items-center space-x-3">
+                <div className="p-2 bg-orange-50 text-orange-500 rounded-xl">
+                  <Clock size={18} />
+                </div>
+                <div>
+                   <h3 className="text-[9px] font-black text-gray-400 uppercase mb-0.5">营业时间</h3>
+                   <p className="text-[11px] font-bold text-gray-800">11:00-13:30, 17:00-19:00</p>
+                </div>
+             </div>
+             <div className="flex items-center space-x-3">
+                <div className="p-2 bg-red-50 text-red-500 rounded-xl">
+                  <Phone size={18} />
+                </div>
+                <div>
+                   <h3 className="text-[9px] font-black text-gray-400 uppercase mb-0.5">送餐电话</h3>
+                   <p className="text-[11px] font-bold text-gray-800">0471-1234432</p>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center space-x-2">
+              <div className="w-1.5 h-4 bg-orange-500 rounded-full" />
+              <h3 className="font-extrabold text-gray-900 text-sm">今日菜谱 (5月2日)</h3>
+            </div>
+            <span className="text-[10px] bg-orange-100 text-orange-600 px-2 py-0.5 rounded-lg font-black">营养均衡</span>
+          </div>
+
+          <div className="bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm">
+            <div className="bg-gray-50/50 px-6 py-3 border-b border-gray-100 grid grid-cols-12 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+              <div className="col-span-5">菜品名称</div>
+              <div className="col-span-3 text-center">长者折扣价</div>
+              <div className="col-span-4 text-right">大众价格</div>
+            </div>
+            <div className="divide-y divide-gray-50 px-6">
+              {menu.map((item, i) => (
+                <div key={i} className="py-4 grid grid-cols-12 items-center group">
+                  <div className="col-span-5">
+                    <h4 className="text-xs font-black text-gray-800 mb-1">{item.name}</h4>
+                    <div className="flex gap-1">
+                      {item.tags.map(tag => (
+                        <span key={tag} className="text-[8px] bg-gray-100 text-gray-400 px-1.5 rounded font-bold">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="col-span-3 text-center">
+                    <div className="text-orange-600 font-black">
+                      <span className="text-[8px]">¥</span>
+                      <span className="text-sm">{item.elder}</span>
+                    </div>
+                  </div>
+                  <div className="col-span-4 text-right text-gray-400 font-bold">
+                    <span className="text-[8px]">¥</span>
+                    <span className="text-xs">{item.regular}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 bg-orange-50 border border-orange-100 rounded-2xl p-4 flex items-start space-x-3">
+          <div className="shrink-0 text-orange-500 mt-0.5"><Activity size={16} /></div>
+          <p className="text-[10px] text-orange-800 leading-relaxed font-medium">
+            <span className="font-black">温馨提示：</span>持社区长者卡用餐即可享受折扣。行动不便的高龄老人（80周岁及以上）可享受免费送餐上门服务。
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DisabledSupportSupermarketPoster({ onBack }: { onBack: () => void }) {
+  const subscriptions = [
+    {
+      id: 1,
+      name: '圣迪乐谷物鸡蛋',
+      spec: '每周1盒(10枚)',
+      desc: '周期配送，新鲜到家',
+      plans: [
+        { title: '6盒周期购', price: 99, original: 120 },
+        { title: '12盒周期购', price: 188, original: 240 }
+      ],
+      image: 'https://images.unsplash.com/photo-1582722872445-44359986bbff?auto=format&fit=crop&w=400&q=80'
+    },
+    {
+      id: 2,
+      name: '爱心扶贫大米',
+      spec: '5kg/袋',
+      desc: '源自残疾人辅助性就业基地',
+      plans: [
+        { title: '季度订阅(3袋)', price: 145, original: 165 },
+        { title: '半年度订阅(6袋)', price: 270, original: 330 }
+      ],
+      image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80'
+    }
+  ];
+
+  return (
+    <div className="bg-indigo-50 min-h-screen font-sans pb-10 relative">
+      <button 
+        onClick={onBack}
+        className="absolute top-6 right-6 p-2 bg-indigo-900/10 hover:bg-indigo-900/20 text-indigo-900 rounded-full transition-colors z-20"
+      >
+        <X size={20} />
+      </button>
+      
+      <div className="bg-gradient-to-br from-indigo-600 to-violet-700 p-8 pt-12 text-white relative overflow-hidden">
+        <ShoppingBag size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
+        <div className="relative z-10">
+          <div className="inline-flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full mb-4 backdrop-blur-md">
+            <Heart size={14} fill="currentColor" />
+            <span className="text-[10px] font-black tracking-widest uppercase">Love Disability Support</span>
+          </div>
+          <h1 className="text-3xl font-black mb-2 tracking-tighter">老缸房社区·爱心助残超市</h1>
+          <p className="opacity-80 text-sm font-medium">残联资助项目 • 每一份订购都是一份爱</p>
+        </div>
+      </div>
+
+      <div className="p-6 -mt-6">
+        <div className="flex items-center space-x-2 px-2 mb-6">
+          <div className="w-1.5 h-4 bg-indigo-600 rounded-full" />
+          <h3 className="font-extrabold text-indigo-900 text-sm">周期性精选订购</h3>
+        </div>
+
+        <div className="space-y-6">
+          {subscriptions.map((sub) => (
+            <div key={sub.id} className="bg-white rounded-[2.5rem] overflow-hidden shadow-xl shadow-indigo-100 border border-indigo-50/50">
+              <div className="h-48 w-full relative">
+                <img src={sub.image} alt={sub.name} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-6 left-6 text-white">
+                  <h4 className="text-xl font-black mb-1">{sub.name}</h4>
+                  <p className="text-xs opacity-80 font-bold">{sub.spec} | {sub.desc}</p>
+                </div>
+              </div>
+              
+              <div className="p-6 grid grid-cols-2 gap-4">
+                {sub.plans.map((plan, idx) => (
+                  <button key={idx} className="flex flex-col items-center p-4 rounded-3xl border-2 border-indigo-50 bg-indigo-50/30 hover:border-indigo-400 hover:bg-white transition-all group">
+                    <span className="text-[10px] font-black text-indigo-400 mb-2 uppercase tracking-tighter">{plan.title}</span>
+                    <div className="flex items-baseline space-x-1 mb-1">
+                      <span className="text-[10px] font-bold text-indigo-600">¥</span>
+                      <span className="text-2xl font-black text-indigo-900">{plan.price}</span>
+                    </div>
+                    <span className="text-[9px] text-gray-400 line-through font-bold">原价 ¥{plan.original}</span>
+                    <div className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-xl text-[10px] font-black opacity-0 group-hover:opacity-100 transition-opacity">
+                      立即订阅
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 bg-indigo-900 rounded-[2.5rem] p-6 text-white relative overflow-hidden">
+           <div className="relative z-10">
+              <h3 className="font-black text-sm mb-3">超市公告</h3>
+              <ul className="text-[10px] space-y-2 opacity-70 italic">
+                <li>• 本超市所有商品由市残联严格把关品质，价格低于市场价。</li>
+                <li>• 部分营收将直接用于社区残障人士康复与就业补贴。</li>
+                <li>• 周期购商品每周固定时间配送至社区驿站或送货上门。</li>
+              </ul>
+           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CommunityClinicPoster({ onBack }: { onBack: () => void }) {
+  const doctors = [
+    {
+      name: '张国医',
+      role: '中医科 主任医师',
+      specialty: '中医内科、针灸理疗，擅长调理慢性胃炎、失眠及颈椎病。',
+      time: '周一、周三、周五 08:30-11:30',
+      image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=200&q=80'
+    },
+    {
+      name: '王爱民',
+      role: '全科医学 主治医师',
+      specialty: '高血压、糖尿病等慢性病管理，常见呼吸道感染诊治。',
+      time: '周二、周四 13:30-16:30，周六 09:00-12:00',
+      image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=200&q=80'
+    }
+  ];
+
+  return (
+    <div className="bg-[#F8FBFF] min-h-screen font-sans pb-10 relative">
+      <button 
+        onClick={onBack}
+        className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
+      >
+        <X size={20} />
+      </button>
+      <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-8 pt-12 text-white relative overflow-hidden">
+        <Activity size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
+        <div className="relative z-10">
+          <div className="inline-flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full mb-4 backdrop-blur-md">
+            <Stethoscope size={14} />
+            <span className="text-[10px] font-black tracking-widest uppercase">Community Clinic</span>
+          </div>
+          <h1 className="text-3xl font-black mb-2 tracking-tighter">社区智慧诊所</h1>
+          <p className="opacity-80 text-sm font-medium">守护邻里健康，让医疗服务更有温度</p>
+        </div>
+      </div>
+
+      <div className="p-6 -mt-6">
+        <div className="bg-white rounded-[2.5rem] p-6 shadow-xl shadow-blue-100 border border-blue-50/50 mb-8 space-y-6">
+          <div className="flex items-start justify-between">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-blue-50 text-blue-500 rounded-xl">
+                  <Clock size={18} />
+                </div>
+                <div>
+                   <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">上班时间</h3>
+                   <p className="text-xs font-bold text-gray-800">周一至周六 08:30-11:30, 13:30-17:00</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-green-50 text-green-500 rounded-xl">
+                  <Phone size={18} />
+                </div>
+                <div>
+                   <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">咨询电话</h3>
+                   <p className="text-xs font-bold text-gray-800">0471-6668888</p>
+                </div>
+              </div>
+            </div>
+            <a 
+              href="tel:0471-6668888" 
+              className="bg-blue-500 text-white p-4 rounded-2xl shadow-lg shadow-blue-100 active:scale-95 transition-transform"
+            >
+              <Phone size={20} fill="currentColor" />
+            </a>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="flex items-center space-x-2 px-2">
+            <div className="w-1.5 h-4 bg-blue-500 rounded-full" />
+            <h3 className="font-extrabold text-gray-900 text-sm">出诊大夫简介</h3>
+          </div>
+
+          <div className="grid gap-6">
+            {doctors.map((doc, i) => (
+              <div key={i} className="bg-white rounded-[2rem] p-5 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-5">
+                <div className="w-24 h-32 rounded-2xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100">
+                  <img src={doc.image} alt={doc.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 text-center sm:text-left">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:space-x-2 mb-2">
+                    <h4 className="text-lg font-black text-gray-900">{doc.name}</h4>
+                    <span className="text-[10px] font-bold text-blue-500 uppercase tracking-tight">{doc.role}</span>
+                  </div>
+                  <div className="bg-blue-50/50 rounded-xl p-3 mb-3">
+                    <p className="text-[10px] text-gray-600 leading-relaxed font-medium">
+                      <span className="text-blue-600 font-bold">专长：</span>{doc.specialty}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-center sm:justify-start space-x-2 text-[10px] text-orange-600 font-bold">
+                    <Calendar size={12} />
+                    <span>出诊：{doc.time}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-10 bg-slate-900 rounded-[2.5rem] p-6 text-white overflow-hidden relative group">
+           <Activity size={80} className="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-500" />
+           <h3 className="text-sm font-black mb-2">健康贴士</h3>
+           <p className="text-[10px] opacity-60 leading-relaxed italic">
+             “上工治未病”。建议居民每半年进行一次常规血压、血糖监测，预防胜于治疗。诊所提供免费基础体检咨询。
+           </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LegalAidPoster({ onBack }: { onBack: () => void }) {
+  const cases = [
+    { title: '遗产继承咨询', desc: '针对居民关心的房产及财产继承问题，提供专业法律指引，化解家庭矛盾。' },
+    { title: '物业维修调解', desc: '精选物业报修纠纷案例，通过法律视角中立核查，展现公正高效的援助实效。' }
+  ];
+
+  return (
+    <div className="bg-slate-900 min-h-screen text-slate-100 p-6 pb-20 font-sans relative">
+      <button 
+        onClick={onBack}
+        className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
+      >
+        <X size={20} />
+      </button>
+      <div className="text-center mb-10 pt-6">
+        <div className="inline-flex items-center space-x-2 text-slate-400 mb-2 font-black tracking-[0.3em] uppercase text-xs">
+          <Gavel size={16} />
+          <span>Community Legal Aid</span>
+        </div>
+        <h1 className="text-3xl font-black text-white tracking-tighter mb-2">社区免费法律援助</h1>
+        <p className="text-slate-400 text-[10px] font-bold">老缸房社区居民委员会 • 法律护航</p>
+      </div>
+
+      <div className="space-y-6">
+        <div className="flex items-center space-x-2 px-2">
+           <div className="w-1.5 h-4 bg-slate-400 rounded-full" />
+           <h3 className="font-extrabold text-slate-200 text-sm">援助典型案例</h3>
+        </div>
+        
+        <div className="grid gap-4">
+          {cases.map((c, i) => (
+            <div key={i} className="bg-slate-800/50 border border-slate-700/50 p-5 rounded-3xl backdrop-blur-sm">
+              <h4 className="text-white font-black text-sm mb-2">【案例】{c.title}</h4>
+              <p className="text-slate-400 text-[11px] leading-relaxed italic">{c.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8">
+           <div className="flex items-center space-x-2 px-2 mb-4">
+              <div className="w-1.5 h-4 bg-slate-400 rounded-full" />
+              <h3 className="font-extrabold text-slate-200 text-sm">李律师直通车</h3>
+           </div>
+           
+           <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700/60 p-6 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
+              <Gavel size={120} className="absolute -right-8 -bottom-8 opacity-[0.03] text-white transform -rotate-12 group-hover:scale-110 transition-transform duration-700" />
+              
+              <div className="relative z-10">
+                <div className="flex items-center space-x-4 mb-6">
+                   <div className="w-14 h-14 rounded-2xl bg-slate-700 border border-slate-600 flex items-center justify-center p-0.5 overflow-hidden">
+                      <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80" alt="李律师" className="w-full h-full object-cover" />
+                   </div>
+                   <div>
+                      <h4 className="text-white font-black text-lg">李华 律师</h4>
+                      <div className="text-[10px] text-slate-500 font-bold tracking-widest uppercase mb-0.5">Senior Legal Advisor</div>
+                   </div>
+                </div>
+                
+                <p className="text-slate-400 text-xs leading-relaxed mb-8">
+                  为您提供专业的婚姻家庭、遗产继承、合同纠纷、劳动争议等领域的法律服务。一站式解决您的烦心事。
+                </p>
+                
+                <a 
+                  href="tel:13312341234" 
+                  className="w-full bg-white text-slate-900 py-4 rounded-2xl font-black flex items-center justify-center space-x-3 active:scale-[0.98] transition-transform shadow-xl shadow-white/5"
+                >
+                  <Phone size={18} fill="currentColor" />
+                  <span>拨打李律师咨询电话</span>
+                </a>
+                
+                <div className="mt-4 flex items-center justify-center space-x-4 text-[9px] text-slate-600 font-bold uppercase tracking-tighter">
+                   <span>官方认证</span>
+                   <div className="w-1 h-1 rounded-full bg-slate-700" />
+                   <span>完全免费</span>
+                   <div className="w-1 h-1 rounded-full bg-slate-700" />
+                   <span>隐私合规</span>
+                </div>
+              </div>
+           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Service() {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | 'application' | null>(null);
+  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | 'application' | 'legal' | 'clinic' | 'charity' | 'canteen' | 'lifecircle' | null>(null);
+  const [activePurchase, setActivePurchase] = useState<any>(null);
+  const [customToast, setCustomToast] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
 
-  const filteredServices = activeCategory === 'all' 
-    ? SERVICES 
-    : SERVICES.filter(s => s.category === activeCategory);
-
-  const isActive = (service: any) => {
+  const isLit = (service: any) => {
     return (
       ('isPoster' in service && service.isPoster) || 
       ('posterType' in service && service.posterType === 'maintenance') || 
-      ('isApplication' in service && service.isApplication)
+      ('isApplication' in service && service.isApplication) ||
+      ('isLegalAid' in service && service.isLegalAid) ||
+      ('isClinic' in service && service.isClinic) ||
+      ('isCharityStore' in service && service.isCharityStore) ||
+      ('isCanteen' in service && service.isCanteen) ||
+      ('isLifeCircle' in service && service.isLifeCircle)
     );
   };
 
+  const filteredServices = (activeCategory === 'all' 
+    ? SERVICES 
+    : SERVICES.filter(s => s.category === activeCategory)
+  ).sort((a, b) => {
+    // Priority: Lit icons first
+    const aLit = isLit(a) ? 1 : 0;
+    const bLit = isLit(b) ? 1 : 0;
+    return bLit - aLit;
+  });
+
   const handleServiceClick = (service: any) => {
-    if ('isPoster' in service && service.isPoster) {
-      setActivePoster('elderly');
-    } else if ('posterType' in service && service.posterType === 'maintenance') {
-      setActivePoster('maintenance');
-    } else if ('isApplication' in service && service.isApplication) {
-      setActivePoster('application');
+    if (isLit(service)) {
+      if ('isPoster' in service && service.isPoster) {
+        setActivePoster('elderly');
+      } else if ('posterType' in service && service.posterType === 'maintenance') {
+        setActivePoster('maintenance');
+      } else if ('isApplication' in service && service.isApplication) {
+        setActivePoster('application');
+      } else if ('isLegalAid' in service && service.isLegalAid) {
+        setActivePoster('legal');
+      } else if ('isClinic' in service && service.isClinic) {
+        setActivePoster('clinic');
+      } else if ('isCharityStore' in service && service.isCharityStore) {
+        setActivePoster('charity');
+      } else if ('isCanteen' in service && service.isCanteen) {
+        setActivePoster('canteen');
+      } else if ('isLifeCircle' in service && service.isLifeCircle) {
+        setActivePoster('lifecircle');
+      } else {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2000);
+      }
     } else {
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 2000);
+      // Unlit icons handling
+      if (service.id === 3 || service.id === 5) {
+        setActivePurchase(service);
+      } else {
+        setCustomToast("功能未开通，开通请联系电话0471-6891234");
+        setTimeout(() => setCustomToast(null), 3000);
+      }
     }
   };
 
@@ -445,10 +1008,10 @@ export default function Service() {
               onClick={() => handleServiceClick(service)}
               className="flex flex-col items-center space-y-2 active:scale-95 transition-transform"
             >
-              <div className={`w-14 h-14 ${service.color} rounded-2xl flex items-center justify-center shadow-sm ${!isActive(service) ? 'grayscale contrast-50 opacity-60' : ''}`}>
+              <div className={`w-14 h-14 ${service.color} rounded-2xl flex items-center justify-center shadow-sm ${!isLit(service) ? 'grayscale contrast-50 opacity-60' : ''}`}>
                 <service.icon size={28} />
               </div>
-              <span className={`text-[11px] font-medium text-center leading-tight whitespace-pre-line ${!isActive(service) ? 'text-gray-400' : 'text-gray-600'}`}>
+              <span className={`text-[11px] font-medium text-center leading-tight whitespace-pre-line ${!isLit(service) ? 'text-gray-400' : 'text-gray-600'}`}>
                 {service.label}
               </span>
             </motion.button>
@@ -458,15 +1021,71 @@ export default function Service() {
 
       {/* Toast Notification */}
       <AnimatePresence>
-        {showToast && (
+        {(showToast || customToast) && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] bg-gray-800/90 text-white px-6 py-2.5 rounded-full text-xs font-bold backdrop-blur-md shadow-xl"
+            className="fixed bottom-24 left-4 right-4 z-[100] bg-gray-800/90 text-white px-6 py-3 rounded-2xl text-xs font-bold backdrop-blur-md shadow-xl text-center"
           >
-            🚧 该功能开发中...
+            {customToast || "🚧 该功能开发中..."}
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Purchase Modal */}
+      <AnimatePresence>
+        {activePurchase && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-[2.5rem] w-full max-w-sm overflow-hidden shadow-2xl"
+            >
+              <div className={`p-8 text-center ${activePurchase.color.split(' ')[0]} bg-opacity-20`}>
+                <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-sm text-gray-400 grayscale">
+                  <activePurchase.icon size={32} />
+                </div>
+                <h3 className="text-lg font-black text-gray-900 mb-1">{activePurchase.label.replace('\n', '')}</h3>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Premium Service</p>
+              </div>
+              
+              <div className="p-8 space-y-6">
+                <div className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between">
+                  <span className="text-xs font-bold text-gray-500">开通价格</span>
+                  <span className="text-sm font-black text-orange-600">
+                    {activePurchase.id === 3 ? "5000元/年" : "660元/单元门或出入门"}
+                  </span>
+                </div>
+                
+                <div className="flex items-start space-x-3 text-left">
+                  <div className="p-1 bg-blue-50 text-blue-500 rounded-full mt-0.5"><Activity size={12} /></div>
+                  <p className="text-[10px] text-gray-500 font-medium leading-relaxed text-balance">
+                    功能未开通，购买后即可开通。让您尽享智慧生活的便捷，我们的专业团队将即刻为您完成系统接入。
+                  </p>
+                </div>
+                
+                <div className="pt-2 space-y-3">
+                  <button 
+                    onClick={() => {
+                      alert("正在准备开通环境...");
+                      setActivePurchase(null);
+                    }}
+                    className="w-full bg-[#FF8C00] text-white py-4 rounded-2xl font-black text-sm shadow-lg shadow-orange-100 active:scale-95 transition-transform"
+                  >
+                    在线开通服务
+                  </button>
+                  <button 
+                    onClick={() => setActivePurchase(null)}
+                    className="w-full text-gray-400 py-2 text-xs font-bold hover:text-gray-600 transition-colors"
+                  >
+                    稍后再说
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
@@ -486,8 +1105,13 @@ export default function Service() {
               >
                 <X size={24} />
               </button>
-              {activePoster === 'elderly' && <ElderlyServicePoster />}
-              {activePoster === 'maintenance' && <SharedMaintenancePoster />}
+              {activePoster === 'elderly' && <ElderlyServicePoster onBack={() => setActivePoster(null)} />}
+              {activePoster === 'maintenance' && <SharedMaintenancePoster onBack={() => setActivePoster(null)} />}
+              {activePoster === 'legal' && <LegalAidPoster onBack={() => setActivePoster(null)} />}
+              {activePoster === 'clinic' && <CommunityClinicPoster onBack={() => setActivePoster(null)} />}
+              {activePoster === 'charity' && <DisabledSupportSupermarketPoster onBack={() => setActivePoster(null)} />}
+              {activePoster === 'canteen' && <CommunityCanteenPoster onBack={() => setActivePoster(null)} />}
+              {activePoster === 'lifecircle' && <LifeCirclePoster onBack={() => setActivePoster(null)} />}
               {activePoster === 'application' && (
                 <div className="bg-white min-h-screen">
                   <CommunityTalentApplication onBack={() => setActivePoster(null)} />

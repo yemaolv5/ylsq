@@ -70,15 +70,15 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
   ];
 
   const news = [
-    { id: 1, title: '老缸房社区开展“春季义诊”活动', type: '动态', time: '刚刚', image: 'https://images.unsplash.com/photo-1576091160550-2173599211d0?auto=format&fit=crop&w=400&q=80' },
+    { id: 1, title: '老缸房社区开展“春季义诊”活动', type: '动态', time: '刚刚', image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=600&q=80' },
     { id: 2, title: '社区智慧路灯全面升级完毕', type: '便民', time: '2小时前', image: 'https://images.unsplash.com/photo-1544376798-89aa6b82c6cd?auto=format&fit=crop&w=400&q=80' },
   ];
 
   const phones = [
-    { label: '物业服务', phone: '010-12345678' },
-    { label: '居委会', phone: '010-87654321' },
-    { label: '卫生站', phone: '010-11223344' },
-    { label: '安保中心', phone: '010-55667788' },
+    { label: '物业服务', phone: '0471-12345678' },
+    { label: '居委会', phone: '0471-87654321' },
+    { label: '卫生站', phone: '0471-11223344' },
+    { label: '安保中心', phone: '0471-55667788' },
   ];
 
   const seniorLinks = [
@@ -348,51 +348,70 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
             </div>
           </div>
         );
+      case 'legal_aid':
         return (
-          <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100 relative group">
+          <div className="bg-white rounded-[32px] p-6 shadow-md shadow-slate-100 border border-slate-50 relative group">
             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
-            <div className="flex items-center justify-between mb-4 px-1">
+            <div className="flex items-center justify-between mb-5 px-1">
               <div className="flex items-center space-x-2">
-                <div className="w-1 h-3.5 bg-slate-600 rounded-full" />
+                <div className="w-1.5 h-4 bg-slate-800 rounded-full" />
                 <h3 className="font-extrabold text-gray-900 text-sm">社区法律援助</h3>
               </div>
-              <button className="text-[10px] text-slate-400 font-bold">查看案例</button>
+              <span className="text-[10px] text-slate-500 bg-slate-50 px-2.5 py-1 rounded-lg font-bold tracking-tight">免费公益服务</span>
             </div>
             
-            <div className="grid grid-cols-1 gap-3 mb-5">
-              <div className="bg-slate-50/50 p-3 rounded-2xl border border-slate-100/50">
-                <div className="flex items-center space-x-2 mb-1.5">
-                  <Scale size={14} className="text-slate-600" />
-                  <span className="text-[11px] font-black text-slate-800 tracking-tight">典型案例：遗产继承咨询</span>
-                </div>
-                <p className="text-[10px] text-gray-400 leading-relaxed italic">协助起草合法遗嘱，成功规避潜在家庭财务纠纷。</p>
+            <div className="space-y-3 mb-6">
+              <div className="flex items-start space-x-3 bg-slate-50/80 p-3 rounded-2xl border border-slate-100/50">
+                 <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-slate-600 shadow-sm shrink-0">
+                    <Scale size={16} />
+                 </div>
+                 <div>
+                    <h4 className="text-[11px] font-black text-slate-800 mb-0.5">遗产继承咨询</h4>
+                    <p className="text-[10px] text-gray-500 leading-relaxed font-medium">针对财产继承提供专业指引，化解家庭矛盾，展现援助实效。</p>
+                 </div>
               </div>
-              <div className="bg-slate-50/50 p-3 rounded-2xl border border-slate-100/50">
-                <div className="flex items-center space-x-2 mb-1.5">
-                  <Scale size={14} className="text-slate-600" />
-                  <span className="text-[11px] font-black text-slate-800 tracking-tight">典型案例：物业维修调解</span>
-                </div>
-                <p className="text-[10px] text-gray-400 leading-relaxed italic">明确权责认定，促成业主与物业就漏水赔偿达成一致。</p>
+              <div className="flex items-start space-x-3 bg-slate-50/80 p-3 rounded-2xl border border-slate-100/50">
+                 <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-slate-600 shadow-sm shrink-0">
+                    <Scale size={16} />
+                 </div>
+                 <div>
+                    <h4 className="text-[11px] font-black text-slate-800 mb-0.5">物业维修调解</h4>
+                    <p className="text-[10px] text-gray-500 leading-relaxed font-medium">中立核查物业权责纠纷，促成公正赔偿，保障业主合法权益。</p>
+                 </div>
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-700 to-slate-900 rounded-2xl p-4 text-white flex items-center justify-between shadow-lg shadow-slate-100">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-md">
-                   <Gavel size={20} className="text-slate-100" />
+            <div className="bg-gradient-to-br from-slate-800 via-slate-900 to-black rounded-[32px] p-5 text-white flex flex-col relative overflow-hidden shadow-xl shadow-slate-200">
+              <Gavel size={100} className="absolute -right-6 -bottom-6 opacity-10 text-white transform -rotate-12" />
+              
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/10 overflow-hidden p-0.5">
+                   <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80" alt="" className="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <h4 className="font-black text-xs">李律师</h4>
-                  <p className="text-[9px] opacity-60 font-bold">金牌法律顾问</p>
+                  <h4 className="font-black text-sm tracking-tight flex items-center">
+                    李律师直通车
+                    <div className="ml-2 w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  </h4>
+                  <p className="text-[9px] opacity-50 font-bold uppercase tracking-widest">Lawyer Li Direct Line</p>
                 </div>
               </div>
+              
               <a 
                 href="tel:13312341234"
-                className="bg-white text-slate-900 px-3 py-2 rounded-xl text-[10px] font-black flex items-center space-x-1 active:scale-95 transition-transform"
+                className="w-full bg-white text-slate-900 py-3.5 rounded-2xl text-xs font-black flex items-center justify-center space-x-2 active:scale-[0.98] transition-transform shadow-lg shadow-white/5"
               >
-                <Phone size={12} fill="currentColor" />
-                <span>免费直拨咨询</span>
+                <Phone size={14} fill="currentColor" />
+                <span>一键直拨免费咨询</span>
               </a>
+              
+              <div className="mt-3 flex items-center justify-center space-x-3 text-[8px] text-slate-500 font-bold">
+                 <span>官方委派</span>
+                 <span className="opacity-20 text-white">|</span>
+                 <span>133-1234-1234</span>
+                 <span className="opacity-20 text-white">|</span>
+                 <span>隐私受保</span>
+              </div>
             </div>
           </div>
         );

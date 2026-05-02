@@ -163,10 +163,10 @@ function ActivityFeed() {
 
 function SecondhandFeed() {
   const items = [
-    { id: 1, title: '九成新儿童推车', price: 150, image: 'https://images.unsplash.com/photo-1591084728795-1149f32d9866?auto=format&fit=crop&w=200&q=80' },
-    { id: 2, title: '家用小烤箱', price: 80, image: 'https://images.unsplash.com/photo-1584286595398-a59f23d4b3ed?auto=format&fit=crop&w=200&q=80' },
-    { id: 3, title: '多肉盆栽', price: 15, image: 'https://images.unsplash.com/photo-1520302630591-fd1c66ed11ef?auto=format&fit=crop&w=200&q=80' },
-    { id: 4, title: '健身瑜伽垫', price: 30, image: 'https://images.unsplash.com/photo-1592175257781-816ae90297fe?auto=format&fit=crop&w=200&q=80' },
+    { id: 1, title: '全新新生婴儿游泳全套', price: 150, image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80' },
+    { id: 2, title: '家用小烤箱', price: 80, image: 'https://images.unsplash.com/photo-1544233726-9f1d2b27be8b?auto=format&fit=crop&w=400&q=80' },
+    { id: 3, title: '多肉盆栽', price: 15, image: 'https://images.unsplash.com/photo-1446071103084-c257b5f70672?auto=format&fit=crop&w=400&q=80' },
+    { id: 4, title: '健身瑜伽垫', price: 30, image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=400&q=80' },
   ];
 
   return (
