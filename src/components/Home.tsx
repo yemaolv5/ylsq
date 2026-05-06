@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
-import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical, Baby, LayoutGrid, Heart, Smartphone, Gavel, Scale, Wrench, X, Star, User } from 'lucide-react';
-import { motion, AnimatePresence, Reorder } from 'motion/react';
+import React, { useState, useEffect } from 'react';
+import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical, Baby, LayoutGrid, Heart, Smartphone, Gavel, Scale, Wrench, X, Star, Bell, FlaskConical, Calendar, Utensils, Camera, Coffee, Hotel, Store } from 'lucide-react';
+import { motion, AnimatePresence, Reorder, useDragControls, DragControls } from 'motion/react';
 
 interface Review {
   userName: string;
+// ... (rest of interfaces remain same)
   avatar: string;
   rating: number;
   content: string;
@@ -26,7 +27,139 @@ interface HomeProps {
   onToggleSeniorMode: () => void;
 }
 
-export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMode }: HomeProps) {
+// Sub-component for Senior Mode
+function HomeSenior({ onOpenSnapReport, onToggleSeniorMode, community, onToggleCommunity }: { onOpenSnapReport: () => void, onToggleSeniorMode: () => void, community: string, onToggleCommunity: () => void }) {
+  const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);
+
+  const seniorLinks = [
+    { label: '一键呼救', icon: Phone, color: 'bg-red-500 text-white', desc: '紧急联系人' },
+    { label: '助餐服务', icon: Heart, color: 'bg-orange-500 text-white', desc: '预约午餐' },
+    { label: '共享维修', icon: Wrench, color: 'bg-blue-600 text-white', desc: '疏通修灯' },
+    { label: '预约挂号', icon: ShieldCheck, color: 'bg-blue-500 text-white', desc: '医院就诊' },
+    { label: '随手拍', icon: Smartphone, color: 'bg-emerald-500 text-white', desc: '反映问题' },
+  ];
+
+  return (
+    <div className="flex flex-col h-full bg-[#FFF9F5] pb-24 overflow-y-auto">
+      <div className="bg-white px-6 pt-12 pb-6 flex items-center justify-between shadow-sm">
+        <div>
+          <h1 className="text-3xl font-black text-gray-900 leading-none">下午好</h1>
+          <p className="text-lg font-bold text-orange-500 mt-2">陈大文 老先生</p>
+        </div>
+        <button 
+          onClick={onToggleSeniorMode}
+          className="flex flex-col items-center space-y-1 bg-gray-100 p-3 rounded-2xl active:scale-95 transition-transform"
+        >
+          <LayoutGrid size={24} className="text-gray-500" />
+          <span className="text-xs font-bold text-gray-600">退出关怀</span>
+        </button>
+      </div>
+
+      <div className="px-6 py-6 space-y-6">
+        <div className="grid grid-cols-1 gap-4">
+          {seniorLinks.map((link, idx) => (
+            <motion.button
+              key={`senior-link-${idx}`}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                 if (link.label === '随手拍') onOpenSnapReport();
+                 if (link.label === '共享维修') setIsMaintenanceOpen(true);
+              }}
+              className={`${link.color} p-6 rounded-[32px] flex items-center shadow-xl shadow-gray-200/50`}
+            >
+              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mr-6">
+                <link.icon size={40} />
+              </div>
+              <div className="text-left">
+                <div className="text-2xl font-black">{link.label}</div>
+                <div className="text-sm font-bold opacity-80 mt-1">{link.desc}</div>
+              </div>
+              <ChevronRight className="ml-auto opacity-50" size={24} />
+            </motion.button>
+          ))}
+        </div>
+
+        <div className="bg-white p-6 rounded-[32px] border-2 border-orange-100">
+           <h3 className="text-xl font-black text-gray-800 mb-4 flex items-center">
+              <div className="w-2 h-6 bg-orange-500 rounded-full mr-2" />
+              我的日常
+           </h3>
+           <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-orange-50 rounded-2xl">
+                 <div className="flex items-center space-x-3">
+                    <span className="text-2xl">🥘</span>
+                    <span className="text-lg font-bold">今日午餐(已订)</span>
+                 </div>
+                 <span className="text-orange-600 font-bold">11:30送达</span>
+              </div>
+              <div className="flex items-center justify-between p-4 bg-blue-50 rounded-2xl">
+                 <div className="flex items-center space-x-3">
+                    <span className="text-2xl">💊</span>
+                    <span className="text-lg font-bold">餐后服药提醒</span>
+                 </div>
+                 <span className="text-blue-600 font-bold">13:00</span>
+              </div>
+           </div>
+        </div>
+      </div>
+
+      <div className="px-6 pb-10">
+         <button className="w-full bg-white border-4 border-orange-500 text-orange-600 py-6 rounded-[32px] text-2xl font-black shadow-lg">
+            一键呼叫社区热线
+         </button>
+      </div>
+
+      {/* Maintenance Modal for Seniors */}
+      <AnimatePresence>
+        {isMaintenanceOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-white flex flex-col p-6 overflow-y-auto"
+          >
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-3xl font-black text-gray-900">维修价目表</h2>
+              <button onClick={() => setIsMaintenanceOpen(false)} className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="space-y-8 pb-32">
+               <div className="space-y-4">
+                  <h3 className="text-xl font-black text-blue-600">电路灯具类</h3>
+                  <div className="bg-white rounded-3xl border-2 border-gray-100 divide-y divide-gray-100">
+                     <div className="p-4 flex justify-between items-center"><span className="font-bold">换普通灯泡</span><span className="font-black text-xl">¥10</span></div>
+                     <div className="p-4 flex justify-between items-center"><span className="font-bold">换开关插座</span><span className="font-black text-xl">¥25</span></div>
+                     <div className="p-4 flex justify-between items-center"><span className="font-bold">换客厅大灯</span><span className="font-black text-xl">¥40</span></div>
+                  </div>
+               </div>
+
+               <div className="space-y-4">
+                  <h3 className="text-xl font-black text-blue-600">水路卫浴类</h3>
+                  <div className="bg-white rounded-3xl border-2 border-gray-100 divide-y divide-gray-100">
+                     <div className="p-4 flex justify-between items-center"><span className="font-bold">换水龙头</span><span className="font-black text-xl">¥30</span></div>
+                     <div className="p-4 flex justify-between items-center"><span className="font-bold">疏通马桶</span><span className="font-black text-xl">¥70</span></div>
+                     <div className="p-4 flex justify-between items-center"><span className="font-bold">换花洒套装</span><span className="font-black text-xl">¥70</span></div>
+                  </div>
+               </div>
+            </div>
+
+            <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-100">
+               <a href="tel:15548837989" className="w-full bg-blue-600 text-white py-6 rounded-[32px] text-2xl font-black flex items-center justify-center space-x-3 shadow-xl">
+                  <Phone size={28} fill="currentColor" />
+                  <span>呼叫维修师傅</span>
+               </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// Sub-component for Default Mode
+function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggleCommunity }: { onOpenSnapReport: () => void, onToggleSeniorMode: () => void, community: string, onToggleCommunity: () => void }) {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [sections, setSections] = useState([
     'property_governance',
@@ -39,55 +172,162 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
     'discussion',
     'phone_dial'
   ]);
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [showIntroModal, setShowIntroModal] = useState(false);
+  const [showPropertyModal, setShowPropertyModal] = useState(false);
 
-  const banners = [
-    {
-      id: 1,
-      title: '智慧社区 · 温暖邻里',
-      desc: '科技赋能，让社区生活更美好',
-      image: 'https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=600&q=80'
+  // Dynamic Content Data
+  const COMMUNITY_DATA: Record<string, { banners: any[], news: any[], announcement: string }> = {
+    '亿利社区': {
+      banners: [
+        { id: 1, title: '亿利社区 · 红色物业', desc: '打造全区红色物业示范标杆', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80' },
+        { id: 2, title: '暖心亿利 · 智慧邻里', desc: '科技赋能，让家园更有温度', image: 'https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=600&q=80' }
+      ],
+      news: [
+        { id: 1, title: '亿利社区党群服务中心正式挂牌', type: '动态', time: '刚刚', image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=600&q=80' },
+        { id: 2, title: '亿利生态城开展垃圾分类宣传周', type: '环保', time: '5小时前', image: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=600&q=80' }
+      ],
+      announcement: '关于亿利生态城西区高空抛物监控安装公示...'
     },
-    {
-      id: 2,
-      title: '全心全意 · 为民服务',
-      desc: '您的满意是我们最大的追求',
-      image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=600&q=80'
+    '老缸房社区': {
+      banners: [
+        { id: 1, title: '老缸房社区 · 守望相助', desc: '千年古韵，和谐新里', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=600&q=80' },
+        { id: 2, title: '春季义诊 · 关爱健康', desc: '社区卫生站免费为居民体检', image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=600&q=80' }
+      ],
+      news: [
+        { id: 1, title: '老缸房社区开展“春季义诊”活动', type: '动态', time: '1天前', image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=600&q=80' },
+        { id: 2, title: '社区智慧路灯全面升级完毕', type: '便民', time: '2小时前', image: 'https://images.unsplash.com/photo-1544376798-89aa6b82c6cd?auto=format&fit=crop&w=400&q=80' }
+      ],
+      announcement: '老缸房社区卫生服务站本周六接种提醒...'
+    },
+    '滨河路社区': {
+      banners: [
+        { id: 1, title: '滨河路社区 · 滨水生活', desc: '乐享优美环境，共建绿色社区', image: 'https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?auto=format&fit=crop&w=600&q=80' },
+        { id: 2, title: '滨河步道 · 活力社区', desc: '倡导绿色出行，共商社区事', image: 'https://images.unsplash.com/photo-1519337265831-281ec6cc8514?auto=format&fit=crop&w=600&q=80' }
+      ],
+      news: [
+        { id: 1, title: '滨河路社区滨水步道清理行动', type: '志愿', time: '刚刚', image: 'https://images.unsplash.com/photo-1493246507139-91e8bef99c1e?auto=format&fit=crop&w=600&q=80' },
+        { id: 2, title: '滨河路社区召开居民议事会', type: '治理', time: '4小时前', image: 'https://images.unsplash.com/photo-1543269664-76bc3997d9ea?auto=format&fit=crop&w=600&q=80' }
+      ],
+      announcement: '滨河路社区近期河道保洁通知...'
     }
-  ];
+  };
+
+  const activeData = COMMUNITY_DATA[community] || COMMUNITY_DATA['亿利社区'];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentBanner((prev) => (prev + 1) % banners.length);
+      setCurrentBanner((prev) => (prev + 1) % (activeData.banners.length || 1));
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [activeData.banners.length]);
 
   const quickLinks = [
-    { id: 1, label: '随手拍', icon: CameraIcon, color: 'bg-blue-50 text-blue-500' },
+    { id: 1, label: '随手拍', icon: Camera, color: 'bg-blue-50 text-blue-500' },
     { id: 2, label: '物业三双', icon: ShieldCheck, color: 'bg-red-50 text-red-500' },
-    { id: 3, label: '物业缴费', icon: CreditCard, color: 'bg-orange-50 text-orange-500' },
-    { id: 4, label: '访客通行', icon: Key, color: 'bg-green-50 text-green-500' },
+    { id: 3, label: '社区简介', isIntro: true, color: 'bg-red-50 text-red-600' },
+    { id: 4, label: '辖区物业', isProperty: true, color: 'bg-green-50 text-green-500' },
     { id: 5, label: '科普入口', icon: Microscope, color: 'bg-purple-50 text-purple-500' },
   ];
 
-  const news = [
-    { id: 1, title: '老缸房社区开展“春季义诊”活动', type: '动态', time: '刚刚', image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=600&q=80' },
-    { id: 2, title: '社区智慧路灯全面升级完毕', type: '便民', time: '2小时前', image: 'https://images.unsplash.com/photo-1544376798-89aa6b82c6cd?auto=format&fit=crop&w=400&q=80' },
+  const propertyCompanies = [
+    {
+      id: 1,
+      name: '呼和浩特市鼎欣物业服务有限责任公司',
+      neighborhoods: ['蒙元骑士城二期'],
+      manager: '张经理',
+      phone: '13500001111',
+      hotline: '0471-1234567',
+      fee: '1.98元/㎡/月',
+      standard: '国家一级物业服务标准，全天候全方位安保巡视，急修15分钟到场。'
+    },
+    {
+      id: 2,
+      name: '内蒙古万家互联物业服务有限公司',
+      neighborhoods: ['工商小区', '环保小区'],
+      manager: '李经理',
+      phone: '13611112222',
+      hotline: '0471-2233445',
+      fee: '1.50元/㎡/月',
+      standard: '智慧化管理模式，注重环境绿化维护及公区设施定期精细保养。'
+    },
+    {
+      id: 3,
+      name: '内蒙古泽信物业服务有限公司',
+      neighborhoods: ['希望阳光苑'],
+      manager: '赵经理',
+      phone: '13722223333',
+      hotline: '0471-3344556',
+      fee: '2.10元/㎡/月',
+      standard: '管家式服务体系，高频家庭入户关怀，定期开展社区文化品牌活动。'
+    },
+    {
+      id: 4,
+      name: '金威物业服务有限公司呼和浩特分公司',
+      neighborhoods: ['亿利生态城西区', '亿利生态城东区'],
+      manager: '王经理',
+      phone: '13833334444',
+      hotline: '0471-4455667',
+      fee: '2.20元/㎡/月',
+      standard: '高端生态社区保障，数字化报修系统，绿色环保化深度公区保洁。'
+    },
+    {
+      id: 5,
+      name: '呼和浩特市博凯物业服务有限公司',
+      neighborhoods: ['统计小区'],
+      manager: '刘经理',
+      phone: '13944445555',
+      hotline: '0471-5566778',
+      fee: '1.20元/㎡/月',
+      standard: '针对老旧小区优化管理，专注于基础安防升级与老旧管网应急抢修。'
+    }
   ];
+
+  const PartyIcon = () => (
+    <div className="relative w-14 h-14 flex items-center justify-center scale-125 -mt-3">
+      {/* Glow Effect */}
+      <div className="absolute inset-0 bg-red-400/20 blur-xl rounded-full animate-pulse" />
+      
+      {/* Four Red Petals (Teardrop shape) */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        {[45, 135, 225, 315].map((rotate, i) => (
+          <div 
+            key={i}
+            className="absolute w-8 h-12 bg-gradient-to-t from-red-700 via-red-600 to-red-500 rounded-[50%_50%_50%_50%_/_60%_60%_40%_40%] shadow-lg border border-red-800/20"
+            style={{ 
+              transform: `rotate(${rotate}deg) translateY(-12px)`,
+              boxShadow: 'inset 0 4px 8px rgba(0,0,0,0.2)'
+            }}
+          />
+        ))}
+      </div>
+      
+      {/* Center Golden Circle with Detailed Hammer and Sickle */}
+      <div className="relative w-9 h-9 bg-gradient-to-br from-yellow-300 via-yellow-500 to-orange-600 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.3)] border-2 border-yellow-200 z-10 overflow-hidden">
+        <svg viewBox="0 0 1024 1024" className="w-6 h-6 text-yellow-100 fill-current drop-shadow-md">
+          <path d="M885.6 304c-15.2-46.4-144.8-196-418.4-131.2 56 34.4 122.4 104.8 152.8 181.6 32 80.8 28.8 178.4-44 268-71.2-74.4-160-128.8-251.2-128.8-82.4 0-149.6 44.8-144.8 132 2.4 39.2 18.4 83.2 44.8 110.4 46.4 48 116.8 51.2 166.4 20l173.6 173.6 92-92-172-172c76-80 120-176.8 111.2-272 56 46.4 80.8 104.8 89.6 140.8z"/>
+          <rect x="180" y="700" width="150" height="300" transform="rotate(45 255 850)" />
+        </svg>
+        {/* Subtle shine effect */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent pointer-events-none" />
+      </div>
+
+      {/* Sparkles approximation */}
+      <div className="absolute inset-x-0 top-0 flex justify-center">
+         <div className="w-1 h-1 bg-white rounded-full animate-ping opacity-70" style={{ animationDelay: '0.2s' }} />
+      </div>
+      <div className="absolute inset-y-0 right-0 flex items-center">
+         <div className="w-1 h-1 bg-white rounded-full animate-ping opacity-70" style={{ animationDelay: '0.5s' }} />
+      </div>
+    </div>
+  );
 
   const phones = [
     { label: '物业服务', phone: '0471-12345678' },
     { label: '居委会', phone: '0471-87654321' },
     { label: '卫生站', phone: '0471-11223344' },
     { label: '安保中心', phone: '0471-55667788' },
-  ];
-
-  const seniorLinks = [
-    { label: '一键呼救', icon: Phone, color: 'bg-red-500 text-white', desc: '紧急联系人' },
-    { label: '助餐服务', icon: Heart, color: 'bg-orange-500 text-white', desc: '预约午餐' },
-    { label: '共享维修', icon: Wrench, color: 'bg-blue-600 text-white', desc: '疏通修灯' },
-    { label: '预约挂号', icon: ShieldCheck, color: 'bg-blue-500 text-white', desc: '医院就诊' },
-    { label: '随手拍', icon: Smartphone, color: 'bg-emerald-500 text-white', desc: '反映问题' },
   ];
 
   const sharedProviders: Provider[] = [
@@ -127,137 +367,19 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
     }
   ];
 
-  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
-  const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);
+  const renderSection = (id: string, dragControls?: DragControls) => {
+    const handleProps = dragControls ? {
+       onPointerDown: (e: React.PointerEvent) => dragControls.start(e),
+       className: "absolute top-4 right-4 p-2 cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-600 transition-colors z-20"
+    } : {
+       className: "absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity"
+    };
 
-  if (isSeniorMode) {
-    return (
-      <div className="flex flex-col h-full bg-[#FFF9F5] pb-24 overflow-y-auto">
-        <div className="bg-white px-6 pt-12 pb-6 flex items-center justify-between shadow-sm">
-          <div>
-            <h1 className="text-3xl font-black text-gray-900 leading-none">下午好</h1>
-            <p className="text-lg font-bold text-orange-500 mt-2">陈大文 老先生</p>
-          </div>
-          <button 
-            onClick={onToggleSeniorMode}
-            className="flex flex-col items-center space-y-1 bg-gray-100 p-3 rounded-2xl active:scale-95 transition-transform"
-          >
-            <LayoutGrid size={24} className="text-gray-500" />
-            <span className="text-xs font-bold text-gray-600">退出关怀</span>
-          </button>
-        </div>
-
-        <div className="px-6 py-6 space-y-6">
-          <div className="grid grid-cols-1 gap-4">
-            {seniorLinks.map((link, idx) => (
-              <motion.button
-                key={idx}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => {
-                   if (link.label === '随手拍') onOpenSnapReport();
-                   if (link.label === '共享维修') setIsMaintenanceOpen(true);
-                }}
-                className={`${link.color} p-6 rounded-[32px] flex items-center shadow-xl shadow-gray-200/50`}
-              >
-                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mr-6">
-                  <link.icon size={40} />
-                </div>
-                <div className="text-left">
-                  <div className="text-2xl font-black">{link.label}</div>
-                  <div className="text-sm font-bold opacity-80 mt-1">{link.desc}</div>
-                </div>
-                <ChevronRight className="ml-auto opacity-50" size={24} />
-              </motion.button>
-            ))}
-          </div>
-
-          <div className="bg-white p-6 rounded-[32px] border-2 border-orange-100">
-             <h3 className="text-xl font-black text-gray-800 mb-4 flex items-center">
-                <div className="w-2 h-6 bg-orange-500 rounded-full mr-2" />
-                我的日常
-             </h3>
-             <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-orange-50 rounded-2xl">
-                   <div className="flex items-center space-x-3">
-                      <span className="text-2xl">🥘</span>
-                      <span className="text-lg font-bold">今日午餐(已订)</span>
-                   </div>
-                   <span className="text-orange-600 font-bold">11:30送达</span>
-                </div>
-                <div className="flex items-center justify-between p-4 bg-blue-50 rounded-2xl">
-                   <div className="flex items-center space-x-3">
-                      <span className="text-2xl">💊</span>
-                      <span className="text-lg font-bold">餐后服药提醒</span>
-                   </div>
-                   <span className="text-blue-600 font-bold">13:00</span>
-                </div>
-             </div>
-          </div>
-        </div>
-
-        <div className="px-6 pb-10">
-           <button className="w-full bg-white border-4 border-orange-500 text-orange-600 py-6 rounded-[32px] text-2xl font-black shadow-lg">
-              一键呼叫社区热线
-           </button>
-        </div>
-
-        {/* Maintenance Modal for Seniors */}
-        <AnimatePresence>
-          {isMaintenanceOpen && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] bg-white flex flex-col p-6 overflow-y-auto"
-            >
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-3xl font-black text-gray-900">维修价目表</h2>
-                <button onClick={() => setIsMaintenanceOpen(false)} className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                  <X size={24} />
-                </button>
-              </div>
-
-              <div className="space-y-8 pb-32">
-                 <div className="space-y-4">
-                    <h3 className="text-xl font-black text-blue-600">电路灯具类</h3>
-                    <div className="bg-white rounded-3xl border-2 border-gray-100 divide-y divide-gray-100">
-                       <div className="p-4 flex justify-between items-center"><span className="font-bold">换普通灯泡</span><span className="font-black text-xl">¥10</span></div>
-                       <div className="p-4 flex justify-between items-center"><span className="font-bold">换开关插座</span><span className="font-black text-xl">¥25</span></div>
-                       <div className="p-4 flex justify-between items-center"><span className="font-bold">换客厅大灯</span><span className="font-black text-xl">¥40</span></div>
-                    </div>
-                 </div>
-
-                 <div className="space-y-4">
-                    <h3 className="text-xl font-black text-blue-600">水路卫浴类</h3>
-                    <div className="bg-white rounded-3xl border-2 border-gray-100 divide-y divide-gray-100">
-                       <div className="p-4 flex justify-between items-center"><span className="font-bold">换水龙头</span><span className="font-black text-xl">¥30</span></div>
-                       <div className="p-4 flex justify-between items-center"><span className="font-bold">疏通马桶</span><span className="font-black text-xl">¥70</span></div>
-                       <div className="p-4 flex justify-between items-center"><span className="font-bold">换花洒套装</span><span className="font-black text-xl">¥70</span></div>
-                    </div>
-                 </div>
-              </div>
-
-              <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-100">
-                 <a href="tel:15548837989" className="w-full bg-blue-600 text-white py-6 rounded-[32px] text-2xl font-black flex items-center justify-center space-x-3 shadow-xl">
-                    <Phone size={28} fill="currentColor" />
-                    <span>呼叫维修师傅</span>
-                 </a>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    );
-  }
-
-  const [showQrModal, setShowQrModal] = useState(false);
-
-  const renderSection = (id: string) => {
     switch (id) {
       case 'property_governance':
         return (
           <div className="bg-white p-4 rounded-3xl shadow-md shadow-red-50/50 border border-red-50 relative group">
-            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
+            <div {...handleProps}><GripVertical size={18} /></div>
             <div className="flex items-center justify-between mb-3 px-1">
                <div className="flex items-center space-x-2">
                   <div className="w-1 h-3.5 bg-red-500 rounded-full" />
@@ -271,7 +393,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
                  { label: '双公开', desc: '收支透明公示', icon: '📊' },
                  { label: '双履约', desc: '企民合规监管', icon: '📝' }
                ].map((item, i) => (
-                 <div key={i} className="bg-gray-50/50 rounded-2xl p-2 text-center border border-gray-50">
+                 <div key={`property-item-${i}`} className="bg-gray-50/50 rounded-2xl p-2 text-center border border-gray-50">
                     <div className="text-lg mb-1">{item.icon}</div>
                     <div className="text-[11px] font-black text-gray-800">{item.label}</div>
                     <div className="text-[8px] text-gray-400 mt-0.5 leading-tight">{item.desc}</div>
@@ -287,7 +409,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
       case 'hot_services':
         return (
           <div className="bg-white p-4 rounded-3xl shadow-md shadow-orange-50/30 border border-orange-50/50 relative group">
-            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
+            <div {...handleProps}><GripVertical size={18} /></div>
             <div className="flex items-center justify-between mb-4 px-1">
                <div className="flex items-center space-x-2">
                   <div className="w-1 h-3.5 bg-[#FF8C00] rounded-full" />
@@ -297,13 +419,13 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
             </div>
             <div className="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
                {[
-                 { label: '小小科学家', icon: FlaskConicalIcon, color: 'bg-cyan-50 text-cyan-500' },
-                 { label: '活动报名', icon: CalendarIcon, color: 'bg-blue-50 text-blue-500' },
-                 { label: '物业报修', icon: WrenchIcon, color: 'bg-red-50 text-red-500' },
-                 { label: '场地预约', icon: MapPinIcon, color: 'bg-indigo-50 text-indigo-500' },
-                 { label: '社区食堂', icon: UtensilsIcon, color: 'bg-yellow-50 text-yellow-600' }
+                 { label: '小小科学家', icon: FlaskConical, color: 'bg-cyan-50 text-cyan-500' },
+                 { label: '活动报名', icon: Calendar, color: 'bg-blue-50 text-blue-500' },
+                 { label: '物业报修', icon: Wrench, color: 'bg-red-50 text-red-500' },
+                 { label: '场地预约', icon: MapPin, color: 'bg-indigo-50 text-indigo-500' },
+                 { label: '社区食堂', icon: Utensils, color: 'bg-yellow-50 text-yellow-600' }
                ].map((item, i) => (
-                 <div key={i} className="flex-shrink-0 flex flex-col items-center relative group">
+                 <div key={`hot-service-${i}`} className="flex-shrink-0 flex flex-col items-center relative group">
                     <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center shadow-sm relative`}>
                        <item.icon size={28} />
                        <div className={`absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-black shadow-sm ${
@@ -321,7 +443,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
       case 'volunteer_recruitment':
         return (
           <div className="bg-emerald-900 rounded-[32px] p-6 text-white relative overflow-hidden shadow-xl shadow-emerald-100 group">
-            <div className="absolute top-4 right-4 opacity-30 group-hover:opacity-50 transition-opacity"><GripVertical size={16} /></div>
+            <div {...handleProps}><GripVertical size={18} /></div>
             <Heart size={140} className="absolute -right-10 -bottom-10 opacity-10 rotate-12" />
             
             <div className="relative z-10 flex flex-col h-full">
@@ -338,9 +460,9 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
                   { title: '关爱孤寡', img: 'https://images.unsplash.com/photo-1579208570378-8c970854bc23?auto=format&fit=crop&w=200&q=80' },
                   { title: '文明引导', img: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=200&q=80' }
                 ].map((act, i) => (
-                  <div key={i} className="flex-shrink-0 w-28 text-center">
+                  <div key={`vol-act-${i}`} className="flex-shrink-0 w-28 text-center">
                     <div className="h-20 rounded-2xl overflow-hidden mb-1.5 ring-2 ring-white/10">
-                      <img src={act.img} className="w-full h-full object-cover" alt="" />
+                      <img src={act.img} className="w-full h-full object-cover" alt="" referrerPolicy="no-referrer" />
                     </div>
                     <span className="text-[10px] font-bold opacity-80">{act.title}</span>
                   </div>
@@ -369,7 +491,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
       case 'shared_providers':
         return (
           <div className="bg-white p-4 rounded-3xl shadow-md border border-gray-100 relative group">
-            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
+            <div {...handleProps}><GripVertical size={18} /></div>
             <div className="flex items-center justify-between mb-4 px-1">
               <div className="flex items-center space-x-2">
                 <div className="w-1 h-3.5 bg-blue-500 rounded-full" />
@@ -381,7 +503,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
             <div className="grid grid-cols-3 gap-3">
               {sharedProviders.map((provider) => (
                 <button 
-                  key={provider.id}
+                  key={`provider-${provider.id}`}
                   onClick={() => setSelectedProvider(provider)}
                   className="flex flex-col items-center group active:scale-95 transition-transform"
                 >
@@ -402,7 +524,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
       case 'legal_aid':
         return (
           <div className="bg-white rounded-[32px] p-6 shadow-md shadow-slate-100 border border-slate-50 relative group">
-            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
+            <div {...handleProps}><GripVertical size={18} /></div>
             <div className="flex items-center justify-between mb-5 px-1">
               <div className="flex items-center space-x-2">
                 <div className="w-1.5 h-4 bg-slate-800 rounded-full" />
@@ -437,7 +559,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
               
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/10 overflow-hidden p-0.5">
-                   <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80" alt="" className="w-full h-full object-cover" />
+                   <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80" alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                 </div>
                 <div>
                   <h4 className="font-black text-sm tracking-tight flex items-center">
@@ -469,16 +591,16 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
       case 'announcements':
         return (
           <div className="relative bg-[#FF8C00]/10 rounded-2xl overflow-hidden border border-[#FF8C00]/20 flex items-center p-3 px-4 group">
-            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={12} /></div>
+            <div {...handleProps}><GripVertical size={16} /></div>
             <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#FF8C00] mr-3 shrink-0 shadow-sm">
-               <BellIcon size={16} />
+               <Bell size={16} />
             </div>
             <div className="flex-1 truncate">
               <div className="flex items-center space-x-2 mb-0.5">
                 <span className="text-[10px] bg-[#FF8C00] text-white px-1.5 py-0.5 rounded font-bold">公告</span>
                 <span className="text-xs font-bold text-[#FF8C00]">今日头条</span>
               </div>
-              <p className="text-xs text-gray-700 font-medium truncate">关于本周三社区停水检修的通知...</p>
+              <p className="text-xs text-gray-700 font-medium truncate">{activeData.announcement}</p>
             </div>
             <ChevronRight size={14} className="text-[#FF8C00] opacity-50 ml-2" />
           </div>
@@ -486,7 +608,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
       case 'community_dynamics':
         return (
           <div className="space-y-3.5 relative group">
-            <div className="absolute -top-1 right-1 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
+            <div {...handleProps}><GripVertical size={18} /></div>
             <div className="flex justify-between items-center px-1">
                <div className="flex items-center space-x-2">
                  <div className="w-1 h-4 bg-green-500 rounded-full" />
@@ -495,8 +617,8 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
                <button className="text-[10px] text-gray-400 font-bold hover:text-[#FF8C00]">查看更多</button>
             </div>
             <div className="space-y-3">
-               {news.map(item => (
-                 <div key={item.id} className="bg-white p-3 rounded-2xl flex space-x-3 border border-gray-50 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] overflow-hidden transition-transform active:scale-[0.99]">
+               {activeData.news.map(item => (
+                 <div key={`news-item-${item.id}`} className="bg-white p-3 rounded-2xl flex space-x-3 border border-gray-50 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] overflow-hidden transition-transform active:scale-[0.99]">
                     <img src={item.image} className="w-20 h-20 rounded-xl object-cover shrink-0" alt="" referrerPolicy="no-referrer" />
                     <div className="flex flex-col justify-between py-1 flex-1">
                        <div>
@@ -509,7 +631,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
                        <div className="flex items-center justify-between mt-auto">
                           <div className="flex -space-x-1.5">
                             {[1,2,3].map(i => (
-                              <div key={i} className="w-5 h-5 rounded-full border-2 border-white bg-gray-100 overflow-hidden shadow-sm">
+                              <div key={`avatar-${item.id}-${i}`} className="w-5 h-5 rounded-full border-2 border-white bg-gray-100 overflow-hidden shadow-sm">
                                 <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i+20}`} className="w-full h-full" alt="" referrerPolicy="no-referrer" />
                               </div>
                             ))}
@@ -525,7 +647,7 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
       case 'discussion':
         return (
           <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 relative group">
-            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
+            <div {...handleProps}><GripVertical size={18} /></div>
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold text-gray-900 border-l-4 border-[#FF8C00] pl-3">社区议事厅</h3>
               <button className="text-[10px] text-gray-400 flex items-center">更多 <ChevronRight size={12} /></button>
@@ -541,14 +663,14 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
         );
       case 'phone_dial':
         return (
-          <div className="space-y-3 relative group">
-            <div className="absolute top-0 right-1 opacity-0 group-hover:opacity-30 transition-opacity"><GripVertical size={16} /></div>
+          <div className="space-y-3.5 relative group">
+            <div {...handleProps}><GripVertical size={18} /></div>
             <div className="flex justify-between items-center px-1">
               <h3 className="font-bold text-gray-900 text-sm">便民电话速拨</h3>
             </div>
             <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
               {phones.map((item, idx) => (
-                 <button key={idx} className="flex-shrink-0 flex items-center bg-white px-4 py-3 rounded-2xl shadow-sm border border-gray-50 space-x-3 active:bg-gray-50 transition-colors">
+                 <button key={`phone-link-${idx}`} className="flex-shrink-0 flex items-center bg-white px-4 py-3 rounded-2xl shadow-sm border border-gray-50 space-x-3 active:bg-gray-50 transition-colors">
                     <div className="w-8 h-8 bg-green-50 text-green-500 rounded-full flex items-center justify-center">
                       <Phone size={16} />
                     </div>
@@ -566,18 +688,37 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
     }
   };
 
+  const DraggableSectionItem = ({ sectionId }: { sectionId: string, key?: string }) => {
+    const dragControls = useDragControls();
+    return (
+      <Reorder.Item 
+        value={sectionId}
+        dragListener={false}
+        dragControls={dragControls}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        {renderSection(sectionId, dragControls)}
+      </Reorder.Item>
+    );
+  };
+
   return (
     <div className="p-4 space-y-6">
-      {/* Fixed: Header: Location & Weather */}
+      {/* Header: Location & Weather */}
       <div className="flex justify-between items-center bg-white p-3 px-4 rounded-2xl shadow-sm border border-gray-50">
-        <div className="flex items-center space-x-3 text-gray-800">
+        <div 
+          onClick={onToggleCommunity}
+          className="flex items-center space-x-3 text-gray-800 cursor-pointer active:opacity-70 transition-opacity"
+        >
           <div className="bg-orange-50 p-1.5 rounded-lg">
             <MapPin size={20} className="text-[#FF8C00]" />
           </div>
           <div className="flex flex-col justify-center">
             <span className="text-base font-extrabold text-[#FF8C00] leading-none mb-1">为民服务</span>
             <div className="flex items-center space-x-1">
-              <span className="font-bold text-xs text-gray-500 tracking-tight">老缸房社区</span>
+              <span className="font-bold text-xs text-gray-500 tracking-tight">{community}</span>
               <span className="text-[9px] bg-gray-100 px-1 py-0.5 rounded text-gray-400 font-normal">自动定位</span>
             </div>
           </div>
@@ -594,61 +735,249 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
         </button>
       </div>
 
-      {/* Fixed: Banner Carousel */}
+      {/* Banner Carousel */}
       <div className="relative h-44 rounded-3xl overflow-hidden shadow-lg shadow-orange-100/50">
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentBanner}
+            key={`banner-${currentBanner}`}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.5 }}
             className="absolute inset-0"
           >
-            <img src={banners[currentBanner].image} className="w-full h-full object-cover" alt="" referrerPolicy="no-referrer" />
+            <img src={activeData.banners[currentBanner].image} className="w-full h-full object-cover" alt="" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-5 text-white">
-               <h3 className="text-lg font-extrabold tracking-tight">{banners[currentBanner].title}</h3>
-               <p className="text-xs text-gray-100 mt-1.5 font-medium opacity-90">{banners[currentBanner].desc}</p>
+               <h3 className="text-lg font-extrabold tracking-tight">{activeData.banners[currentBanner].title}</h3>
+               <p className="text-xs text-gray-100 mt-1.5 font-medium opacity-90">{activeData.banners[currentBanner].desc}</p>
             </div>
           </motion.div>
         </AnimatePresence>
         <div className="absolute bottom-4 left-5 flex space-x-1.5">
-          {banners.map((_, i) => (
-            <div key={i} className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === currentBanner ? 'bg-[#FF8C00] w-4' : 'bg-white/60'}`} />
+          {activeData.banners.map((_, i) => (
+            <div key={`dot-${i}`} className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === currentBanner ? 'bg-[#FF8C00] w-4' : 'bg-white/60'}`} />
           ))}
         </div>
       </div>
 
-      {/* Fixed: Quick Access Grid */}
+      {/* Quick Access Grid */}
       <div className="grid grid-cols-5 gap-2">
         {quickLinks.map((link) => (
           <button 
-            key={link.id} 
+            key={`quicklink-${link.id}`} 
             onClick={() => {
               if (link.label === '随手拍') onOpenSnapReport();
+              if (link.isIntro) setShowIntroModal(true);
+              if (link.isProperty) setShowPropertyModal(true);
             }}
-            className="flex flex-col items-center space-y-1.5 group"
+            className="flex flex-col items-center space-y-1.5 group active:scale-95 transition-transform"
           >
-            <div className={`w-12 h-12 ${link.color} rounded-2xl flex items-center justify-center group-active:scale-95 transition-transform shadow-sm`}>
-              <link.icon size={22} />
-            </div>
-            <span className="text-[10px] text-gray-600 font-medium">{link.label}</span>
+            {link.isIntro ? (
+              <PartyIcon />
+            ) : (
+              <div className={`w-12 h-12 ${link.color} rounded-2xl flex items-center justify-center shadow-sm`}>
+                {link.isProperty ? <ShieldCheck size={22} /> : <link.icon size={22} />}
+              </div>
+            )}
+            <span className={`text-[10px] text-gray-600 font-bold ${link.isIntro ? 'text-red-600 scale-110 mt-1' : ''}`}>{link.label}</span>
           </button>
         ))}
       </div>
 
+      {/* Property Management Directory Modal */}
+      <AnimatePresence>
+        {showPropertyModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] bg-white flex flex-col"
+          >
+            <div className="bg-gradient-to-br from-green-600 to-emerald-700 h-48 shrink-0 relative flex flex-col items-center justify-center text-white overflow-hidden">
+               <ShieldCheck size={120} className="absolute -right-10 -bottom-10 opacity-10 rotate-12" />
+               <button 
+                 onClick={() => setShowPropertyModal(false)}
+                 className="absolute top-6 left-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center active:scale-90 transition-transform"
+               >
+                 <ChevronRight size={24} className="rotate-180" />
+               </button>
+               <div className="w-16 h-16 bg-white/20 rounded-3xl flex items-center justify-center mb-4 backdrop-blur-sm border border-white/30 shadow-xl">
+                  <ShieldCheck size={32} />
+               </div>
+               <h2 className="text-2xl font-black tracking-tight">辖区物业名录</h2>
+               <p className="text-xs font-bold opacity-70 mt-1">Property Management Directory</p>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-5 py-6 space-y-5 bg-gray-50">
+              {propertyCompanies.map((company) => (
+                <div key={`property-co-${company.id}`} className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 space-y-4">
+                   <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                         <h3 className="text-sm font-black text-gray-900 leading-tight mb-2 pr-4">{company.name}</h3>
+                         <div className="flex flex-wrap gap-1.5">
+                            {company.neighborhoods.map(nb => (
+                               <span key={nb} className="bg-green-50 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-100">
+                                  {nb}
+                               </span>
+                            ))}
+                         </div>
+                      </div>
+                      <div className="bg-blue-50 p-2 rounded-xl text-blue-600">
+                         <Smartphone size={16} />
+                      </div>
+                   </div>
+
+                   <div className="grid grid-cols-2 gap-3 py-4 border-y border-dashed border-gray-100">
+                      <div className="space-y-1">
+                         <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">收费标准</div>
+                         <div className="text-xs font-black text-gray-700">{company.fee}</div>
+                      </div>
+                      <div className="space-y-1 text-right">
+                         <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">项目经理</div>
+                         <div className="text-xs font-black text-gray-700">{company.manager}</div>
+                      </div>
+                   </div>
+
+                   <div className="space-y-2">
+                      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">服务标准</div>
+                      <p className="text-[11px] text-gray-500 font-medium leading-relaxed italic">{company.standard}</p>
+                   </div>
+
+                   <div className="flex gap-3 pt-2">
+                      <a 
+                        href={`tel:${company.phone}`}
+                        className="flex-1 bg-blue-50 text-blue-600 py-3 rounded-2xl text-[11px] font-black flex items-center justify-center space-x-2 active:scale-95 transition-transform"
+                      >
+                         <Phone size={14} fill="currentColor" />
+                         <span>联系经理</span>
+                      </a>
+                      <a 
+                        href={`tel:${company.hotline}`}
+                        className="flex-1 bg-green-600 text-white py-3 rounded-2xl text-[11px] font-black flex items-center justify-center space-x-2 active:scale-95 transition-transform shadow-lg shadow-green-100"
+                      >
+                         <Phone size={14} fill="currentColor" />
+                         <span>客服热线</span>
+                      </a>
+                   </div>
+                </div>
+              ))}
+              <div className="pb-10 pt-4 text-center">
+                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">由 亿利社区党群服务中心 监管</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Community Intro Modal */}
+      <AnimatePresence>
+        {showIntroModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] bg-white flex flex-col"
+          >
+            <div className="relative h-64 shrink-0">
+               <img 
+                 src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" 
+                 className="w-full h-full object-cover" 
+                 alt="社区党群服务中心" 
+                 referrerPolicy="no-referrer"
+               />
+               <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-white" />
+               <button 
+                 onClick={() => setShowIntroModal(false)}
+                 className="absolute top-6 right-6 w-10 h-10 bg-black/20 backdrop-blur-md text-white rounded-full flex items-center justify-center active:scale-90 transition-transform"
+               >
+                 <X size={20} />
+               </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-6 -mt-10 relative z-10">
+               <div className="bg-white rounded-[40px] shadow-xl shadow-red-100/50 p-6 border border-red-50">
+                  <div className="flex items-center space-x-3 mb-4">
+                     <div className="w-1.5 h-6 bg-red-600 rounded-full" />
+                     <h2 className="text-2xl font-black text-gray-900">亿利社区简介</h2>
+                  </div>
+                  
+                  <div className="space-y-6 text-gray-600 leading-relaxed text-sm font-medium">
+                     <section className="bg-red-50/50 p-4 rounded-3xl border border-red-100">
+                        <p>
+                           <span className="text-red-600 font-black">亿利社区党群服务中心</span>成立于2020年，是一个充满活力与温度的现代社区。
+                        </p>
+                     </section>
+
+                     <section className="space-y-3">
+                        <h3 className="font-black text-gray-800 flex items-center text-base">
+                           <MapPin size={18} className="text-red-500 mr-2" />
+                           地理范围
+                        </h3>
+                        <p className="bg-gray-50 p-4 rounded-2xl text-[13px]">
+                           东起金桥一路，西至呼伦南路，北至包头大街，南到金源街，外加银河北街北侧亿利生态城东、西区。
+                        </p>
+                     </section>
+
+                     <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-orange-50 p-4 rounded-3xl border border-orange-100 text-center">
+                           <div className="text-[10px] font-bold text-orange-400 uppercase tracking-widest mb-1">辖区面积</div>
+                           <div className="text-xl font-black text-orange-600">0.67 <span className="text-xs">km²</span></div>
+                        </div>
+                        <div className="bg-blue-50 p-4 rounded-3xl border border-blue-100 text-center">
+                           <div className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">总户数</div>
+                           <div className="text-xl font-black text-blue-600">5617 <span className="text-xs">户</span></div>
+                        </div>
+                        <div className="bg-emerald-50 p-4 rounded-3xl border border-emerald-100 text-center">
+                           <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">总人口</div>
+                           <div className="text-xl font-black text-emerald-600">9361 <span className="text-xs">人</span></div>
+                        </div>
+                        <div className="bg-purple-50 p-4 rounded-3xl border border-purple-100 text-center">
+                           <div className="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-1">居民小区</div>
+                           <div className="text-xl font-black text-purple-600">7 <span className="text-xs">个</span></div>
+                        </div>
+                     </div>
+
+                     <section className="space-y-3">
+                        <h3 className="font-black text-gray-800 flex items-center text-base">
+                           <ShieldCheck size={18} className="text-red-500 mr-2" />
+                           辖区小区
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                           {['亿利生态城东区', '亿利生态城西区', '希望阳光苑', '蒙元骑士城一期', '蒙元骑士城二期', '环保小区', '统计小区'].map(tag => (
+                             <span key={tag} className="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl text-xs font-bold">{tag}</span>
+                           ))}
+                        </div>
+                     </section>
+
+                     <section className="bg-gradient-to-br from-red-600 to-red-700 p-6 rounded-[32px] text-white shadow-lg shadow-red-200">
+                        <h3 className="font-black text-lg mb-4 flex items-center">
+                           <Star size={20} className="mr-2" />
+                           党建引领
+                        </h3>
+                        <div className="space-y-4 text-sm opacity-90 font-medium">
+                           <p>社区党总支下设<span className="font-black text-yellow-300 underline underline-offset-4">2个党支部</span>，在册党员<span className="font-black text-yellow-300">73人</span>，在职党员<span className="font-black text-yellow-300">178人</span>。</p>
+                           <p>以“党建+红色物业”为抓手，打造“领建、联建、促建”<span className="font-black text-yellow-200">“三建”党建品牌</span>。</p>
+                        </div>
+                     </section>
+
+                     <section className="space-y-4 pb-10">
+                        <h3 className="font-black text-gray-800 text-base">服务宗旨</h3>
+                        <p className="text-gray-500 italic">“以人本、服务居民”</p>
+                        <p className="bg-gray-50 p-5 rounded-[2.5rem] border border-gray-100">
+                           坚持把“为老为小”优质服务融入基层治理中，构建共建、共治、共享的社区治理新格局。
+                        </p>
+                     </section>
+                  </div>
+               </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Reorderable Sections */}
       <Reorder.Group axis="y" values={sections} onReorder={setSections} className="space-y-6">
         {sections.map((sectionId) => (
-          <Reorder.Item 
-            key={sectionId} 
-            value={sectionId}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {renderSection(sectionId)}
-          </Reorder.Item>
+          <DraggableSectionItem key={`section-${sectionId}`} sectionId={sectionId} />
         ))}
       </Reorder.Group>
 
@@ -721,6 +1050,21 @@ export default function Home({ onOpenSnapReport, isSeniorMode, onToggleSeniorMod
   );
 }
 
+// Master component that toggles between modes
+export default function Home(props: HomeProps) {
+  const COMMUNITIES = ['亿利社区', '老缸房社区', '滨河路社区'];
+  const [communityIndex, setCommunityIndex] = useState(0);
+
+  const toggleCommunity = () => {
+    setCommunityIndex((prev) => (prev + 1) % COMMUNITIES.length);
+  };
+
+  if (props.isSeniorMode) {
+    return <HomeSenior {...props} community={COMMUNITIES[communityIndex]} onToggleCommunity={toggleCommunity} />;
+  }
+  return <HomeDefault {...props} community={COMMUNITIES[communityIndex]} onToggleCommunity={toggleCommunity} />;
+}
+
 function ProviderModal({ provider, onClose }: { provider: Provider; onClose: () => void }) {
   return (
     <motion.div 
@@ -762,7 +1106,7 @@ function ProviderModal({ provider, onClose }: { provider: Provider; onClose: () 
               </h4>
               <div className="flex flex-wrap gap-2">
                  {provider.expertise.map((item, idx) => (
-                    <span key={idx} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-xl text-xs font-bold ring-1 ring-blue-100">
+                    <span key={`expertise-${idx}`} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-xl text-xs font-bold ring-1 ring-blue-100">
                        {item}
                     </span>
                  ))}
@@ -776,14 +1120,14 @@ function ProviderModal({ provider, onClose }: { provider: Provider; onClose: () 
               </h4>
               <div className="space-y-4">
                  {provider.reviews.map((review, idx) => (
-                    <div key={idx} className="bg-gray-50 rounded-2xl p-4">
+                    <div key={`review-${idx}`} className="bg-gray-50 rounded-2xl p-4">
                        <div className="flex justify-between items-start mb-2">
                           <div className="flex items-center space-x-2">
                              <img src={review.avatar} className="w-8 h-8 rounded-full" alt="" referrerPolicy="no-referrer" />
                              <div>
                                 <div className="text-xs font-black text-gray-800">{review.userName}</div>
                                 <div className="flex text-orange-500">
-                                   {[...Array(review.rating)].map((_, i) => <Star key={i} size={10} fill="currentColor" />)}
+                                   {[...Array(review.rating)].map((_, i) => <Star key={`star-${idx}-${i}`} size={10} fill="currentColor" />)}
                                 </div>
                              </div>
                           </div>
@@ -798,81 +1142,13 @@ function ProviderModal({ provider, onClose }: { provider: Provider; onClose: () 
 
         <div className="mt-10 flex gap-3">
            <button className="flex-1 bg-gray-100 text-gray-800 py-4 rounded-[20px] text-sm font-black active:scale-95 transition-transform">
-              在线私聊
+              联系师傅
            </button>
-           <button className="flex-1 bg-blue-600 text-white py-4 rounded-[20px] text-sm font-black shadow-lg shadow-blue-100 flex items-center justify-center space-x-2 active:scale-95 transition-transform">
-              <Phone size={18} fill="currentColor" />
-              <span>电话预约</span>
+           <button className="flex-1 bg-blue-600 text-white py-4 rounded-[20px] text-sm font-black active:scale-95 transition-transform shadow-lg shadow-blue-100">
+              立即预约
            </button>
         </div>
       </motion.div>
     </motion.div>
-  );
-}
-
-function CameraIcon({ size }: { size: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-      <circle cx="12" cy="13" r="3" />
-    </svg>
-  );
-}
-
-function BellIcon({ size }: { size: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-    </svg>
-  );
-}
-
-function FlaskConicalIcon({ size }: { size: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10 2v7.5" />
-      <path d="M14 2v7.5" />
-      <path d="M8.5 2h7" />
-      <path d="M14 11.5c.6 0 1.2.2 1.6.6l3.9 4.3c.9 1 1 2.5.2 3.6A3.6 3.6 0 0 1 16.8 22H7.2a3.6 3.6 0 0 1-2.9-1.5c-.8-1.1-.7-2.6.2-3.6l3.9-4.3c.4-.4 1-.6 1.6-.6h4z" />
-    </svg>
-  );
-}
-
-function CalendarIcon({ size }: { size: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-      <line x1="16" x2="16" y1="2" y2="6" />
-      <line x1="8" x2="8" y1="2" y2="6" />
-      <line x1="3" x2="21" y1="10" y2="10" />
-    </svg>
-  );
-}
-
-function WrenchIcon({ size }: { size: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-    </svg>
-  );
-}
-
-function MapPinIcon({ size }: { size: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
-  );
-}
-
-function UtensilsIcon({ size }: { size: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
-      <path d="M7 2v20" />
-      <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
-    </svg>
   );
 }

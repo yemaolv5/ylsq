@@ -26,8 +26,8 @@ const SERVICES = [
   { id: 10, label: '办证进度', icon: Calendar, category: 'gov', color: 'bg-teal-50 text-teal-600' },
   { id: 16, label: '法律援助', icon: Gavel, category: 'gov', color: 'bg-slate-50 text-slate-800', isLegalAid: true },
   
-  { id: 17, label: '爱心助残\n超市', icon: ShoppingBag, category: 'life', color: 'bg-indigo-50 text-indigo-600', isCharityStore: true },
-  { id: 18, label: '社区食堂', icon: Utensils, category: 'life', color: 'bg-orange-50 text-orange-500', isCanteen: true },
+  { id: 21, label: '爱心助残\n超市', icon: ShoppingBag, category: 'life', color: 'bg-indigo-50 text-indigo-600', isCharityStore: true },
+  { id: 22, label: '社区食堂', icon: Utensils, category: 'life', color: 'bg-orange-50 text-orange-500', isCanteen: true },
 
   { id: 11, label: '社区诊所', icon: Stethoscope, category: 'health', color: 'bg-rose-50 text-rose-500', isClinic: true },
   { id: 12, label: '智慧药柜', icon: ShoppingBag, category: 'health', color: 'bg-emerald-50 text-emerald-500' },
@@ -36,8 +36,8 @@ const SERVICES = [
   
   { id: 13, label: '科普预约', icon: Microscope, category: 'special', color: 'bg-violet-50 text-violet-500' },
   { id: 14, label: '小小科学家', icon: FlaskConical, category: 'special', color: 'bg-cyan-50 text-cyan-500' },
-  { id: 17, label: '特约维修', icon: Wrench, category: 'life', color: 'bg-blue-50 text-blue-600' },
-  { id: 18, label: '共享维修\n服务价目', icon: Wrench, category: 'life', color: 'bg-orange-50 text-orange-600', posterType: 'maintenance' },
+  { id: 23, label: '特约维修', icon: Wrench, category: 'life', color: 'bg-blue-50 text-blue-600' },
+  { id: 24, label: '共享维修\n服务价目', icon: Wrench, category: 'life', color: 'bg-orange-50 text-orange-600', posterType: 'maintenance' },
   { id: 19, label: '社区达人\n申请', icon: Star, category: 'special', color: 'bg-amber-50 text-amber-600', isApplication: true },
 ];
 
@@ -243,7 +243,7 @@ function SharedMaintenancePoster({ onBack }: { onBack: () => void }) {
             </div>
             <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 divide-y divide-slate-50">
               {section.items.map((item, i) => (
-                <div key={i} className="p-4 flex justify-between items-start space-x-4">
+                <div key={`maintenance-item-${idx}-${i}`} className="p-4 flex justify-between items-start space-x-4">
                   <div className="flex-1 space-y-1">
                     <h4 className="font-bold text-gray-800 text-xs leading-relaxed">{item.name}</h4>
                     <p className="text-[10px] text-gray-400 italic">备注：{item.desc}</p>
@@ -336,7 +336,7 @@ function ElderlyServicePoster({ onBack }: { onBack: () => void }) {
             </div>
             <div className="divide-y divide-orange-50">
               {cat.items.map((item) => (
-                <div key={item.id} className="p-4 flex space-x-3 items-start">
+                <div key={`elderly-item-${item.id}`} className="p-4 flex space-x-3 items-start">
                   <div className="w-5 h-5 rounded-full bg-orange-50 text-[#FF8C00] flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">
                     {item.id}
                   </div>
@@ -456,7 +456,7 @@ function LifeCirclePoster({ onBack }: { onBack: () => void }) {
               className="space-y-4"
             >
               {venues[activeTab as keyof typeof venues].map((venue, i) => (
-                <div key={i} className="bg-white rounded-3xl p-5 border border-gray-50 shadow-sm flex items-center justify-between">
+                <div key={`venue-${activeTab}-${i}`} className="bg-white rounded-3xl p-5 border border-gray-50 shadow-sm flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 shrink-0">
                       {activeTab === 'catering' ? <Coffee size={24} /> : activeTab === 'market' ? <Store size={24} /> : <Hotel size={24} />}
@@ -564,12 +564,12 @@ function CommunityCanteenPoster({ onBack }: { onBack: () => void }) {
             </div>
             <div className="divide-y divide-gray-50 px-6">
               {menu.map((item, i) => (
-                <div key={i} className="py-4 grid grid-cols-12 items-center group">
+                <div key={`canteen-menu-${i}`} className="py-4 grid grid-cols-12 items-center group">
                   <div className="col-span-5">
                     <h4 className="text-xs font-black text-gray-800 mb-1">{item.name}</h4>
                     <div className="flex gap-1">
-                      {item.tags.map(tag => (
-                        <span key={tag} className="text-[8px] bg-gray-100 text-gray-400 px-1.5 rounded font-bold">{tag}</span>
+                      {item.tags.map((tag, tagIdx) => (
+                        <span key={`food-tag-${i}-${tagIdx}`} className="text-[8px] bg-gray-100 text-gray-400 px-1.5 rounded font-bold">{tag}</span>
                       ))}
                     </div>
                   </div>
@@ -655,7 +655,7 @@ function DisabledSupportSupermarketPoster({ onBack }: { onBack: () => void }) {
 
         <div className="space-y-6">
           {subscriptions.map((sub) => (
-            <div key={sub.id} className="bg-white rounded-[2.5rem] overflow-hidden shadow-xl shadow-indigo-100 border border-indigo-50/50">
+            <div key={`charity-sub-${sub.id}`} className="bg-white rounded-[2.5rem] overflow-hidden shadow-xl shadow-indigo-100 border border-indigo-50/50">
               <div className="h-48 w-full relative">
                 <img src={sub.image} alt={sub.name} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -666,8 +666,8 @@ function DisabledSupportSupermarketPoster({ onBack }: { onBack: () => void }) {
               </div>
               
               <div className="p-6 grid grid-cols-2 gap-4">
-                {sub.plans.map((plan, idx) => (
-                  <button key={idx} className="flex flex-col items-center p-4 rounded-3xl border-2 border-indigo-50 bg-indigo-50/30 hover:border-indigo-400 hover:bg-white transition-all group">
+                {sub.plans.map((plan, pIdx) => (
+                  <button key={`charity-plan-${sub.id}-${pIdx}`} className="flex flex-col items-center p-4 rounded-3xl border-2 border-indigo-50 bg-indigo-50/30 hover:border-indigo-400 hover:bg-white transition-all group">
                     <span className="text-[10px] font-black text-indigo-400 mb-2 uppercase tracking-tighter">{plan.title}</span>
                     <div className="flex items-baseline space-x-1 mb-1">
                       <span className="text-[10px] font-bold text-indigo-600">¥</span>
@@ -777,7 +777,7 @@ function CommunityClinicPoster({ onBack }: { onBack: () => void }) {
 
           <div className="grid gap-6">
             {doctors.map((doc, i) => (
-              <div key={i} className="bg-white rounded-[2rem] p-5 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-5">
+              <div key={`doctor-${i}`} className="bg-white rounded-[2rem] p-5 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-5">
                 <div className="w-24 h-32 rounded-2xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100">
                   <img src={doc.image} alt={doc.name} className="w-full h-full object-cover" />
                 </div>
@@ -844,7 +844,7 @@ function LegalAidPoster({ onBack }: { onBack: () => void }) {
         
         <div className="grid gap-4">
           {cases.map((c, i) => (
-            <div key={i} className="bg-slate-800/50 border border-slate-700/50 p-5 rounded-3xl backdrop-blur-sm">
+            <div key={`legal-case-${i}`} className="bg-slate-800/50 border border-slate-700/50 p-5 rounded-3xl backdrop-blur-sm">
               <h4 className="text-white font-black text-sm mb-2">【案例】{c.title}</h4>
               <p className="text-slate-400 text-[11px] leading-relaxed italic">{c.desc}</p>
             </div>
@@ -1004,7 +1004,7 @@ export default function Service() {
               layout
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              key={service.id} 
+              key={`main-service-${service.id}`} 
               onClick={() => handleServiceClick(service)}
               className="flex flex-col items-center space-y-2 active:scale-95 transition-transform"
             >

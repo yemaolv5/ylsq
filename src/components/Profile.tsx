@@ -49,7 +49,7 @@ export default function Profile() {
     }));
   };
 
-  const [expandedDates, setExpandedDates] = useState<string[]>(['20260502']);
+  const [expandedDates, setExpandedDates] = useState<string[]>(['20260506']);
 
   const toggleDate = (date: string) => {
     setExpandedDates(prev => 
@@ -58,6 +58,27 @@ export default function Profile() {
   };
 
   const updateLogs = [
+    {
+      date: '20260506',
+      items: [
+        {
+          title: '1. 社区简介深度定制',
+          desc: '原“物业缴费”升级为“社区简介”，采用专属设计的红色花瓣党群图标。点击进入可查看亿利社区详尽的地理范围、人口组成、党建品牌及服务宗旨。'
+        },
+        {
+          title: '2. 辖区物业名录上线',
+          desc: '原“访客通行”升级为“辖区物业”，收录鼎欣、万家互联、泽信、金威、博凯等物业公司资料，覆盖收费标准、服务细则及一键拨打经理电话。'
+        },
+        {
+          title: '3. 视觉体验细节优化',
+          desc: '重绘了极具美感的红色党建图标，加入呼吸感光效与流线型花瓣。同时优化了全站图片加载策略，修复了部分外链图床无法正常显示的问题。'
+        },
+        {
+          title: '4. 交互体验细节优化',
+          desc: '针对手机端长页面滑动与卡片拖拽的冲突进行了深度优化，引入了专用的拖拽手柄（Grip Handle），有效避免了误触导致的布局偏移。同时加强了导航栏图标的触感反馈与平滑缩放效果。'
+        }
+      ]
+    },
     {
       date: '20260502',
       items: [
