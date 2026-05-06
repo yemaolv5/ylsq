@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical, Baby, LayoutGrid, Heart, Smartphone, Gavel, Scale, Wrench, X, Star, Bell, FlaskConical, Calendar, Utensils, Camera, Coffee, Hotel, Store } from 'lucide-react';
+import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical, Baby, LayoutGrid, Heart, Smartphone, Gavel, Scale, Wrench, X, Star, Bell, FlaskConical, Calendar, Utensils, Camera, Coffee, Hotel, Store, Share2 } from 'lucide-react';
 import { motion, AnimatePresence, Reorder, useDragControls, DragControls } from 'motion/react';
 
 interface Review {
@@ -30,6 +30,7 @@ interface HomeProps {
 // Sub-component for Senior Mode
 function HomeSenior({ onOpenSnapReport, onToggleSeniorMode, community, onToggleCommunity }: { onOpenSnapReport: () => void, onToggleSeniorMode: () => void, community: string, onToggleCommunity: () => void }) {
   const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);
+  const [showShare, setShowShare] = useState(false);
 
   const seniorLinks = [
     { label: '一键呼救', icon: Phone, color: 'bg-red-500 text-white', desc: '紧急联系人' },
@@ -118,11 +119,22 @@ function HomeSenior({ onOpenSnapReport, onToggleSeniorMode, community, onToggleC
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] bg-white flex flex-col p-6 overflow-y-auto"
           >
+            <AnimatePresence>
+              {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+            </AnimatePresence>
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-3xl font-black text-gray-900">维修价目表</h2>
-              <button onClick={() => setIsMaintenanceOpen(false)} className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                <X size={24} />
-              </button>
+              <div className="flex items-center space-x-3">
+                <button 
+                  onClick={() => setShowShare(true)}
+                  className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center"
+                >
+                  <Share2 size={24} />
+                </button>
+                <button onClick={() => setIsMaintenanceOpen(false)} className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                  <X size={24} />
+                </button>
+              </div>
             </div>
 
             <div className="space-y-8 pb-32">
@@ -176,6 +188,7 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
   const [showQrModal, setShowQrModal] = useState(false);
   const [showIntroModal, setShowIntroModal] = useState(false);
   const [showPropertyModal, setShowPropertyModal] = useState(false);
+  const [showShare, setShowShare] = useState(false);
 
   // Dynamic Content Data
   const COMMUNITY_DATA: Record<string, { banners: any[], news: any[], announcement: string }> = {
@@ -303,12 +316,10 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
         ))}
       </div>
       
-      {/* Center Golden Circle with Detailed Hammer and Sickle */}
-      <div className="relative w-9 h-9 bg-gradient-to-br from-yellow-300 via-yellow-500 to-orange-600 rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.3)] border-2 border-yellow-200 z-10 overflow-hidden">
-        <svg viewBox="0 0 1024 1024" className="w-6 h-6 text-yellow-100 fill-current drop-shadow-md">
-          <path d="M885.6 304c-15.2-46.4-144.8-196-418.4-131.2 56 34.4 122.4 104.8 152.8 181.6 32 80.8 28.8 178.4-44 268-71.2-74.4-160-128.8-251.2-128.8-82.4 0-149.6 44.8-144.8 132 2.4 39.2 18.4 83.2 44.8 110.4 46.4 48 116.8 51.2 166.4 20l173.6 173.6 92-92-172-172c76-80 120-176.8 111.2-272 56 46.4 80.8 104.8 89.6 140.8z"/>
-          <rect x="180" y="700" width="150" height="300" transform="rotate(45 255 850)" />
-        </svg>
+      {/* Center Golden Circle with Calligraphy Text */}
+      <div className="relative w-10 h-10 bg-gradient-to-br from-yellow-300 via-yellow-500 to-orange-600 rounded-full flex flex-col items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.3)] border-2 border-yellow-200 z-10 overflow-hidden leading-none gap-[1mm]">
+        <span className="font-calligraphy text-[11px] text-red-700 font-bold">社区</span>
+        <span className="font-calligraphy text-[11px] text-red-700 font-bold">简介</span>
         {/* Subtle shine effect */}
         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent pointer-events-none" />
       </div>
@@ -779,7 +790,9 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
                 {link.isProperty ? <ShieldCheck size={22} /> : <link.icon size={22} />}
               </div>
             )}
-            <span className={`text-[10px] text-gray-600 font-bold ${link.isIntro ? 'text-red-600 scale-110 mt-1' : ''}`}>{link.label}</span>
+            {!link.isIntro && (
+              <span className="text-[10px] text-gray-600 font-bold">{link.label}</span>
+            )}
           </button>
         ))}
       </div>
@@ -793,8 +806,26 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[200] bg-white flex flex-col"
           >
+            <AnimatePresence>
+              {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+            </AnimatePresence>
+
             <div className="bg-gradient-to-br from-green-600 to-emerald-700 h-48 shrink-0 relative flex flex-col items-center justify-center text-white overflow-hidden">
                <ShieldCheck size={120} className="absolute -right-10 -bottom-10 opacity-10 rotate-12" />
+               <div className="absolute top-6 right-6 flex items-center space-x-3 z-50">
+                  <button 
+                    onClick={() => setShowShare(true)}
+                    className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                  >
+                    <Share2 size={20} />
+                  </button>
+                  <button 
+                    onClick={() => setShowPropertyModal(false)}
+                    className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                  >
+                    <X size={20} />
+                  </button>
+               </div>
                <button 
                  onClick={() => setShowPropertyModal(false)}
                  className="absolute top-6 left-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center active:scale-90 transition-transform"
@@ -878,6 +909,10 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[200] bg-white flex flex-col"
           >
+            <AnimatePresence>
+              {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+            </AnimatePresence>
+
             <div className="relative h-64 shrink-0">
                <img 
                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" 
@@ -886,12 +921,20 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
                  referrerPolicy="no-referrer"
                />
                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-white" />
-               <button 
-                 onClick={() => setShowIntroModal(false)}
-                 className="absolute top-6 right-6 w-10 h-10 bg-black/20 backdrop-blur-md text-white rounded-full flex items-center justify-center active:scale-90 transition-transform"
-               >
-                 <X size={20} />
-               </button>
+               <div className="absolute top-6 right-6 flex items-center space-x-3 z-50">
+                  <button 
+                    onClick={() => setShowShare(true)}
+                    className="w-10 h-10 bg-black/20 backdrop-blur-md text-white rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                  >
+                    <Share2 size={20} />
+                  </button>
+                  <button 
+                    onClick={() => setShowIntroModal(false)}
+                    className="w-10 h-10 bg-black/20 backdrop-blur-md text-white rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                  >
+                    <X size={20} />
+                  </button>
+               </div>
             </div>
 
             <div className="flex-1 overflow-y-auto px-6 -mt-10 relative z-10">
@@ -1051,6 +1094,47 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
 }
 
 // Master component that toggles between modes
+const ShareOverlay = ({ onClose }: { onClose: () => void }) => (
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    onClick={onClose}
+    className="fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm flex items-end justify-center p-6"
+  >
+    <motion.div 
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      exit={{ y: 100 }}
+      onClick={(e) => e.stopPropagation()}
+      className="bg-white w-full max-w-sm rounded-[32px] p-8 space-y-6"
+    >
+      <div className="text-center space-y-2">
+        <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-100">
+          <Share2 className="text-white" size={32} />
+        </div>
+        <h3 className="text-xl font-black text-gray-900">分享至微信</h3>
+        <p className="text-xs text-gray-500 font-medium">即将分享至 亿利社区业主群</p>
+      </div>
+      
+      <div className="grid grid-cols-1 gap-3">
+        <button 
+          onClick={onClose}
+          className="w-full bg-green-600 text-white py-4 rounded-2xl font-black text-sm active:scale-95 transition-transform shadow-xl shadow-green-100 flex items-center justify-center space-x-2"
+        >
+          <span>立即发送</span>
+        </button>
+        <button 
+          onClick={onClose}
+          className="w-full py-4 rounded-2xl font-bold text-gray-400 text-sm active:scale-95 transition-transform"
+        >
+          取消
+        </button>
+      </div>
+    </motion.div>
+  </motion.div>
+);
+
 export default function Home(props: HomeProps) {
   const COMMUNITIES = ['亿利社区', '老缸房社区', '滨河路社区'];
   const [communityIndex, setCommunityIndex] = useState(0);
@@ -1066,6 +1150,7 @@ export default function Home(props: HomeProps) {
 }
 
 function ProviderModal({ provider, onClose }: { provider: Provider; onClose: () => void }) {
+  const [showShare, setShowShare] = useState(false);
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -1074,6 +1159,9 @@ function ProviderModal({ provider, onClose }: { provider: Provider; onClose: () 
       className="fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4"
       onClick={onClose}
     >
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
       <motion.div 
         initial={{ y: "100%" }}
         animate={{ y: 0 }}
@@ -1093,9 +1181,17 @@ function ProviderModal({ provider, onClose }: { provider: Provider; onClose: () 
                  </div>
               </div>
            </div>
-           <button onClick={onClose} className="p-2 bg-gray-100 rounded-full text-gray-400 hover:text-gray-600">
-              <X size={24} />
-           </button>
+           <div className="flex items-center space-x-2">
+              <button 
+                onClick={() => setShowShare(true)}
+                className="p-2 bg-gray-100 rounded-full text-gray-400 hover:text-gray-600"
+              >
+                 <Share2 size={24} />
+              </button>
+              <button onClick={onClose} className="p-2 bg-gray-100 rounded-full text-gray-400 hover:text-gray-600">
+                 <X size={24} />
+              </button>
+           </div>
         </div>
 
         <div className="space-y-6">

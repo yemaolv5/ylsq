@@ -1,6 +1,47 @@
 import React, { useState } from 'react';
-import { Search, Calendar, MapPin, CreditCard, Wrench, Key, Utensils, Users, ShoppingBag, Heart, ShieldCheck, Microscope, FlaskConical, Baby, X, Gavel, Star, Phone, Stethoscope, Clock, Activity, Coffee, Hotel, Store, Navigation } from 'lucide-react';
+import { Search, Calendar, MapPin, CreditCard, Wrench, Key, Utensils, Users, ShoppingBag, Heart, ShieldCheck, Microscope, FlaskConical, Baby, X, Gavel, Star, Phone, Stethoscope, Clock, Activity, Coffee, Hotel, Store, Navigation, MessageSquare, Share2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+
+const ShareOverlay = ({ onClose }: { onClose: () => void }) => (
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    onClick={onClose}
+    className="fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm flex items-end justify-center p-6"
+  >
+    <motion.div 
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      exit={{ y: 100 }}
+      onClick={(e) => e.stopPropagation()}
+      className="bg-white w-full max-w-sm rounded-[32px] p-8 space-y-6"
+    >
+      <div className="text-center space-y-2">
+        <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-100">
+          <Share2 className="text-white" size={32} />
+        </div>
+        <h3 className="text-xl font-black text-gray-900">分享至微信</h3>
+        <p className="text-xs text-gray-500 font-medium">即将分享至 亿利社区业主群</p>
+      </div>
+      
+      <div className="grid grid-cols-1 gap-3">
+        <button 
+          onClick={onClose}
+          className="w-full bg-green-600 text-white py-4 rounded-2xl font-black text-sm active:scale-95 transition-transform shadow-xl shadow-green-100 flex items-center justify-center space-x-2"
+        >
+          <span>立即发送</span>
+        </button>
+        <button 
+          onClick={onClose}
+          className="w-full py-4 rounded-2xl font-bold text-gray-400 text-sm active:scale-95 transition-transform"
+        >
+          取消
+        </button>
+      </div>
+    </motion.div>
+  </motion.div>
+);
 
 const CATEGORIES = [
   { id: 'all', label: '全部' },
@@ -9,6 +50,7 @@ const CATEGORIES = [
   { id: 'health', label: '健康服务' },
   { id: 'elderly', label: '为老服务' },
   { id: 'special', label: '特色服务' },
+  { id: 'online', label: '线上服务' },
 ];
 
 const SERVICES = [
@@ -39,9 +81,18 @@ const SERVICES = [
   { id: 23, label: '特约维修', icon: Wrench, category: 'life', color: 'bg-blue-50 text-blue-600' },
   { id: 24, label: '共享维修\n服务价目', icon: Wrench, category: 'life', color: 'bg-orange-50 text-orange-600', posterType: 'maintenance' },
   { id: 19, label: '社区达人\n申请', icon: Star, category: 'special', color: 'bg-amber-50 text-amber-600', isApplication: true },
+  
+  { id: 101, label: '展示类\n信息发布', icon: MessageSquare, category: 'online', color: 'bg-blue-50 text-blue-500', isOnline: true },
+  { id: 102, label: '流程类\n在线办理', icon: ShieldCheck, category: 'online', color: 'bg-emerald-50 text-emerald-600', isOnline: true },
+  { id: 103, label: '交易类\n缴费支付', icon: CreditCard, category: 'online', color: 'bg-orange-50 text-orange-600', isOnline: true },
+  { id: 104, label: '互动参与\n线上协作', icon: Users, category: 'online', color: 'bg-purple-50 text-purple-600', isOnline: true },
+  { id: 105, label: '查询档案\n认证查询', icon: Search, category: 'online', color: 'bg-indigo-50 text-indigo-600', isOnline: true },
+  { id: 106, label: '便民直达\n快速预约', icon: Phone, category: 'online', color: 'bg-rose-50 text-rose-600', isOnline: true },
+  { id: 107, label: '智能预警\n主动提醒', icon: Activity, category: 'online', color: 'bg-amber-50 text-amber-600', isOnline: true },
 ];
 
 function CommunityTalentApplication({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
   const [status, setStatus] = useState<'form' | 'submitting' | 'pending'>('form');
   const [formData, setFormData] = useState({ name: '', role: '', expertise: '', intro: '' });
 
@@ -98,7 +149,26 @@ function CommunityTalentApplication({ onBack }: { onBack: () => void }) {
   }
 
   return (
-    <div className="p-6 pb-20 text-gray-900">
+    <div className="p-6 pb-20 text-gray-900 relative">
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-gray-100 hover:bg-gray-200 text-gray-500 rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-gray-100 hover:bg-gray-200 text-gray-500 rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
+
       <div className="flex items-center space-x-3 mb-8">
          <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600">
             <Star size={20} fill="currentColor" />
@@ -181,6 +251,7 @@ function CommunityTalentApplication({ onBack }: { onBack: () => void }) {
 }
 
 function SharedMaintenancePoster({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
   const sections = [
     {
       title: '电路灯具类维修',
@@ -217,12 +288,24 @@ function SharedMaintenancePoster({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="bg-slate-50 p-5 pb-10 min-h-screen font-sans relative">
-      <button 
-        onClick={onBack}
-        className="absolute top-4 right-4 p-2 bg-white/50 hover:bg-white text-gray-800 rounded-full transition-colors z-20"
-      >
-        <X size={20} />
-      </button>
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-black/10 hover:bg-black/20 text-black rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-black/10 hover:bg-black/20 text-black rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
       <div className="text-center mb-8 pt-4">
         <div className="inline-flex items-center space-x-2 text-slate-800 mb-2 font-black tracking-widest text-lg uppercase">
           <Wrench size={24} className="text-blue-600" />
@@ -276,6 +359,7 @@ function SharedMaintenancePoster({ onBack }: { onBack: () => void }) {
 }
 
 function ElderlyServicePoster({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
   const categories = [
     { name: '生活照料类', items: [
       { id: 1, name: '日间照料', content: '提供日间托管、餐饮、休息、健康监测等服务', type: '按次', price: '25元／次' },
@@ -310,12 +394,24 @@ function ElderlyServicePoster({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="bg-[#FFF9F5] p-5 pb-10 min-h-screen font-sans relative">
-      <button 
-        onClick={onBack}
-        className="absolute top-4 right-4 p-2 bg-[#FF8C00]/10 hover:bg-[#FF8C00]/20 text-[#FF8C00] rounded-full transition-colors z-20"
-      >
-        <X size={20} />
-      </button>
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-[#FF8C00]/10 hover:bg-[#FF8C00]/20 text-[#FF8C00] rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-[#FF8C00]/10 hover:bg-[#FF8C00]/20 text-[#FF8C00] rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
       <div className="text-center mb-8 pt-4">
         <div className="inline-flex items-center space-x-2 text-[#FF8C00] mb-2 font-bold tracking-widest text-lg">
           <Heart size={24} fill="currentColor" />
@@ -385,6 +481,7 @@ function ElderlyServicePoster({ onBack }: { onBack: () => void }) {
 }
 
 function LifeCirclePoster({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
   const [activeTab, setActiveTab] = useState('catering');
   
   const categories = [
@@ -413,12 +510,24 @@ function LifeCirclePoster({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="bg-[#F4F7FF] min-h-screen font-sans pb-10 relative">
-      <button 
-        onClick={onBack}
-        className="absolute top-6 right-6 p-2 bg-indigo-900/10 hover:bg-indigo-900/20 text-indigo-900 rounded-full transition-colors z-20"
-      >
-        <X size={20} />
-      </button>
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-indigo-900/10 hover:bg-indigo-900/20 text-indigo-900 rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-indigo-900/10 hover:bg-indigo-900/20 text-indigo-900 rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
 
       <div className="bg-gradient-to-br from-indigo-500 to-blue-700 p-8 pt-12 text-white relative overflow-hidden">
         <MapPin size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
@@ -495,6 +604,7 @@ function LifeCirclePoster({ onBack }: { onBack: () => void }) {
 }
 
 function CommunityCanteenPoster({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
   const menu = [
     { name: '红烧狮子头', elder: 8, regular: 12, tags: ['招牌', '肉类'] },
     { name: '西红柿炒鸡蛋', elder: 4, regular: 6, tags: ['营养', '素食'] },
@@ -504,12 +614,24 @@ function CommunityCanteenPoster({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="bg-[#FFFDF9] min-h-screen font-sans pb-10 relative">
-      <button 
-        onClick={onBack}
-        className="absolute top-6 right-6 p-2 bg-orange-900/10 hover:bg-orange-900/20 text-orange-900 rounded-full transition-colors z-20"
-      >
-        <X size={20} />
-      </button>
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-orange-900/10 hover:bg-orange-900/20 text-orange-900 rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-orange-900/10 hover:bg-orange-900/20 text-orange-900 rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
 
       <div className="bg-gradient-to-br from-orange-400 to-red-500 p-8 pt-12 text-white relative overflow-hidden">
         <Utensils size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
@@ -600,7 +722,121 @@ function CommunityCanteenPoster({ onBack }: { onBack: () => void }) {
   );
 }
 
+const ONLINE_SERVICE_DETAILS: Record<number, { description: string, examples: string[] }> = {
+  101: {
+    description: "单向或弱交互的信息告知，居民只需浏览，主要用于社区动态展示与政务公开。",
+    examples: ["社区风采展示", "居务公开（财务、决议）", "社区通知公告", "政策宣传", "办事指南", "便民地图（周边菜场、药店）"]
+  },
+  102: {
+    description: "居民按步骤提交申请或登记，后台流转处理，实现“零跑腿”在线办事体验。",
+    examples: ["活动预约（亲子活动、义诊）", "场地预约（活动室、健身房）", "事项申报（生育登记、居住证明）", "报事报修（上传照片、派单）", "投诉建议流转"]
+  },
+  103: {
+    description: "涉及资金收付，通常与第三方支付对接，解决社区生活中的各类缴费难题。",
+    examples: ["物业费缴纳", "停车费缴纳", "水电燃气代收", "社区团购支付", "场地使用费", "活动报名费"]
+  },
+  104: {
+    description: "居民与社区、居民之间双向沟通或协作，增强社区凝聚力与居民参与度。",
+    examples: ["在线议事投票（加装电梯、改造方案）", "民意调查/问卷", "邻里互助（借物、拼单）", "居民论坛/留言板"]
+  },
+  105: {
+    description: "个人或公共数据查询，一般需身份认证，确保信息安全与精准化服务。",
+    examples: ["自己的报修进度查询", "活动报名状态查询", "积分/信用分查询（志愿服务时长）", "社区通讯录查询"]
+  },
+  106: {
+    description: "快速跳转或接入第三方服务，社区做入口，为居民提供海量生活便利资源。",
+    examples: ["社区医生在线问诊", "法律咨询预约", "家政服务订购", "一键呼叫网格员", "养老助餐预订"]
+  },
+  107: {
+    description: "基于事件或数据的主动提醒（非居民主动发起），确保重要信息及安全风险第一时间传达。",
+    examples: ["停水停电通知", "天气预警提醒", "独居老人主动关怀提醒", "分级疫情防控消息推送"]
+  }
+};
+
+function OnlineServicePoster({ service, onBack }: { service: any, onBack: () => void }) {
+  const detail = ONLINE_SERVICE_DETAILS[service.id];
+  const [showShare, setShowShare] = useState(false);
+  
+  return (
+    <div className={`min-h-screen font-sans pb-10 relative bg-gray-50`}>
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-[70]">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-black/10 hover:bg-black/20 text-black rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-black/10 hover:bg-black/20 text-black rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
+
+      <div className={`bg-gradient-to-br ${service.color.split(' ')[0]} ${service.color.split(' ')[0].replace('bg-', 'from-').replace('50', '500')} ${service.color.split(' ')[0].replace('bg-', 'to-').replace('50', '600')} p-8 pt-16 text-white relative overflow-hidden`}>
+        <service.icon size={220} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
+        <div className="relative z-10">
+          <div className="inline-flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full mb-4 backdrop-blur-md">
+            <service.icon size={14} />
+            <span className="text-[10px] font-black tracking-widest uppercase">Online Service Category</span>
+          </div>
+          <h1 className="text-3xl font-black mb-2 tracking-tighter whitespace-pre-line">{service.label.replace('\n', '')}</h1>
+          <p className="opacity-80 text-sm font-medium">线上驱动 • 赋能智慧社区高效治理</p>
+        </div>
+      </div>
+
+      <div className="p-6 -mt-6">
+        <div className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-gray-200/50 border border-white mb-8 space-y-8">
+           <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <div className={`w-1.5 h-4 ${service.color.split(' ')[1].replace('text-', 'bg-')} rounded-full`} />
+                <h3 className="font-extrabold text-gray-900 text-sm">类别服务说明</h3>
+              </div>
+              <p className="text-xs text-gray-500 leading-relaxed font-medium bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                {detail?.description}
+              </p>
+           </div>
+
+           <div className="space-y-5">
+              <div className="flex items-center space-x-2">
+                <div className={`w-1.5 h-4 ${service.color.split(' ')[1].replace('text-', 'bg-')} rounded-full`} />
+                <h3 className="font-extrabold text-gray-900 text-sm">典型服务举例</h3>
+              </div>
+              <div className="grid gap-3">
+                {detail?.examples.map((example, i) => (
+                  <div key={i} className="flex items-start space-x-3 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm group active:scale-[0.98] transition-transform">
+                    <div className={`mt-1 w-1.5 h-1.5 rounded-full ${service.color.split(' ')[1].replace('text-', 'bg-')} shrink-0`} />
+                    <span className="text-xs font-bold text-gray-700">{example}</span>
+                  </div>
+                ))}
+              </div>
+           </div>
+        </div>
+
+        <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+           <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+           <div className="relative z-10 flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+                <ShieldCheck className="text-blue-400" size={24} />
+              </div>
+              <h4 className="font-black text-sm mb-2">安全与数字化保障</h4>
+              <p className="text-[10px] text-gray-400 leading-relaxed max-w-[240px]">
+                所有线上服务均依托社区私有云部署，严格遵守数据安全法，确保居民隐私信息在流转过程中全程加密不泄露。
+              </p>
+           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function DisabledSupportSupermarketPoster({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
   const subscriptions = [
     {
       id: 1,
@@ -628,12 +864,24 @@ function DisabledSupportSupermarketPoster({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="bg-indigo-50 min-h-screen font-sans pb-10 relative">
-      <button 
-        onClick={onBack}
-        className="absolute top-6 right-6 p-2 bg-indigo-900/10 hover:bg-indigo-900/20 text-indigo-900 rounded-full transition-colors z-20"
-      >
-        <X size={20} />
-      </button>
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-indigo-900/10 hover:bg-indigo-900/20 text-indigo-900 rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-indigo-900/10 hover:bg-indigo-900/20 text-indigo-900 rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
       
       <div className="bg-gradient-to-br from-indigo-600 to-violet-700 p-8 pt-12 text-white relative overflow-hidden">
         <ShoppingBag size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
@@ -700,6 +948,7 @@ function DisabledSupportSupermarketPoster({ onBack }: { onBack: () => void }) {
 }
 
 function CommunityClinicPoster({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
   const doctors = [
     {
       name: '张国医',
@@ -719,12 +968,24 @@ function CommunityClinicPoster({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="bg-[#F8FBFF] min-h-screen font-sans pb-10 relative">
-      <button 
-        onClick={onBack}
-        className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
-      >
-        <X size={20} />
-      </button>
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
       <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-8 pt-12 text-white relative overflow-hidden">
         <Activity size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
         <div className="relative z-10">
@@ -814,6 +1075,7 @@ function CommunityClinicPoster({ onBack }: { onBack: () => void }) {
 }
 
 function LegalAidPoster({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
   const cases = [
     { title: '遗产继承咨询', desc: '针对居民关心的房产及财产继承问题，提供专业法律指引，化解家庭矛盾。' },
     { title: '物业维修调解', desc: '精选物业报修纠纷案例，通过法律视角中立核查，展现公正高效的援助实效。' }
@@ -821,12 +1083,24 @@ function LegalAidPoster({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="bg-slate-900 min-h-screen text-slate-100 p-6 pb-20 font-sans relative">
-      <button 
-        onClick={onBack}
-        className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
-      >
-        <X size={20} />
-      </button>
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
       <div className="text-center mb-10 pt-6">
         <div className="inline-flex items-center space-x-2 text-slate-400 mb-2 font-black tracking-[0.3em] uppercase text-xs">
           <Gavel size={16} />
@@ -900,7 +1174,8 @@ function LegalAidPoster({ onBack }: { onBack: () => void }) {
 
 export default function Service() {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | 'application' | 'legal' | 'clinic' | 'charity' | 'canteen' | 'lifecircle' | null>(null);
+  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | 'application' | 'legal' | 'clinic' | 'charity' | 'canteen' | 'lifecircle' | 'online' | null>(null);
+  const [selectedOnlineService, setSelectedOnlineService] = useState<any>(null);
   const [activePurchase, setActivePurchase] = useState<any>(null);
   const [customToast, setCustomToast] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
@@ -914,7 +1189,8 @@ export default function Service() {
       ('isClinic' in service && service.isClinic) ||
       ('isCharityStore' in service && service.isCharityStore) ||
       ('isCanteen' in service && service.isCanteen) ||
-      ('isLifeCircle' in service && service.isLifeCircle)
+      ('isLifeCircle' in service && service.isLifeCircle) ||
+      ('isOnline' in service && service.isOnline)
     );
   };
 
@@ -946,6 +1222,9 @@ export default function Service() {
         setActivePoster('canteen');
       } else if ('isLifeCircle' in service && service.isLifeCircle) {
         setActivePoster('lifecircle');
+      } else if ('isOnline' in service && service.isOnline) {
+        setSelectedOnlineService(service);
+        setActivePoster('online');
       } else {
         setShowToast(true);
         setTimeout(() => setShowToast(false), 2000);
@@ -1112,6 +1391,7 @@ export default function Service() {
               {activePoster === 'charity' && <DisabledSupportSupermarketPoster onBack={() => setActivePoster(null)} />}
               {activePoster === 'canteen' && <CommunityCanteenPoster onBack={() => setActivePoster(null)} />}
               {activePoster === 'lifecircle' && <LifeCirclePoster onBack={() => setActivePoster(null)} />}
+              {activePoster === 'online' && <OnlineServicePoster service={selectedOnlineService} onBack={() => setActivePoster(null)} />}
               {activePoster === 'application' && (
                 <div className="bg-white min-h-screen">
                   <CommunityTalentApplication onBack={() => setActivePoster(null)} />
