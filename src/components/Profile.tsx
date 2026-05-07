@@ -49,7 +49,7 @@ export default function Profile() {
     }));
   };
 
-  const [expandedDates, setExpandedDates] = useState<string[]>(['20260506']);
+  const [expandedDates, setExpandedDates] = useState<string[]>(['20260507']);
 
   const toggleDate = (date: string) => {
     setExpandedDates(prev => 
@@ -58,6 +58,19 @@ export default function Profile() {
   };
 
   const updateLogs = [
+    {
+      date: '20260507',
+      items: [
+        {
+          title: '1. 长者智守护服务上线',
+          desc: '携手兴野智汇数字科技，为老服务板块新增“长者智守护”智能安家终端。支持供电、厨房、漏水、烟雾等多维度实时监测，保障长者居家安全。'
+        },
+        {
+          title: '2. 多元融合科普阵地落成',
+          desc: '“科普阵地”与“小小科学家”板块全新升级。涵盖科普步道、家庭科学实验室、健康指导站三大模块，并新增小小科学家实践活动图文案例展示。'
+        }
+      ]
+    },
     {
       date: '20260506',
       items: [

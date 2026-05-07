@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Calendar, MapPin, CreditCard, Wrench, Key, Utensils, Users, ShoppingBag, Heart, ShieldCheck, Microscope, FlaskConical, Baby, X, Gavel, Star, Phone, Stethoscope, Clock, Activity, Coffee, Hotel, Store, Navigation, MessageSquare, Share2 } from 'lucide-react';
+import { Search, Calendar, MapPin, CreditCard, Wrench, Key, Utensils, Users, ShoppingBag, Heart, ShieldCheck, Microscope, FlaskConical, Baby, X, Gavel, Star, Phone, Stethoscope, Clock, Activity, Coffee, Hotel, Store, Navigation, MessageSquare, Share2, Smartphone, BookOpen, Rocket, Zap, Apple, GraduationCap, Brain, Compass, Atom, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 const ShareOverlay = ({ onClose }: { onClose: () => void }) => (
@@ -75,9 +75,10 @@ const SERVICES = [
   { id: 12, label: '智慧药柜', icon: ShoppingBag, category: 'health', color: 'bg-emerald-50 text-emerald-500' },
 
   { id: 15, label: '老缸房社区\n为老服务中心', icon: Baby, category: 'elderly', color: 'bg-orange-50 text-orange-600', isPoster: true },
+  { id: 25, label: '长者智守护', icon: ShieldCheck, category: 'elderly', color: 'bg-teal-50 text-teal-600', isSmartGuardian: true },
   
-  { id: 13, label: '科普预约', icon: Microscope, category: 'special', color: 'bg-violet-50 text-violet-500' },
-  { id: 14, label: '小小科学家', icon: FlaskConical, category: 'special', color: 'bg-cyan-50 text-cyan-500' },
+  { id: 13, label: '科普阵地', icon: Microscope, category: 'special', color: 'bg-violet-50 text-violet-500', isScience: true },
+  { id: 14, label: '小小科学家', icon: FlaskConical, category: 'special', color: 'bg-cyan-50 text-cyan-500', isScience: true },
   { id: 23, label: '特约维修', icon: Wrench, category: 'life', color: 'bg-blue-50 text-blue-600' },
   { id: 24, label: '共享维修\n服务价目', icon: Wrench, category: 'life', color: 'bg-orange-50 text-orange-600', posterType: 'maintenance' },
   { id: 19, label: '社区达人\n申请', icon: Star, category: 'special', color: 'bg-amber-50 text-amber-600', isApplication: true },
@@ -835,6 +836,326 @@ function OnlineServicePoster({ service, onBack }: { service: any, onBack: () => 
   );
 }
 
+export function CommunitySciencePoster({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
+  
+  const trailModules = [
+    { title: '自然科学', icon: Apple, color: 'bg-green-50 text-green-600', desc: '探索大自然的奥秘，了解动植物生态。' },
+    { title: '航天航空', icon: Rocket, color: 'bg-blue-50 text-blue-600', desc: '星辰大海的征途，领略宇宙飞行技术。' },
+    { title: '生态环保', icon: Compass, color: 'bg-emerald-50 text-emerald-600', desc: '守护绿色家园，学习环保生活小常识。' },
+    { title: '生命健康', icon: Activity, color: 'bg-rose-50 text-rose-600', desc: '认识人体构造，掌握健康生活方式。' },
+  ];
+
+  const labSteps = [
+    { title: '神奇的水循环', level: '初级', time: '15min', desc: '通过简单的容器，观察水蒸发与冷凝的过程。' },
+    { title: '果蔬电池', level: '中级', time: '30min', desc: '利用柠檬或土豆，点亮一盏小小的LED灯。' },
+    { title: '自制指南针', level: '初级', time: '10min', desc: '用缝衣针和磁铁，在水面上寻找北方。' },
+  ];
+
+  const healthStation = [
+    { title: '用眼卫生', icon: BookOpen, content: '“20-20-20”法则，每20分钟眺望20英尺外20秒。' },
+    { title: '科学运动', icon: Zap, content: '适度有氧运动，每周坚持150分钟中等强度锻炼。' },
+    { title: '营养膳食', icon: Utensils, content: '控盐控油，多吃蔬果，均衡摄入蛋白质。' },
+    { title: '慢病防治', icon: Stethoscope, content: '定期监测健康指标，科学管理血糖与血压。' },
+  ];
+
+  const cases = [
+    { title: '小小科学家·植物观察日记', student: '王小明', date: '2024.04', image: 'https://images.unsplash.com/photo-1599839619722-30dd93551810?auto=format&fit=crop&w=400&q=80' },
+    { title: '创意环保：废纸盒变身垃圾车', student: '李华', date: '2024.03', image: 'https://images.unsplash.com/photo-1532187863486-abf51ad990c9?auto=format&fit=crop&w=400&q=80' },
+  ];
+
+  return (
+    <div className="bg-slate-50 min-h-screen font-sans pb-20 relative">
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-black/10 hover:bg-black/20 text-black rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-black/10 hover:bg-black/20 text-black rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
+
+      <div className="bg-gradient-to-br from-violet-600 to-indigo-800 p-8 pt-12 text-white relative overflow-hidden">
+        <Atom size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
+        <div className="relative z-10">
+          <div className="inline-flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full mb-4 backdrop-blur-md">
+            <GraduationCap size={14} />
+            <span className="text-[10px] font-black tracking-widest uppercase">Science Base</span>
+          </div>
+          <h1 className="text-3xl font-black mb-2 tracking-tighter">多元融合科普阵地</h1>
+          <p className="opacity-80 text-sm font-medium">探索科学奥秘 • 赋能智慧未来</p>
+        </div>
+      </div>
+
+      <div className="p-6 -mt-6">
+        {/* Module 1: Science Trail */}
+        <div className="bg-white rounded-[2.5rem] p-6 shadow-xl shadow-indigo-100 border border-indigo-50 mb-8">
+          <div className="flex items-center space-x-2 mb-6">
+            <div className="w-1.5 h-6 bg-indigo-500 rounded-full" />
+            <h2 className="text-lg font-black text-slate-800">科普步道</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {trailModules.map((m, i) => (
+              <div key={i} className="p-4 bg-slate-50 rounded-3xl border border-slate-100 flex flex-col items-center text-center">
+                <div className={`w-12 h-12 ${m.color} rounded-2xl flex items-center justify-center mb-3 shadow-sm`}>
+                  <m.icon size={24} />
+                </div>
+                <h4 className="text-xs font-black text-slate-800 mb-1">{m.title}</h4>
+                <p className="text-[9px] text-slate-400 leading-tight font-medium">{m.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Module 2: Family Lab */}
+        <div className="bg-indigo-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl mb-8">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+          <div className="relative z-10">
+            <div className="flex items-center space-x-2 mb-6">
+              <div className="w-1.5 h-6 bg-cyan-400 rounded-full" />
+              <h2 className="text-lg font-black">家庭科学实验室</h2>
+            </div>
+            <div className="space-y-4">
+              {labSteps.map((step, i) => (
+                <div key={i} className="flex items-center space-x-4 bg-white/10 p-4 rounded-3xl border border-white/10 backdrop-blur-sm group active:bg-white/20 transition-all">
+                  <div className="w-10 h-10 bg-cyan-400 text-indigo-900 rounded-2xl flex items-center justify-center font-black text-sm shrink-0">
+                    {i + 1}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-baseline justify-between mb-1">
+                      <h4 className="text-sm font-black tracking-tight">{step.title}</h4>
+                      <div className="flex space-x-2">
+                        <span className="text-[9px] bg-white/20 px-2 py-0.5 rounded font-bold">{step.level}</span>
+                        <span className="text-[9px] bg-white/20 px-2 py-0.5 rounded font-bold">{step.time}</span>
+                      </div>
+                    </div>
+                    <p className="text-[10px] opacity-60 font-medium line-clamp-1">{step.desc}</p>
+                  </div>
+                  <ChevronRight size={18} className="text-cyan-400 opacity-50 transition-transform group-hover:translate-x-1" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Module 3: Health Guidance */}
+        <div className="bg-white rounded-[2.5rem] p-6 shadow-xl shadow-rose-100 border border-rose-50 mb-8">
+          <div className="flex items-center space-x-2 mb-6">
+            <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
+            <h2 className="text-lg font-black text-slate-800">健康指导站</h2>
+          </div>
+          <div className="grid grid-cols-1 gap-3">
+            {healthStation.map((h, i) => (
+              <div key={i} className="flex items-start space-x-4 bg-rose-50/30 p-4 rounded-3xl border border-rose-50">
+                <div className="w-10 h-10 bg-white shadow-sm rounded-2xl flex items-center justify-center text-rose-500 shrink-0">
+                  <h.icon size={20} />
+                </div>
+                <div>
+                  <h4 className="text-xs font-black text-slate-800 mb-1">{h.title}</h4>
+                  <p className="text-[10px] text-slate-500 leading-relaxed font-medium">{h.content}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Case Studies */}
+        <div>
+          <div className="flex justify-between items-center px-2 mb-6">
+            <div className="flex items-center space-x-2">
+              <div className="w-1.5 h-6 bg-amber-500 rounded-full" />
+              <h2 className="text-lg font-black text-slate-800">小小科学家实践案例</h2>
+            </div>
+          </div>
+          <div className="space-y-4">
+            {cases.map((c, i) => (
+              <div key={i} className="bg-white rounded-[2.5rem] overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 group">
+                <div className="h-48 overflow-hidden relative">
+                  <img src={c.image} alt={c.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-6 left-6 text-white">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <span className="text-[10px] bg-amber-500 px-2 py-0.5 rounded font-black uppercase">Practice Case</span>
+                      <span className="text-[10px] font-bold opacity-60 text-slate-200">{c.date}</span>
+                    </div>
+                    <h4 className="text-lg font-black tracking-tight">{c.title}</h4>
+                  </div>
+                </div>
+                <div className="p-5 flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center overflow-hidden">
+                       <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${c.student}`} alt="" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-black text-slate-800">{c.student}</p>
+                      <p className="text-[10px] text-slate-400 font-bold italic">社区小小科学家成员</p>
+                    </div>
+                  </div>
+                  <button className="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black active:scale-95 transition-transform">
+                    详情回顾
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ElderlySmartGuardianPoster({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
+  const tableData = [
+    { feature: '供电安全', desc: '家庭电路、电闸控制和管理', full: '支持', smart: '支持', basic: '不支持' },
+    { feature: '厨房安全', desc: '厨房温湿度、漏水、烟雾及火灾隐患监测', full: '支持', smart: '支持', basic: '支持' },
+    { feature: '家庭视频', desc: '系统集成萤石云摄像头视频查看', full: '支持', smart: '不支持', basic: '不支持' },
+    { feature: '联动控制', desc: '自动控制阀门等水电设备启动或关闭', full: '支持', smart: '支持', basic: '不支持' },
+    { feature: '报警设定', desc: '报警阈值按需定义报警范围', full: '支持', smart: '支持', basic: '不支持' },
+    { feature: '微信报警', desc: '报警信息和隐患情况通过微信告知用户', full: '支持', smart: '支持', basic: '支持' },
+    { feature: '电话报警', desc: '报警信息和隐患情况通过固定电话告知用户', full: '支持', smart: '支持', basic: '不支持' },
+    { feature: '室内声光报警', desc: '报警发生时，启动室内报警器（闪光、声音）', full: '支持', smart: '支持', basic: '不支持' },
+    { feature: '智能网关', desc: '多房间、多点位监测时，数据集中传输', full: '支持', smart: '支持', basic: '不支持' },
+    { feature: '扩展智能盒', desc: '多房间、多点位监测时，连接传感器等设备', full: '支持', smart: '不支持', basic: '不支持' },
+    { feature: '阀门开关', desc: '自来水、暖气等阀门电动开关', full: '支持', smart: '支持', basic: '不支持' },
+    { feature: '传感器套装', desc: '温湿度、漏水、烟雾、燃气浓度、甲醛等', full: '支持', smart: '支持', basic: '支持' },
+    { feature: '价格（月付）', desc: '一次性付费/月付/年付', full: '85.00', smart: '65.00', basic: '45.00' },
+  ];
+
+  return (
+    <div className="bg-slate-50 min-h-screen font-sans pb-20 relative">
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button 
+          onClick={() => setShowShare(true)}
+          className="p-2 bg-black/10 hover:bg-black/20 text-black rounded-full transition-colors backdrop-blur-md"
+        >
+          <Share2 size={24} />
+        </button>
+        <button 
+          onClick={onBack}
+          className="p-2 bg-black/10 hover:bg-black/20 text-black rounded-full transition-colors backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
+
+      <div className="bg-gradient-to-br from-teal-500 to-emerald-700 p-8 pt-12 text-white relative overflow-hidden">
+        <ShieldCheck size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
+        <div className="relative z-10">
+          <div className="inline-flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full mb-4 backdrop-blur-md">
+            <Smartphone size={14} />
+            <span className="text-[10px] font-black tracking-widest uppercase">Smart Guardian</span>
+          </div>
+          <h1 className="text-3xl font-black mb-2 tracking-tighter">长者智守护</h1>
+          <p className="opacity-80 text-sm font-medium">内蒙古兴野智汇数字科技有限责任公司</p>
+        </div>
+      </div>
+
+      <div className="p-6 -mt-6">
+        <div className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-teal-100/50 border border-teal-50 mb-8">
+          <h2 className="text-lg font-black text-slate-800 mb-6 flex items-center space-x-2">
+            <div className="w-1.5 h-6 bg-teal-500 rounded-full" />
+            <span>兴野智汇安家服务智能终端</span>
+          </h2>
+
+          <div className="overflow-x-auto -mx-8 sm:mx-0">
+            <div className="min-w-[600px] px-8 sm:px-0">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-100">
+                    <th className="py-4 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">功能特性</th>
+                    <th className="py-4 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">说明</th>
+                    <th className="py-4 px-2 text-center text-[10px] font-black text-teal-600 uppercase tracking-widest bg-teal-50/30">全能版</th>
+                    <th className="py-4 px-2 text-center text-[10px] font-black text-emerald-600 uppercase tracking-widest">全智版</th>
+                    <th className="py-4 px-2 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest">基础版</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {tableData.map((row, i) => (
+                    <tr key={i} className="group hover:bg-slate-50/50 transition-colors">
+                      <td className="py-4 px-2">
+                        <span className="text-xs font-black text-slate-700">{row.feature}</span>
+                      </td>
+                      <td className="py-4 px-2">
+                        <span className="text-[10px] text-slate-400 font-medium leading-relaxed">{row.desc}</span>
+                      </td>
+                      <td className={`py-4 px-2 text-center bg-teal-50/10`}>
+                        <span className={`text-[11px] font-black ${row.full === '支持' ? 'text-teal-600' : 'text-slate-900'}`}>{row.full}</span>
+                      </td>
+                      <td className="py-4 px-2 text-center">
+                        <span className={`text-[11px] font-black ${row.smart === '支持' ? 'text-emerald-600' : 'text-slate-900'}`}>{row.smart}</span>
+                      </td>
+                      <td className="py-4 px-2 text-center text-slate-400">
+                        <span className={`text-[11px] font-black ${row.basic === '支持' ? 'text-slate-700' : 'text-slate-300'}`}>{row.basic}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+            <div className="relative z-10 space-y-6">
+              <div className="space-y-2">
+                <p className="text-[10px] text-teal-400 font-black tracking-[0.2em] uppercase">Contact Information</p>
+                <div className="flex flex-col space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
+                      <MessageSquare className="text-teal-400" size={20} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 font-bold">微信公众号</p>
+                      <p className="text-sm font-black italic">兴野智汇轻物联</p>
+                    </div>
+                  </div>
+                  <a href="tel:18104866166" className="flex items-center space-x-3 group">
+                    <div className="w-10 h-10 bg-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/20 group-active:scale-90 transition-transform">
+                      <Phone className="text-white" size={20} fill="currentColor" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 font-bold">业务联系电话</p>
+                      <p className="text-sm font-black tabular-nums group-hover:text-teal-400 transition-colors">181-0486-6166</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-teal-50 border border-teal-100 rounded-[2.5rem] p-6 flex items-start space-x-4">
+            <div className="p-2 bg-teal-500 text-white rounded-2xl shrink-0">
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <p className="text-[11px] text-teal-900 font-bold leading-relaxed">
+                全天候智能安全防范，针对家庭用电、用火、用水多维度实时监测，让居家养老生活更加安心从容。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function DisabledSupportSupermarketPoster({ onBack }: { onBack: () => void }) {
   const [showShare, setShowShare] = useState(false);
   const subscriptions = [
@@ -1174,7 +1495,7 @@ function LegalAidPoster({ onBack }: { onBack: () => void }) {
 
 export default function Service() {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | 'application' | 'legal' | 'clinic' | 'charity' | 'canteen' | 'lifecircle' | 'online' | null>(null);
+  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | 'application' | 'legal' | 'clinic' | 'charity' | 'canteen' | 'lifecircle' | 'online' | 'smartGuardian' | null>(null);
   const [selectedOnlineService, setSelectedOnlineService] = useState<any>(null);
   const [activePurchase, setActivePurchase] = useState<any>(null);
   const [customToast, setCustomToast] = useState<string | null>(null);
@@ -1190,7 +1511,8 @@ export default function Service() {
       ('isCharityStore' in service && service.isCharityStore) ||
       ('isCanteen' in service && service.isCanteen) ||
       ('isLifeCircle' in service && service.isLifeCircle) ||
-      ('isOnline' in service && service.isOnline)
+      ('isOnline' in service && service.isOnline) ||
+      ('isSmartGuardian' in service && service.isSmartGuardian)
     );
   };
 
@@ -1225,6 +1547,10 @@ export default function Service() {
       } else if ('isOnline' in service && service.isOnline) {
         setSelectedOnlineService(service);
         setActivePoster('online');
+      } else if ('isSmartGuardian' in service && service.isSmartGuardian) {
+        setActivePoster('smartGuardian');
+      } else if ('isScience' in service && service.isScience) {
+        setActivePoster('science' as any);
       } else {
         setShowToast(true);
         setTimeout(() => setShowToast(false), 2000);
@@ -1392,6 +1718,8 @@ export default function Service() {
               {activePoster === 'canteen' && <CommunityCanteenPoster onBack={() => setActivePoster(null)} />}
               {activePoster === 'lifecircle' && <LifeCirclePoster onBack={() => setActivePoster(null)} />}
               {activePoster === 'online' && <OnlineServicePoster service={selectedOnlineService} onBack={() => setActivePoster(null)} />}
+              {activePoster === 'smartGuardian' && <ElderlySmartGuardianPoster onBack={() => setActivePoster(null)} />}
+              {(activePoster as any) === 'science' && <CommunitySciencePoster onBack={() => setActivePoster(null)} />}
               {activePoster === 'application' && (
                 <div className="bg-white min-h-screen">
                   <CommunityTalentApplication onBack={() => setActivePoster(null)} />

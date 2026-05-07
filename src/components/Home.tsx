@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Cloud, ChevronRight, Phone, MessageSquare, ShieldCheck, CreditCard, Key, Microscope, GripVertical, Baby, LayoutGrid, Heart, Smartphone, Gavel, Scale, Wrench, X, Star, Bell, FlaskConical, Calendar, Utensils, Camera, Coffee, Hotel, Store, Share2 } from 'lucide-react';
 import { motion, AnimatePresence, Reorder, useDragControls, DragControls } from 'motion/react';
+import { CommunitySciencePoster } from './Service';
 
 interface Review {
   userName: string;
@@ -188,6 +189,7 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
   const [showQrModal, setShowQrModal] = useState(false);
   const [showIntroModal, setShowIntroModal] = useState(false);
   const [showPropertyModal, setShowPropertyModal] = useState(false);
+  const [showSciencePoster, setShowSciencePoster] = useState(false);
   const [showShare, setShowShare] = useState(false);
 
   // Dynamic Content Data
@@ -780,6 +782,7 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
               if (link.label === '随手拍') onOpenSnapReport();
               if (link.isIntro) setShowIntroModal(true);
               if (link.isProperty) setShowPropertyModal(true);
+              if (link.id === 5) setShowSciencePoster(true);
             }}
             className="flex flex-col items-center space-y-1.5 group active:scale-95 transition-transform"
           >
@@ -1089,6 +1092,20 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
       </AnimatePresence>
 
       <div className="h-24" />
+
+      {/* Science Poster Modal */}
+      <AnimatePresence>
+        {showSciencePoster && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[300] bg-white overflow-y-auto"
+          >
+            <CommunitySciencePoster onBack={() => setShowSciencePoster(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
