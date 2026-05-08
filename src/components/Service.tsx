@@ -1073,41 +1073,66 @@ function ElderlySmartGuardianPoster({ onBack }: { onBack: () => void }) {
             <span>兴野智汇安家服务智能终端</span>
           </h2>
 
-          <div className="overflow-x-auto -mx-8 sm:mx-0">
-            <div className="min-w-[600px] px-8 sm:px-0">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-100">
-                    <th className="py-4 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">功能特性</th>
-                    <th className="py-4 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">说明</th>
-                    <th className="py-4 px-2 text-center text-[10px] font-black text-teal-600 uppercase tracking-widest bg-teal-50/30">全能版</th>
-                    <th className="py-4 px-2 text-center text-[10px] font-black text-emerald-600 uppercase tracking-widest">全智版</th>
-                    <th className="py-4 px-2 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest">基础版</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50">
-                  {tableData.map((row, i) => (
-                    <tr key={i} className="group hover:bg-slate-50/50 transition-colors">
-                      <td className="py-4 px-2">
-                        <span className="text-xs font-black text-slate-700">{row.feature}</span>
-                      </td>
-                      <td className="py-4 px-2">
-                        <span className="text-[10px] text-slate-400 font-medium leading-relaxed">{row.desc}</span>
-                      </td>
-                      <td className={`py-4 px-2 text-center bg-teal-50/10`}>
-                        <span className={`text-[11px] font-black ${row.full === '支持' ? 'text-teal-600' : 'text-slate-900'}`}>{row.full}</span>
-                      </td>
-                      <td className="py-4 px-2 text-center">
-                        <span className={`text-[11px] font-black ${row.smart === '支持' ? 'text-emerald-600' : 'text-slate-900'}`}>{row.smart}</span>
-                      </td>
-                      <td className="py-4 px-2 text-center text-slate-400">
-                        <span className={`text-[11px] font-black ${row.basic === '支持' ? 'text-slate-700' : 'text-slate-300'}`}>{row.basic}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <div className="space-y-4 mb-8">
+            {tableData.map((row, i) => {
+              if (row.feature === '价格（月付）') return null;
+              return (
+                <div key={i} className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
+                  <div className="flex justify-between items-start mb-3">
+                    <h4 className="text-sm font-black text-slate-800">{row.feature}</h4>
+                    <div className="flex space-x-1">
+                      {row.full === '支持' && <span className="bg-teal-50 text-teal-600 px-2 py-0.5 rounded-lg text-[9px] font-black border border-teal-100">全能</span>}
+                      {row.smart === '支持' && <span className="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-lg text-[9px] font-black border border-emerald-100">全智</span>}
+                      {row.basic === '支持' && <span className="bg-slate-50 text-slate-500 px-2 py-0.5 rounded-lg text-[9px] font-black border border-slate-200">基础</span>}
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-slate-400 font-medium leading-relaxed mb-4">{row.desc}</p>
+                  
+                  <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-50">
+                    <div className="flex flex-col items-center">
+                      <span className="text-[8px] text-slate-400 font-bold uppercase mb-1">全能版</span>
+                      <div className={`w-full py-1.5 rounded-xl text-center text-[10px] font-black ${row.full === '支持' ? 'bg-teal-500 text-white' : 'bg-slate-100 text-slate-300'}`}>
+                        {row.full}
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="text-[8px] text-slate-400 font-bold uppercase mb-1">全智版</span>
+                      <div className={`w-full py-1.5 rounded-xl text-center text-[10px] font-black ${row.smart === '支持' ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-300'}`}>
+                        {row.smart}
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="text-[8px] text-slate-400 font-bold uppercase mb-1">基础版</span>
+                      <div className={`w-full py-1.5 rounded-xl text-center text-[10px] font-black ${row.basic === '支持' ? 'bg-slate-200 text-slate-400' : 'bg-slate-100 text-slate-300'}`}>
+                        {row.basic}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-[2.5rem] p-6 text-white mb-8 shadow-xl">
+            <h3 className="text-sm font-black text-teal-400 mb-4 flex items-center space-x-2">
+              <div className="w-1.5 h-4 bg-teal-400 rounded-full" />
+              <span>版本资费方案</span>
+            </h3>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-white/5 rounded-2xl p-3 border border-white/10 text-center">
+                <p className="text-[9px] font-bold opacity-60 mb-2">全能版</p>
+                <div className="text-xl font-black text-teal-400">85<span className="text-[10px] ml-0.5">元/月</span></div>
+              </div>
+              <div className="bg-white/5 rounded-2xl p-3 border border-white/10 text-center">
+                <p className="text-[9px] font-bold opacity-60 mb-2">全智版</p>
+                <div className="text-xl font-black text-emerald-400">65<span className="text-[10px] ml-0.5">元/月</span></div>
+              </div>
+              <div className="bg-white/5 rounded-2xl p-3 border border-white/10 text-center">
+                <p className="text-[9px] font-bold opacity-60 mb-2">基础版</p>
+                <div className="text-xl font-black text-slate-300">45<span className="text-[10px] ml-0.5">元/月</span></div>
+              </div>
             </div>
+            <p className="text-[9px] text-white/40 mt-4 text-center">可选择一次性付费、月付或年付等多种支付方式</p>
           </div>
         </div>
 
