@@ -171,9 +171,47 @@ function HomeSenior({ onOpenSnapReport, onToggleSeniorMode, community, onToggleC
   );
 }
 
+// Banner Component to isolate re-renders
+const HomeBanner = React.memo(({ banners }: { banners: any[] }) => {
+  const [currentBanner, setCurrentBanner] = useState(0);
+
+  useEffect(() => {
+    if (!banners.length) return;
+    const timer = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [banners.length]);
+
+  return (
+    <div className="relative h-44 rounded-3xl overflow-hidden shadow-lg shadow-orange-100/50">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`banner-${currentBanner}`}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.5 }}
+          className="absolute inset-0"
+        >
+          <img src={banners[currentBanner].image} className="w-full h-full object-cover" alt="" referrerPolicy="no-referrer" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-5 text-white">
+             <h3 className="text-lg font-extrabold tracking-tight">{banners[currentBanner].title}</h3>
+             <p className="text-xs text-gray-100 mt-1.5 font-medium opacity-90">{banners[currentBanner].desc}</p>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+      <div className="absolute bottom-4 left-5 flex space-x-1.5">
+        {banners.map((_, i) => (
+          <div key={`dot-${i}`} className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === currentBanner ? 'bg-[#FF8C00] w-4' : 'bg-white/60'}`} />
+        ))}
+      </div>
+    </div>
+  );
+});
+
 // Sub-component for Default Mode
 function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggleCommunity }: { onOpenSnapReport: () => void, onToggleSeniorMode: () => void, community: string, onToggleCommunity: () => void }) {
-  const [currentBanner, setCurrentBanner] = useState(0);
   const [sections, setSections] = useState([
     'property_governance',
     'hot_services',
@@ -231,12 +269,79 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
 
   const activeData = COMMUNITY_DATA[community] || COMMUNITY_DATA['亿利社区'];
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentBanner((prev) => (prev + 1) % (activeData.banners.length || 1));
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [activeData.banners.length]);
+  const COMMUNITY_INTRO_DETAILS: Record<string, {
+    title: string;
+    image: string;
+    scope: string;
+    stats: { label: string, value: string, unit: string, color: string, iconColor: string }[];
+    complexes: string[];
+    partyBuilding: { branchCount: number, memberCount: number, registeredMemberCount: number, brand: string };
+    purpose: string;
+    tagline: string;
+  }> = {
+    '亿利社区': {
+      title: '亿利社区',
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+      scope: '东起金桥一路，西至呼伦南路，北至包头大街，南到金源街，外加银河北街北侧亿利生态城东、西区。',
+      stats: [
+        { label: '辖区面积', value: '0.67', unit: 'km²', color: 'bg-orange-50', iconColor: 'text-orange-400' },
+        { label: '总户数', value: '5617', unit: '户', color: 'bg-blue-50', iconColor: 'text-blue-400' },
+        { label: '总人口', value: '9361', unit: '人', color: 'bg-emerald-50', iconColor: 'text-emerald-400' },
+        { label: '居民小区', value: '7', unit: '个', color: 'bg-purple-50', iconColor: 'text-purple-400' },
+      ],
+      complexes: ['亿利生态城东区', '亿利生态城西区', '希望阳光苑', '蒙元骑士城一期', '蒙元骑士城二期', '环保小区', '统计小区'],
+      partyBuilding: {
+        branchCount: 2,
+        memberCount: 73,
+        registeredMemberCount: 178,
+        brand: '“领建、联建、促建”“三建”党建品牌'
+      },
+      purpose: '坚持把“为老为小”优质服务融入基层治理中，构建共建、共治、共享的社区治理新格局。',
+      tagline: '“以人本、服务居民”'
+    },
+    '老缸房社区': {
+      title: '老缸房社区',
+      image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=800&q=80',
+      scope: '北起锡林郭勒南路，南至大黑河，西接赛罕路，东邻金桥路。',
+      stats: [
+        { label: '辖区面积', value: '1.2', unit: 'km²', color: 'bg-orange-50', iconColor: 'text-orange-400' },
+        { label: '总户数', value: '4200', unit: '户', color: 'bg-blue-50', iconColor: 'text-blue-400' },
+        { label: '总人口', value: '11500', unit: '人', color: 'bg-emerald-50', iconColor: 'text-emerald-400' },
+        { label: '居民小区', value: '5', unit: '个', color: 'bg-purple-50', iconColor: 'text-purple-400' },
+      ],
+      complexes: ['老缸房住宅楼', '如意佳园', '滨河公馆', '金桥小区', '塞外锦绣'],
+      partyBuilding: {
+        branchCount: 3,
+        memberCount: 85,
+        registeredMemberCount: 156,
+        brand: '“古韵新风·红色缸房”党建引领品牌'
+      },
+      purpose: '传承历史底蕴，创新现代治理，全心全意为居民办实事、解难题。',
+      tagline: '“守望相助，共享和谐”'
+    },
+    '滨河路社区': {
+      title: '滨河路社区',
+      image: 'https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?auto=format&fit=crop&w=800&q=80',
+      scope: '沿滨河路展开，东起河源路，西至生态园边界。',
+      stats: [
+        { label: '辖区面积', value: '0.85', unit: 'km²', color: 'bg-orange-50', iconColor: 'text-orange-400' },
+        { label: '总户数', value: '3800', unit: '户', color: 'bg-blue-50', iconColor: 'text-blue-400' },
+        { label: '总人口', value: '8900', unit: '人', color: 'bg-emerald-50', iconColor: 'text-emerald-400' },
+        { label: '居民小区', value: '4', unit: '个', color: 'bg-purple-50', iconColor: 'text-purple-400' },
+      ],
+      complexes: ['滨河丽景', '水岸华庭', '绿谷嘉园', '半岛阳光'],
+      partyBuilding: {
+        branchCount: 2,
+        memberCount: 68,
+        registeredMemberCount: 142,
+        brand: '“碧水蓝天·党员先锋”生态治理党建'
+      },
+      purpose: '绿色宜居，文化引领，通过生态社区建设提升居民幸福指数。',
+      tagline: '“滨河美家，绿色共建”'
+    }
+  };
+
+  const activeIntro = COMMUNITY_INTRO_DETAILS[community] || COMMUNITY_INTRO_DETAILS['亿利社区'];
 
   const quickLinks = [
     { id: 1, label: '随手拍', icon: Camera, color: 'bg-blue-50 text-blue-500' },
@@ -749,29 +854,7 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
       </div>
 
       {/* Banner Carousel */}
-      <div className="relative h-44 rounded-3xl overflow-hidden shadow-lg shadow-orange-100/50">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`banner-${currentBanner}`}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0"
-          >
-            <img src={activeData.banners[currentBanner].image} className="w-full h-full object-cover" alt="" referrerPolicy="no-referrer" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-5 text-white">
-               <h3 className="text-lg font-extrabold tracking-tight">{activeData.banners[currentBanner].title}</h3>
-               <p className="text-xs text-gray-100 mt-1.5 font-medium opacity-90">{activeData.banners[currentBanner].desc}</p>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-        <div className="absolute bottom-4 left-5 flex space-x-1.5">
-          {activeData.banners.map((_, i) => (
-            <div key={`dot-${i}`} className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === currentBanner ? 'bg-[#FF8C00] w-4' : 'bg-white/60'}`} />
-          ))}
-        </div>
-      </div>
+      <HomeBanner banners={activeData.banners} />
 
       {/* Quick Access Grid */}
       <div className="grid grid-cols-5 gap-2">
@@ -918,9 +1001,9 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
 
             <div className="relative h-64 shrink-0">
                <img 
-                 src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" 
+                 src={activeIntro.image} 
                  className="w-full h-full object-cover" 
-                 alt="社区党群服务中心" 
+                 alt={activeIntro.title} 
                  referrerPolicy="no-referrer"
                />
                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-white" />
@@ -944,13 +1027,13 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
                <div className="bg-white rounded-[40px] shadow-xl shadow-red-100/50 p-6 border border-red-50">
                   <div className="flex items-center space-x-3 mb-4">
                      <div className="w-1.5 h-6 bg-red-600 rounded-full" />
-                     <h2 className="text-2xl font-black text-gray-900">亿利社区简介</h2>
+                     <h2 className="text-2xl font-black text-gray-900">{activeIntro.title}简介</h2>
                   </div>
                   
                   <div className="space-y-6 text-gray-600 leading-relaxed text-sm font-medium">
                      <section className="bg-red-50/50 p-4 rounded-3xl border border-red-100">
                         <p>
-                           <span className="text-red-600 font-black">亿利社区党群服务中心</span>成立于2020年，是一个充满活力与温度的现代社区。
+                           <span className="text-red-600 font-black">{activeIntro.title}党群服务中心</span>成立于2020年，是一个充满活力与温度的现代社区。
                         </p>
                      </section>
 
@@ -960,27 +1043,17 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
                            地理范围
                         </h3>
                         <p className="bg-gray-50 p-4 rounded-2xl text-[13px]">
-                           东起金桥一路，西至呼伦南路，北至包头大街，南到金源街，外加银河北街北侧亿利生态城东、西区。
+                           {activeIntro.scope}
                         </p>
                      </section>
 
                      <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-orange-50 p-4 rounded-3xl border border-orange-100 text-center">
-                           <div className="text-[10px] font-bold text-orange-400 uppercase tracking-widest mb-1">辖区面积</div>
-                           <div className="text-xl font-black text-orange-600">0.67 <span className="text-xs">km²</span></div>
-                        </div>
-                        <div className="bg-blue-50 p-4 rounded-3xl border border-blue-100 text-center">
-                           <div className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">总户数</div>
-                           <div className="text-xl font-black text-blue-600">5617 <span className="text-xs">户</span></div>
-                        </div>
-                        <div className="bg-emerald-50 p-4 rounded-3xl border border-emerald-100 text-center">
-                           <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">总人口</div>
-                           <div className="text-xl font-black text-emerald-600">9361 <span className="text-xs">人</span></div>
-                        </div>
-                        <div className="bg-purple-50 p-4 rounded-3xl border border-purple-100 text-center">
-                           <div className="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-1">居民小区</div>
-                           <div className="text-xl font-black text-purple-600">7 <span className="text-xs">个</span></div>
-                        </div>
+                        {activeIntro.stats.map((stat, i) => (
+                           <div key={i} className={`${stat.color} p-4 rounded-3xl border border-gray-100 text-center`}>
+                              <div className={`text-[10px] font-bold ${stat.iconColor} uppercase tracking-widest mb-1`}>{stat.label}</div>
+                              <div className={`text-xl font-black ${stat.iconColor.replace('text-', 'text-slate-800').replace('-400', '')}`}>{stat.value} <span className="text-xs">{stat.unit}</span></div>
+                           </div>
+                        ))}
                      </div>
 
                      <section className="space-y-3">
@@ -989,7 +1062,7 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
                            辖区小区
                         </h3>
                         <div className="flex flex-wrap gap-2">
-                           {['亿利生态城东区', '亿利生态城西区', '希望阳光苑', '蒙元骑士城一期', '蒙元骑士城二期', '环保小区', '统计小区'].map(tag => (
+                           {activeIntro.complexes.map(tag => (
                              <span key={tag} className="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl text-xs font-bold">{tag}</span>
                            ))}
                         </div>
@@ -1001,16 +1074,16 @@ function HomeDefault({ onOpenSnapReport, onToggleSeniorMode, community, onToggle
                            党建引领
                         </h3>
                         <div className="space-y-4 text-sm opacity-90 font-medium">
-                           <p>社区党总支下设<span className="font-black text-yellow-300 underline underline-offset-4">2个党支部</span>，在册党员<span className="font-black text-yellow-300">73人</span>，在职党员<span className="font-black text-yellow-300">178人</span>。</p>
-                           <p>以“党建+红色物业”为抓手，打造“领建、联建、促建”<span className="font-black text-yellow-200">“三建”党建品牌</span>。</p>
+                           <p>社区党总支下设<span className="font-black text-yellow-300 underline underline-offset-4">{activeIntro.partyBuilding.branchCount}个党支部</span>，在册党员<span className="font-black text-yellow-300">{activeIntro.partyBuilding.memberCount}人</span>，在职党员<span className="font-black text-yellow-300">{activeIntro.partyBuilding.registeredMemberCount}人</span>。</p>
+                           <p>以“党建+红色物业”为抓手，打造<span className="font-black text-yellow-200">{activeIntro.partyBuilding.brand}</span>。</p>
                         </div>
                      </section>
 
                      <section className="space-y-4 pb-10">
                         <h3 className="font-black text-gray-800 text-base">服务宗旨</h3>
-                        <p className="text-gray-500 italic">“以人本、服务居民”</p>
+                        <p className="text-gray-500 italic">{activeIntro.tagline}</p>
                         <p className="bg-gray-50 p-5 rounded-[2.5rem] border border-gray-100">
-                           坚持把“为老为小”优质服务融入基层治理中，构建共建、共治、共享的社区治理新格局。
+                           {activeIntro.purpose}
                         </p>
                      </section>
                   </div>

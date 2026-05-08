@@ -49,7 +49,7 @@ export default function Profile() {
     }));
   };
 
-  const [expandedDates, setExpandedDates] = useState<string[]>(['20260507']);
+  const [expandedDates, setExpandedDates] = useState<string[]>(['20260508']);
 
   const toggleDate = (date: string) => {
     setExpandedDates(prev => 
@@ -58,6 +58,15 @@ export default function Profile() {
   };
 
   const updateLogs = [
+    {
+      date: '20260508',
+      items: [
+        {
+          title: '1. “白事通”殡葬服务指南上线',
+          desc: '为方便居民了解身后事宜，服务板块新增“白事通”指南。收录呼和浩特2026年最新殡葬服务价格参考，涵盖临终初期、治丧期间、告别火化及墓地安葬全流程费用明细与避坑指南。'
+        }
+      ]
+    },
     {
       date: '20260507',
       items: [

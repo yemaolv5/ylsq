@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Calendar, MapPin, CreditCard, Wrench, Key, Utensils, Users, ShoppingBag, Heart, ShieldCheck, Microscope, FlaskConical, Baby, X, Gavel, Star, Phone, Stethoscope, Clock, Activity, Coffee, Hotel, Store, Navigation, MessageSquare, Share2, Smartphone, BookOpen, Rocket, Zap, Apple, GraduationCap, Brain, Compass, Atom, ChevronRight } from 'lucide-react';
+import { Search, Calendar, MapPin, CreditCard, Wrench, Key, Utensils, Users, ShoppingBag, Heart, ShieldCheck, Microscope, FlaskConical, Baby, X, Gavel, Star, Phone, Stethoscope, Clock, Activity, Coffee, Hotel, Store, Navigation, MessageSquare, Share2, Smartphone, BookOpen, Rocket, Zap, Apple, GraduationCap, Brain, Compass, Atom, ChevronRight, LayoutGrid } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 const ShareOverlay = ({ onClose }: { onClose: () => void }) => (
@@ -44,13 +44,13 @@ const ShareOverlay = ({ onClose }: { onClose: () => void }) => (
 );
 
 const CATEGORIES = [
-  { id: 'all', label: '全部' },
-  { id: 'life', label: '生活服务' },
-  { id: 'gov', label: '政务服务' },
-  { id: 'health', label: '健康服务' },
-  { id: 'elderly', label: '为老服务' },
-  { id: 'special', label: '特色服务' },
-  { id: 'online', label: '线上服务' },
+  { id: 'all', label: '全部', icon: LayoutGrid },
+  { id: 'life', label: '生活服务', icon: Coffee },
+  { id: 'gov', label: '政务服务', icon: ShieldCheck },
+  { id: 'health', label: '健康服务', icon: Stethoscope },
+  { id: 'elderly', label: '为老服务', icon: Baby },
+  { id: 'special', label: '特色服务', icon: Star },
+  { id: 'online', label: '线上服务', icon: Smartphone },
 ];
 
 const SERVICES = [
@@ -80,6 +80,7 @@ const SERVICES = [
   { id: 13, label: '科普阵地', icon: Microscope, category: 'special', color: 'bg-violet-50 text-violet-500', isScience: true },
   { id: 14, label: '小小科学家', icon: FlaskConical, category: 'special', color: 'bg-cyan-50 text-cyan-500', isScience: true },
   { id: 23, label: '特约维修', icon: Wrench, category: 'life', color: 'bg-blue-50 text-blue-600' },
+  { id: 26, label: '白事通', icon: Heart, category: 'life', color: 'bg-slate-50 text-slate-600', isFuneral: true },
   { id: 24, label: '共享维修\n服务价目', icon: Wrench, category: 'life', color: 'bg-orange-50 text-orange-600', posterType: 'maintenance' },
   { id: 19, label: '社区达人\n申请', icon: Star, category: 'special', color: 'bg-amber-50 text-amber-600', isApplication: true },
   
@@ -1395,6 +1396,238 @@ function CommunityClinicPoster({ onBack }: { onBack: () => void }) {
   );
 }
 
+function FuneralGuidePoster({ onBack }: { onBack: () => void }) {
+  const [showShare, setShowShare] = useState(false);
+  
+  const priceData = [
+    {
+      title: '一、临终及身后初期服务',
+      subtitle: '（逝者离世后 0–24 小时）',
+      items: [
+        { name: '净身穿衣（入殓）', content: '遗体清洁、消毒、穿衣（寿衣）、简单整容', price: '800–2000 元', note: '普通寿衣 800–1200；高档寿衣 1500–2000' },
+        { name: '遗体接运（灵车）', content: '专用灵车接送（医院/家中→殡仪馆）、抬尸、消毒', price: '600–1500 元/趟', note: '市区 600；郊区/长途 1000–1500' },
+        { name: '遗体冷藏存放', content: '殡仪馆冷藏柜保存（防变质，等待告别/吉日火化）', price: '60–80 元/天', note: '一般存 3 天，合计 180–240 元' },
+        { name: '死亡证明/火化证代办', content: '协助医院/派出所开死亡证明、殡仪馆办火化手续', price: '300–600 元', note: '代办费，不含官方工本费' },
+      ]
+    },
+    {
+      title: '二、灵堂与治丧期间服务',
+      subtitle: '（1–3 天）',
+      sections: [
+        {
+          name: '灵堂布置',
+          items: [
+            { name: '基础布置', content: '遗像制作（12寸实木框）、灵位牌、香炉、蜡烛、白布、挽联', price: '500–1200 元' },
+            { name: '升级布置', content: '鲜花拱门、电子花圈、空飘、灯光、音响', price: '1500–3000 元' },
+          ]
+        },
+        {
+          name: '寿衣/骨灰盒/花圈',
+          tables: [
+            { label: '寿衣（按件套）', headers: ['类型', '报价'], rows: [['3件套', '800–1500 元'], ['5件套', '1500–2500 元'], ['7件套', '2500–4000 元']] },
+            { label: '骨灰盒', headers: ['类型', '报价'], rows: [['普通硬木', '800–1500 元'], ['实木/黑檀', '2000–5000 元'], ['高档/紫檀', '5000–20000 元']] },
+            { label: '花圈/花篮', headers: ['类型', '报价'], rows: [['普通纸花圈', '100–300 元/个'], ['鲜花圈', '500–1200 元/个'], ['告别厅布置', '1000–3000 元']] },
+          ]
+        }
+      ],
+      items: [
+        { name: '礼仪服务', content: '家祭/守灵指导、挽联书写、香烛纸钱供应', price: '500–1500 元', note: '治丧期间全程服务' }
+      ]
+    },
+    {
+      title: '三、告别仪式与火化',
+      subtitle: '（1 天）',
+      tables: [
+        { label: '告别厅租赁', headers: ['类型', '规模', '报价'], rows: [['普通厅', '20-50人', '800-1500'], ['中档厅', '50-100人', '2000-3500'], ['高档厅', '100人+', '4000-8000']] },
+        { label: '遗体整容/火化', headers: ['项目', '类型', '报价'], rows: [['整容', '基础', '500-1000'], ['整容', '精细', '1200-2500'], ['火化', '普通', '300-600'], ['火化', '单人高档', '800-1500']] },
+      ],
+      items: [
+        { name: '仪式主持', content: '司仪、流程引导、答谢、告别行礼', price: '800–2000 元/场' }
+      ]
+    },
+    {
+      title: '四、墓地选购与安葬',
+      subtitle: '（1 天，可延后吉日）',
+      items: [
+        { name: '选墓服务', content: '陪同看墓、风水选址、手续代办', price: '1000–3000 元', note: '不含墓地款' },
+      ],
+      tables: [
+        { label: '墓地费用参考', headers: ['类型', '报价'], rows: [['公益性公墓', '1–3 万元'], ['普通经营性', '3–8 万元'], ['中高档型', '8–20 万元'], ['豪华艺术墓', '20–50 万元+']] },
+      ],
+      items2: [
+        { name: '安葬服务', content: '下葬仪式、骨灰盒下葬、摆供、封土', price: '1500–3000 元', note: '不含刻字费' },
+        { name: '刻字/瓷像', content: '姓名、生卒、碑文；遗像瓷像制作', price: '300–1200 元' },
+      ]
+    }
+  ];
+
+  const packages = [
+    { title: '经济简约套餐', price: '2800–3800 元', desc: '接运 + 冷藏3天 + 穿衣 + 火化 + 基础骨灰盒 + 手续代办', tag: '直接火化，无告别' },
+    { title: '标准体面套餐', price: '6000–12000 元', desc: '含经济套餐 + 灵堂基础布置 + 告别厅 + 整容 + 主持 + 鲜花圈', tag: '小型告别仪式' },
+    { title: '尊孝全套餐', price: '15000–30000 元', desc: '含标准套餐 + 高档寿衣/骨灰盒 + 中档灵堂 + 乐队/礼仪 + 选墓安葬', tag: '含中档墓地3–8万', extra: '传统全套仪式' }
+  ];
+
+  return (
+    <div className="bg-slate-50 min-h-screen font-sans pb-20 relative">
+      <AnimatePresence>
+        {showShare && <ShareOverlay onClose={() => setShowShare(false)} />}
+      </AnimatePresence>
+
+      <div className="fixed top-6 right-6 flex items-center space-x-3 z-50">
+        <button onClick={() => setShowShare(true)} className="p-2 bg-black/10 hover:bg-black/20 text-black rounded-full transition-colors backdrop-blur-md">
+          <Share2 size={24} />
+        </button>
+        <button onClick={onBack} className="p-2 bg-black/10 hover:bg-black/20 text-black rounded-full transition-colors backdrop-blur-md">
+          <X size={24} />
+        </button>
+      </div>
+
+      <div className="bg-slate-900 p-8 pt-16 text-white relative overflow-hidden">
+        <Heart size={180} className="absolute -right-12 -bottom-12 opacity-10 rotate-12" />
+        <div className="relative z-10">
+          <div className="inline-flex items-center space-x-2 bg-white/10 px-3 py-1 rounded-full mb-4 backdrop-blur-md">
+            <ShieldCheck size={14} className="text-slate-400" />
+            <span className="text-[10px] font-black tracking-widest uppercase">Service Guide</span>
+          </div>
+          <h1 className="text-3xl font-black mb-2 tracking-tighter">白事通</h1>
+          <p className="opacity-80 text-sm font-medium">呼和浩特殡葬服务价格参考（2026年）</p>
+        </div>
+      </div>
+
+      <div className="p-6 -mt-6 space-y-8">
+        {priceData.map((group, gIdx) => (
+          <div key={gIdx} className="bg-white rounded-[2.5rem] p-6 shadow-xl shadow-slate-200/50 border border-slate-100">
+            <div className="mb-6">
+              <h2 className="text-lg font-black text-slate-800">{group.title}</h2>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{group.subtitle}</p>
+            </div>
+            
+            <div className="space-y-6">
+              {group.items?.map((item, i) => (
+                <div key={i} className="flex flex-col space-y-1 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                  <div className="flex justify-between items-start">
+                    <h4 className="text-xs font-black text-slate-800">{item.name}</h4>
+                    <span className="text-slate-900 font-black text-xs">{item.price}</span>
+                  </div>
+                  <p className="text-[10px] text-slate-500 leading-relaxed">{item.content}</p>
+                  {item.note && <p className="text-[9px] text-indigo-500 font-bold mt-1 opacity-70">备注：{item.note}</p>}
+                </div>
+              ))}
+
+              {group.sections?.map((section, sIdx) => (
+                <div key={sIdx} className="space-y-4">
+                  <div className="flex items-center space-x-2 opacity-60">
+                    <div className="w-1 h-3 bg-slate-400 rounded-full" />
+                    <span className="text-[10px] font-black tracking-widest">{section.name}</span>
+                  </div>
+                  {section.items?.map((item, i) => (
+                    <div key={i} className="flex flex-col space-y-1 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                      <div className="flex justify-between items-start">
+                        <h4 className="text-xs font-black text-slate-800">{item.name}</h4>
+                        <span className="text-slate-900 font-black text-xs">{item.price}</span>
+                      </div>
+                      <p className="text-[10px] text-slate-500 leading-relaxed font-medium">{item.content}</p>
+                    </div>
+                  ))}
+                  {section.tables?.map((table, tIdx) => (
+                    <div key={tIdx} className="overflow-hidden rounded-2xl border border-slate-100">
+                      <div className="bg-slate-50 px-4 py-2 border-b border-slate-100">
+                        <span className="text-[10px] font-black text-slate-800">{table.label}</span>
+                      </div>
+                      <table className="w-full text-[10px]">
+                        <thead>
+                          <tr className="bg-white/50 text-slate-400 font-bold border-b border-slate-50">
+                            {table.headers.map((h, i) => <th key={i} className="px-4 py-2 text-left">{h}</th>)}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-50">
+                          {table.rows.map((row, i) => (
+                            <tr key={i} className="hover:bg-slate-50/50">
+                              {row.map((cell, cIdx) => <td key={cIdx} className="px-4 py-2 text-slate-600 font-medium">{cell}</td>)}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ))}
+                </div>
+              ))}
+
+              {group.tables?.map((table, tIdx) => (
+                <div key={tIdx} className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1 h-3 bg-slate-400 rounded-full" />
+                    <span className="text-[10px] font-black tracking-widest opacity-60">{table.label}</span>
+                  </div>
+                  <div className="overflow-hidden rounded-2xl border border-slate-100">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="bg-slate-50 text-slate-400 font-bold border-b border-slate-100">
+                          {table.headers.map((h, i) => <th key={i} className="px-4 py-2 text-left text-[9px] uppercase tracking-wider">{h}</th>)}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {table.rows.map((row, i) => (
+                          <tr key={i}>
+                            {row.map((cell, cIdx) => <td key={cIdx} className="px-4 py-2.5 text-slate-700 font-bold text-[11px]">{cell}</td>)}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
+
+              {group.items2?.map((item, i) => (
+                <div key={i} className="flex flex-col space-y-1 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                  <div className="flex justify-between items-start">
+                    <h4 className="text-xs font-black text-slate-800">{item.name}</h4>
+                    <span className="text-slate-900 font-black text-xs">{item.price}</span>
+                  </div>
+                  <p className="text-[10px] text-slate-500 leading-relaxed">{item.content}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {/* Section 5: Packages */}
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2 px-2">
+             <div className="w-1.5 h-6 bg-amber-500 rounded-full" />
+             <h2 className="text-lg font-black text-slate-800">五、套餐化参考</h2>
+          </div>
+          <div className="grid gap-4">
+            {packages.map((pkg, i) => (
+              <div key={i} className="bg-white p-6 rounded-[2.5rem] border-2 border-amber-100 shadow-xl shadow-amber-50">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest">{pkg.tag}</span>
+                    <h3 className="text-lg font-black text-slate-900">{pkg.title}</h3>
+                  </div>
+                  <div className="bg-amber-500 text-white px-3 py-1 rounded-xl text-[10px] font-black">
+                    {pkg.price}
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-500 leading-relaxed italic border-l-2 border-amber-200 pl-3">
+                  {pkg.desc}
+                </p>
+                {pkg.extra && <p className="mt-3 text-[10px] text-amber-600 font-bold">{pkg.extra}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+
+
+
+        <div className="text-center pt-4 opacity-40">
+          <p className="text-[9px] font-black tracking-widest uppercase">Data from Government Documents (2026)</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LegalAidPoster({ onBack }: { onBack: () => void }) {
   const [showShare, setShowShare] = useState(false);
   const cases = [
@@ -1495,7 +1728,7 @@ function LegalAidPoster({ onBack }: { onBack: () => void }) {
 
 export default function Service() {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | 'application' | 'legal' | 'clinic' | 'charity' | 'canteen' | 'lifecircle' | 'online' | 'smartGuardian' | null>(null);
+  const [activePoster, setActivePoster] = useState<'elderly' | 'maintenance' | 'application' | 'legal' | 'clinic' | 'charity' | 'canteen' | 'lifecircle' | 'online' | 'smartGuardian' | 'funeral' | null>(null);
   const [selectedOnlineService, setSelectedOnlineService] = useState<any>(null);
   const [activePurchase, setActivePurchase] = useState<any>(null);
   const [customToast, setCustomToast] = useState<string | null>(null);
@@ -1512,7 +1745,8 @@ export default function Service() {
       ('isCanteen' in service && service.isCanteen) ||
       ('isLifeCircle' in service && service.isLifeCircle) ||
       ('isOnline' in service && service.isOnline) ||
-      ('isSmartGuardian' in service && service.isSmartGuardian)
+      ('isSmartGuardian' in service && service.isSmartGuardian) ||
+      ('isFuneral' in service && service.isFuneral)
     );
   };
 
@@ -1547,6 +1781,8 @@ export default function Service() {
       } else if ('isOnline' in service && service.isOnline) {
         setSelectedOnlineService(service);
         setActivePoster('online');
+      } else if ('isFuneral' in service && service.isFuneral) {
+        setActivePoster('funeral');
       } else if ('isSmartGuardian' in service && service.isSmartGuardian) {
         setActivePoster('smartGuardian');
       } else if ('isScience' in service && service.isScience) {
@@ -1581,46 +1817,129 @@ export default function Service() {
       </div>
 
       {/* Category Tabs */}
-      <div className="sticky top-0 bg-white z-10 flex space-x-6 px-4 py-3 border-b border-gray-50 overflow-x-auto scrollbar-hide">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => setActiveCategory(cat.id)}
-            className={`whitespace-nowrap text-sm font-medium transition-colors relative pb-1 ${
-              activeCategory === cat.id ? 'text-[#FF8C00]' : 'text-gray-400 font-normal hover:text-gray-600'
-            }`}
-          >
-            {cat.label}
-            {activeCategory === cat.id && (
-              <motion.div 
-                layoutId="active-category" 
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#FF8C00] rounded-full" 
-              />
-            )}
-          </button>
-        ))}
+      <div className="bg-white sticky top-0 z-20 shadow-sm overflow-x-auto scrollbar-hide py-2">
+        <div className="flex space-x-2 px-4">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`flex items-center space-x-1.5 px-4 py-2 rounded-2xl whitespace-nowrap text-xs font-black transition-all ${
+                activeCategory === cat.id 
+                  ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' 
+                  : 'bg-slate-50 text-slate-400 hover:bg-slate-100'
+              }`}
+            >
+              <cat.icon size={14} fill={activeCategory === cat.id ? "currentColor" : "none"} className={activeCategory === cat.id ? "opacity-100" : "opacity-40"} />
+              <span>{cat.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Services Grid */}
-      <div className="p-4 flex-1">
-        <div className="grid grid-cols-4 gap-y-6 gap-x-3">
-          {filteredServices.map((service) => (
-            <motion.button 
-              layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              key={`main-service-${service.id}`} 
-              onClick={() => handleServiceClick(service)}
-              className="flex flex-col items-center space-y-2 active:scale-95 transition-transform"
-            >
-              <div className={`w-14 h-14 ${service.color} rounded-2xl flex items-center justify-center shadow-sm ${!isLit(service) ? 'grayscale contrast-50 opacity-60' : ''}`}>
-                <service.icon size={28} />
+      <div className="flex-1 overflow-y-auto">
+        {/* Services Grid */}
+        <div className="p-4 space-y-8">
+          {activeCategory === 'all' ? (
+            // Optimized "All" Layout: Grouped by Category
+            CATEGORIES.filter(c => c.id !== 'all').map(category => {
+              const categoryServices = SERVICES.filter(s => s.category === category.id).sort((a, b) => {
+                const aLit = isLit(a) ? 1 : 0;
+                const bLit = isLit(b) ? 1 : 0;
+                return bLit - aLit;
+              });
+              
+              if (categoryServices.length === 0) return null;
+
+              return (
+                <div key={`group-${category.id}`} className="space-y-4">
+                  <div className="flex items-center justify-between px-1">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-1 h-4 bg-slate-900 rounded-full" />
+                      <h2 className="text-sm font-black text-slate-800">{category.label}</h2>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-4 gap-y-6 gap-x-3">
+                    {categoryServices.map((service) => (
+                      <motion.button 
+                        layout
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        key={`all-service-${service.id}`} 
+                        onClick={() => handleServiceClick(service)}
+                        className="flex flex-col items-center space-y-2 active:scale-95 transition-transform"
+                      >
+                        <div className={`w-14 h-14 ${service.color} rounded-2xl flex items-center justify-center shadow-sm ${!isLit(service) ? 'grayscale contrast-50 opacity-60' : ''}`}>
+                          <service.icon size={28} />
+                        </div>
+                        <span className={`text-[11px] font-bold text-center leading-tight whitespace-pre-line ${!isLit(service) ? 'text-slate-300' : 'text-slate-600'}`}>
+                          {service.label}
+                        </span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })
+          ) : activeCategory === 'life' ? (
+            // Optimized "Life Services" Layout: Featured Top + Grid
+            <div className="space-y-8">
+              <div className="relative h-40 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-[2.5rem] p-6 text-white overflow-hidden shadow-xl shadow-blue-100">
+                <Coffee size={120} className="absolute -right-8 -bottom-8 opacity-10 rotate-12" />
+                <div className="relative z-10">
+                  <span className="text-[10px] font-black tracking-widest uppercase bg-white/20 px-2 py-0.5 rounded">Featured</span>
+                  <h2 className="text-2xl font-black mt-2 tracking-tighter">美好生活 • 便民服务</h2>
+                  <p className="text-xs font-medium opacity-80 mt-1 max-w-[180px]">为您提供最贴心的社区生活保障，享受智慧便捷服务。</p>
+                </div>
               </div>
-              <span className={`text-[11px] font-medium text-center leading-tight whitespace-pre-line ${!isLit(service) ? 'text-gray-400' : 'text-gray-600'}`}>
-                {service.label}
-              </span>
-            </motion.button>
-          ))}
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2 px-1">
+                  <div className="w-1 h-4 bg-blue-500 rounded-full" />
+                  <h2 className="text-sm font-black text-slate-800">全部生活服务</h2>
+                </div>
+                <div className="grid grid-cols-4 gap-y-6 gap-x-3">
+                  {filteredServices.map((service) => (
+                    <motion.button 
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      key={`life-service-${service.id}`} 
+                      onClick={() => handleServiceClick(service)}
+                      className="flex flex-col items-center space-y-2 active:scale-95 transition-transform"
+                    >
+                      <div className={`w-14 h-14 ${service.color} rounded-2xl flex items-center justify-center shadow-sm ${!isLit(service) ? 'grayscale contrast-50 opacity-60' : ''}`}>
+                        <service.icon size={28} />
+                      </div>
+                      <span className={`text-[11px] font-bold text-center leading-tight whitespace-pre-line ${!isLit(service) ? 'text-slate-300' : 'text-slate-600'}`}>
+                        {service.label}
+                      </span>
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            // Standard Category Layout
+            <div className="grid grid-cols-4 gap-y-6 gap-x-3">
+              {filteredServices.map((service) => (
+                <motion.button 
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  key={`category-service-${service.id}`} 
+                  onClick={() => handleServiceClick(service)}
+                  className="flex flex-col items-center space-y-2 active:scale-95 transition-transform"
+                >
+                  <div className={`w-14 h-14 ${service.color} rounded-2xl flex items-center justify-center shadow-sm ${!isLit(service) ? 'grayscale contrast-50 opacity-60' : ''}`}>
+                    <service.icon size={28} />
+                  </div>
+                  <span className={`text-[11px] font-bold text-center leading-tight whitespace-pre-line ${!isLit(service) ? 'text-slate-300' : 'text-slate-600'}`}>
+                    {service.label}
+                  </span>
+                </motion.button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -1718,6 +2037,7 @@ export default function Service() {
               {activePoster === 'canteen' && <CommunityCanteenPoster onBack={() => setActivePoster(null)} />}
               {activePoster === 'lifecircle' && <LifeCirclePoster onBack={() => setActivePoster(null)} />}
               {activePoster === 'online' && <OnlineServicePoster service={selectedOnlineService} onBack={() => setActivePoster(null)} />}
+              {activePoster === 'funeral' && <FuneralGuidePoster onBack={() => setActivePoster(null)} />}
               {activePoster === 'smartGuardian' && <ElderlySmartGuardianPoster onBack={() => setActivePoster(null)} />}
               {(activePoster as any) === 'science' && <CommunitySciencePoster onBack={() => setActivePoster(null)} />}
               {activePoster === 'application' && (
