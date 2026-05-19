@@ -1,5 +1,10 @@
-import { useState } from 'react';
-import { User, Home, Wrench, Calendar, Settings, ChevronRight, ChevronDown, ChevronUp, Bell, Shield, Info, QrCode, PlusCircle, Ticket, Gift, MousePointer2 } from 'lucide-react';
+import React, { useState, ReactNode } from 'react';
+import { 
+  User, Home, Wrench, Calendar, ChevronRight, ChevronDown, ChevronUp, 
+  Bell, Shield, Info, QrCode, PlusCircle, Gift, MousePointer2, 
+  BookOpen, Layers, Layout, Cpu, HelpCircle, ArrowLeft,
+  Navigation, MessageSquare, Star
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Benefit {
@@ -49,7 +54,14 @@ export default function Profile() {
     }));
   };
 
+  const records = [
+    { label: '已完成', count: 12, color: 'text-emerald-500' },
+    { label: '处理中', count: 2, color: 'text-blue-500' },
+    { label: '待响应', count: 1, color: 'text-orange-500' },
+  ];
+
   const [expandedDates, setExpandedDates] = useState<string[]>(['20260508']);
+  const [showProductGuide, setShowProductGuide] = useState(false);
 
   const toggleDate = (date: string) => {
     setExpandedDates(prev => 
@@ -63,7 +75,7 @@ export default function Profile() {
       items: [
         {
           title: '1. “白事通”殡葬服务指南上线',
-          desc: '为方便居民了解身后事宜，服务板块新增“白事通”指南。收录呼和浩特2026年最新殡葬服务价格参考，涵盖临终初期、治丧期间、告别火化及墓地安葬全流程费用明细与避坑指南。'
+          desc: '为方便居民了解身后事宜，服务板块新增“白事通”指南。'
         }
       ]
     },
@@ -72,278 +84,178 @@ export default function Profile() {
       items: [
         {
           title: '1. 长者智守护服务上线',
-          desc: '携手兴野智汇数字科技，为老服务板块新增“长者智守护”智能安家终端。支持供电、厨房、漏水、烟雾等多维度实时监测，保障长者居家安全。'
-        },
-        {
-          title: '2. 多元融合科普阵地落成',
-          desc: '“科普阵地”与“小小科学家”板块全新升级。涵盖科普步道、家庭科学实验室、健康指导站三大模块，并新增小小科学家实践活动图文案例展示。'
+          desc: '携手兴野智汇数字科技，为老服务板块新增“长者智守护”智能安家终端。'
         }
-      ]
-    },
-    {
-      date: '20260506',
-      items: [
-        {
-          title: '1. 社区简介深度定制',
-          desc: '原“物业缴费”升级为“社区简介”，采用专属设计的红色花瓣党群图标。点击进入可查看亿利社区详尽的地理范围、人口组成、党建品牌及服务宗旨。'
-        },
-        {
-          title: '2. 辖区物业名录上线',
-          desc: '原“访客通行”升级为“辖区物业”，收录鼎欣、万家互联、泽信、金威、博凯等物业公司资料，覆盖收费标准、服务细则及一键拨打经理电话。'
-        },
-        {
-          title: '3. 视觉体验细节优化',
-          desc: '重绘了极具美感的红色党建图标，加入呼吸感光效与流线型花瓣。同时优化了全站图片加载策略，修复了部分外链图床无法正常显示的问题。'
-        },
-        {
-          title: '4. 交互体验细节优化',
-          desc: '针对手机端长页面滑动与卡片拖拽的冲突进行了深度优化，引入了专用的拖拽手柄（Grip Handle），有效避免了误触导致的布局偏移。同时加强了导航栏图标的触感反馈与平滑缩放效果。'
-        },
-        {
-          title: '5. 线上服务矩阵上线',
-          desc: '“服务”板块新增“线上服务”分类，涵盖展示类、流程类、交易类、互动参与类等7大核心维度。通过一站式详情页，清晰明了地为居民展示各类别服务的说明与典型应用场景。'
-        },
-        {
-          title: '6. 全局一键分享功能',
-          desc: '为所有子页面、服务详情及社区公示弹窗新增了“微信分享”功能。支持一键将实用的便民信息、维修价目或办事指南转发至业主群，提升社区信息的传播效率。'
-        },
-        {
-          title: '7. 首页视觉交互优化',
-          desc: '重构了“社区简介”图标，采用书法体将文字直接内嵌于党建活力圈内，视觉更为凝练。同时优化了首页卡片的拖拽稳定性，确保大屏滑动时的流畅体验。'
-        }
-      ]
-    },
-    {
-      date: '20260502',
-      items: [
-        {
-          title: '1. 社区志愿者招募上线',
-          desc: '首页新增“志愿者招募”专区，展示环保卫士、关爱孤寡等公益活动集锦，支持居民在线报名加入社区志愿者服务队。'
-        },
-        {
-          title: '2. 15分钟生活圈上线',
-          desc: '以老缸房社区为中心，分类展示周边餐饮、超市、酒店等优质商户，并提供实时距离参考，打造智慧便捷生活服务圈。'
-        },
-        {
-          title: '2. 社区食堂排餐上线',
-          desc: '在健康服务中新增“社区诊所”，提供详细的医生出诊排班、专家擅长领域及一键咨询热线，便捷解决邻里看病难题。'
-        },
-        {
-          title: '2. 助力法治社区建设',
-          desc: '首页新增“法律援助”专栏，上线遗产继承、物业调解典型案例展示，并配套“李律师直通车”支持一键咨询。'
-        },
-        {
-          title: '3. 更新日志体验优化',
-          desc: '重构了更新日志展示方式，支持按日期收起与展开，默认仅显示最新动态，界面更清爽。'
-        },
-        {
-          title: '4. 新增权益卡卡片',
-          desc: '在个人中心上线“社区权益卡”，居民可领取并使用周边商家优惠，支持次数核销与有效期管理。'
-        }
-      ]
-    },
-    {
-      date: '20260429',
-      items: [
-        { title: '1. 长者版界面上线', desc: '针对年长居民优化了大字展示、简洁布局及核心助老服务（呼救、助餐、挂号等）。' },
-        { title: '2. 随手拍功能升级', desc: '划分为“问政策”、“报诉求”、“查追踪”三版块，支持多级分类上报与全流程追踪。' },
-        { title: '3. 老缸房服务中心完善', desc: '重绘项表，支持清晰细腻的移动端浏览。' },
-        { title: '4. 新增法律援助模块', desc: '首页新增法律援助专栏，支持致电李律师进行法律垂询。' },
-        { title: '5. 新增特约维修服务', desc: '快速链接社区专业维修师傅，解决家庭水电维修难题。' },
-        { title: '6. 新增共享维修服务', desc: '新增详细价目表，价格透明公开，覆盖电路灯具、水路卫浴。' },
-        { title: '7. 新增社区共享达人', desc: '推荐水电、保洁、康复等领域的社区好手，支持查看评价。' },
-        { title: '8. 新增社区达人申请入口', desc: '居民可在线提交个人专长与资料，支持多状态进度查询。' },
-        { title: '9. 系统性能与兼容性优化', desc: '全站图片引入防盗链优化，优化模块平滑过渡动画体验。' }
       ]
     }
-  ];
-
-  const records = [
-    { label: '处理中', count: 2, color: 'text-blue-500' },
-    { label: '已完成', count: 12, color: 'text-green-500' },
-    { label: '已评价', count: 10, color: 'text-gray-400' },
   ];
 
   const menuItems = [
     { icon: Bell, label: '消息通知' },
     { icon: Shield, label: '隐私设置' },
-    { icon: Info, label: '关于我们' },
+    { icon: Info, label: '关于我们', onClick: () => setShowProductGuide(true) },
   ];
 
+  const GuideSection = ({ title, icon: Icon, children }: { title: string, icon: any, children: ReactNode }) => (
+    <div className="space-y-4">
+      <div className="flex items-center space-x-2 px-1">
+        <div className="w-1.5 h-6 bg-orange-500 rounded-full" />
+        <Icon className="text-orange-500" size={20} />
+        <h3 className="text-base font-black text-slate-800">{title}</h3>
+      </div>
+      <div className="space-y-3">
+        {children}
+      </div>
+    </div>
+  );
+
+  const GuideCard = ({ title, desc, operation }: { title: string, desc: string, operation?: string }) => (
+    <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+      <div className="text-sm font-black text-slate-800 mb-1">{title}</div>
+      <p className="text-[11px] text-slate-500 mb-2 leading-relaxed">{desc}</p>
+      {operation && (
+        <div className="flex items-center space-x-1.5 bg-white/80 w-fit px-2 py-1 rounded-lg border border-slate-100">
+          <Navigation size={12} className="text-orange-500" />
+          <span className="text-[9px] font-bold text-orange-600">操作：{operation}</span>
+        </div>
+      )}
+    </div>
+  );
+
   return (
-    <div className="bg-gray-50 flex flex-col">
-      {/* Header */}
-      <div className="bg-[#FF8C00] px-6 pt-10 pb-12 rounded-b-[48px] relative overflow-hidden shadow-lg shadow-orange-100">
-        {/* Decorative Circles */}
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
-        <div className="absolute top-20 -left-10 w-24 h-24 bg-white/5 rounded-full blur-xl" />
-        
+    <div className="bg-gray-50 flex flex-col min-h-full">
+      <AnimatePresence>
+        {showProductGuide && (
+          <motion.div
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            className="fixed inset-0 bg-white z-[100] flex flex-col"
+          >
+            <div className="bg-white border-b border-slate-100 p-6 flex items-center justify-between sticky top-0 z-10">
+              <button 
+                onClick={() => setShowProductGuide(false)}
+                className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 active:scale-95 transition-transform"
+              >
+                <ArrowLeft size={20} />
+              </button>
+              <div className="text-center">
+                <h2 className="text-lg font-black text-slate-800">产品导览</h2>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Little Key Community</p>
+              </div>
+              <div className="w-10" />
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6 space-y-8 pb-12">
+              <GuideSection title="首页功能板块" icon={Home}>
+                <div className="grid grid-cols-1 gap-3">
+                  <GuideCard title="社区简介" desc="展现社区红图、人口结构与党建文化。" operation="首页顶端" />
+                  <GuideCard title="随手拍" desc="反馈社区问题并实时追踪办理进度。" operation="首页模块区" />
+                </div>
+              </GuideSection>
+
+              <GuideSection title="整体框架" icon={Layout}>
+                <div className="bg-slate-900 rounded-3xl p-5 text-white">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-8 h-8 bg-orange-500 rounded-xl flex items-center justify-center">
+                      <Layers size={18} />
+                    </div>
+                    <span className="text-sm font-black">交互体系</span>
+                  </div>
+                  <div className="space-y-2 text-[11px]">
+                    <p><b className="text-orange-400">顶部：</b>状态展示与切换。</p>
+                    <p><b className="text-blue-400">中部：</b>核心功能卡片。</p>
+                    <p><b className="text-emerald-400">底部：</b>快捷导航。</p>
+                  </div>
+                </div>
+              </GuideSection>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="bg-[#FF8C00] px-6 pt-10 pb-12 rounded-b-[48px] relative shadow-lg">
         <div className="flex items-center space-x-4 relative z-10">
-          <div className="w-18 h-18 rounded-full border-4 border-white/30 overflow-hidden bg-white/20 shadow-xl">
+          <div className="w-18 h-18 rounded-full border-4 border-white/30 overflow-hidden bg-white/20">
             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar" className="w-full h-full" referrerPolicy="no-referrer" />
           </div>
           <div className="text-white">
             <h2 className="text-2xl font-black tracking-tight">陈大文</h2>
-            <div className="flex space-x-2 mt-1.5">
-              <span className="text-[10px] bg-white/20 px-2.5 py-0.5 rounded-full backdrop-blur-md font-bold">业主居民</span>
-              <span className="text-[10px] bg-white/20 px-2.5 py-0.5 rounded-full backdrop-blur-md font-bold">5号楼楼长</span>
-            </div>
+            <span className="text-[10px] bg-white/20 px-2.5 py-0.5 rounded-full font-bold">业主居民</span>
           </div>
         </div>
       </div>
 
       <div className="px-5 -mt-8 space-y-5 pb-8">
-        {/* My House */}
-        <div className="bg-white rounded-3xl p-6 shadow-md shadow-gray-200/50 border border-white">
+        <div className="bg-white rounded-3xl p-6 shadow-md border border-white">
           <div className="flex justify-between items-center mb-5">
             <h3 className="font-extrabold text-gray-900 flex items-center text-base">
               <Home size={20} className="mr-2.5 text-[#FF8C00]" /> 我的房屋
             </h3>
-            <button className="w-9 h-9 flex items-center justify-center bg-orange-50 text-[#FF8C00] rounded-xl active:scale-95 transition-transform">
+            <button className="w-9 h-9 flex items-center justify-center bg-orange-50 text-[#FF8C00] rounded-xl">
                <QrCode size={20} />
             </button>
           </div>
-          <div className="bg-gray-50/80 rounded-2xl p-4 flex justify-between items-center border border-gray-100/50">
+          <div className="bg-gray-50/80 rounded-2xl p-4 flex justify-between items-center border border-gray-100">
             <div>
               <div className="text-sm font-black text-gray-800">老缸房社区-同心园小区</div>
-              <div className="text-xs text-gray-400 mt-1 font-medium font-mono tracking-tight">5号楼 - 1单元 - 1203室</div>
+              <div className="text-xs text-gray-400 mt-1 font-medium font-mono">5号楼 - 1单元 - 1203室</div>
             </div>
-            <button className="text-[#FF8C00] text-xs font-black flex items-center bg-white px-3 py-1.5 rounded-full shadow-sm active:scale-95 transition-transform">
-              <PlusCircle size={14} className="mr-1" /> 添加成员
-            </button>
           </div>
         </div>
 
-        {/* Equity Cards */}
-        <div className="bg-white rounded-3xl p-6 shadow-md shadow-gray-200/50 border border-white">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex items-center space-x-2">
-              <div className="w-1.5 h-4 bg-indigo-500 rounded-full" />
-              <h3 className="font-extrabold text-gray-900 text-base">我的权益卡</h3>
-            </div>
-            <span className="text-[10px] text-gray-400 font-bold">邻里专属优惠</span>
-          </div>
-          
+        <div className="bg-white rounded-3xl p-6 shadow-md border border-white">
+          <h3 className="font-extrabold text-gray-900 text-base mb-6">我的权益卡</h3>
           <div className="space-y-4">
-            {benefits.map((benefit) => {
-              const isUsedUp = benefit.usedCount >= benefit.totalCount;
-              return (
-                <div 
-                  key={benefit.id} 
-                  className={`relative overflow-hidden rounded-3xl border transition-all duration-300 ${
-                    isUsedUp ? 'bg-gray-50 border-gray-100 grayscale opacity-70' : 'bg-white border-gray-50 hover:shadow-lg'
-                  }`}
-                >
-                  <div className="flex p-4">
-                    {/* Visual Card Part */}
-                    <div className={`w-28 h-20 bg-gradient-to-br ${benefit.theme} rounded-2xl flex flex-col items-center justify-center text-white relative shadow-sm overflow-hidden`}>
-                       <benefit.icon size={24} className="opacity-20 absolute -right-2 -bottom-2 transform -rotate-12" />
-                       <div className="text-[10px] font-bold opacity-80 uppercase tracking-tighter mb-0.5">{benefit.title}</div>
-                       <div className="text-lg font-black">{benefit.benefit}</div>
-                       <div className="absolute top-1 left-1.5 flex space-x-0.5">
-                          {[...Array(benefit.totalCount)].map((_, i) => (
-                             <div key={i} className={`w-1 h-1 rounded-full ${i < (benefit.totalCount - benefit.usedCount) ? 'bg-white' : 'bg-white/20'}`} />
-                          ))}
-                       </div>
-                    </div>
-
-                    {/* Content Part */}
-                    <div className="ml-4 flex-1 flex flex-col justify-between py-0.5">
-                       <div>
-                          <div className="flex justify-between items-start">
-                             <h4 className="text-sm font-black text-gray-800">{benefit.store}</h4>
-                             <span className="text-[10px] text-gray-400 font-bold">{benefit.validDate}</span>
-                          </div>
-                          <p className="text-[10px] text-gray-400 mt-1 font-medium">使用次数: {benefit.totalCount - benefit.usedCount}/{benefit.totalCount}</p>
-                       </div>
-
-                       <div className="flex justify-end">
-                          <button 
-                            disabled={isUsedUp}
-                            onClick={() => handleUseBenefit(benefit.id)}
-                            className={`px-4 py-1.5 rounded-xl text-[11px] font-black transition-all active:scale-95 flex items-center space-x-1.5 ${
-                              isUsedUp 
-                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                                : 'bg-indigo-50 text-indigo-600 shadow-sm shadow-indigo-100'
-                            }`}
-                          >
-                             {isUsedUp ? (
-                               '已使用完成'
-                             ) : (
-                               <>
-                                 <MousePointer2 size={12} />
-                                 <span>使用权益</span>
-                               </>
-                             )}
-                          </button>
-                       </div>
-                    </div>
-                  </div>
-                  {/* Decorative Ticket Perforation */}
-                  <div className="absolute left-28 top-0 bottom-0 w-4 border-l border-dashed border-gray-100 hidden sm:block" />
+            {benefits.map((benefit) => (
+              <div key={benefit.id} className="relative overflow-hidden rounded-3xl border border-gray-50 bg-white p-4 flex">
+                <div className={`w-24 h-16 bg-gradient-to-br ${benefit.theme} rounded-2xl flex flex-col items-center justify-center text-white shrink-0 shadow-sm`}>
+                  <div className="text-[8px] font-black opacity-80 uppercase tracking-widest">{benefit.title}</div>
+                  <div className="text-base font-black">{benefit.benefit}</div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Records */}
-        <div className="bg-white rounded-3xl p-6 shadow-md shadow-gray-200/50 border border-white">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="font-extrabold text-gray-900 text-base">报修/上报记录</h3>
-            <button className="text-[10px] text-[#FF8C00] font-bold bg-[#FF8C00]/5 px-2 py-1 rounded-lg flex items-center">查看全部 <ChevronRight size={12} className="ml-0.5" /></button>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            {records.map((item, idx) => (
-              <div key={idx} className="flex flex-col items-center p-3 rounded-2xl bg-gray-50/50 border border-gray-50">
-                <span className={`text-xl font-black ${item.color}`}>{item.count}</span>
-                <span className="text-[10px] text-gray-400 mt-1.5 font-bold">{item.label}</span>
+                <div className="ml-4 flex-1 flex flex-col justify-between">
+                  <div className="flex justify-between items-start">
+                    <h4 className="text-xs font-black text-gray-800">{benefit.store}</h4>
+                    <span className="text-[9px] text-gray-400 font-bold">{benefit.validDate}</span>
+                  </div>
+                  <div className="flex justify-end">
+                    <button 
+                      onClick={() => handleUseBenefit(benefit.id)}
+                      className="px-3 py-1.5 rounded-xl text-[10px] font-black bg-indigo-50 text-indigo-600"
+                    >
+                      使用权益
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Action List Section */}
-        <div className="space-y-3.5 px-1">
-           <button className="w-full bg-white px-5 py-4.5 rounded-3xl flex justify-between items-center shadow-sm border border-white active:scale-[0.99] transition-all hover:bg-gray-50">
-              <div className="flex items-center">
-                <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center mr-3.5 shadow-inner">
-                  <Calendar size={20} />
-                </div>
-                <div className="text-left">
-                  <div className="text-sm font-black text-gray-800 leading-none">我的活动报名</div>
-                  <div className="text-[10px] text-gray-400 mt-1.5 font-bold">3个进行中</div>
-                </div>
+        <div className="bg-white rounded-3xl p-6 shadow-md border border-white">
+          <h3 className="font-extrabold text-gray-900 text-base mb-6">报修记录</h3>
+          <div className="grid grid-cols-3 gap-3">
+            {records.map((item, idx) => (
+              <div key={idx} className="flex flex-col items-center p-3 rounded-2xl bg-gray-50/50">
+                <span className={`text-xl font-black ${item.color}`}>{item.count}</span>
+                <span className="text-[10px] text-gray-400 mt-1 font-bold">{item.label}</span>
               </div>
-              <ChevronRight size={16} className="text-gray-300" />
-           </button>
-
-           <button className="w-full bg-white px-5 py-4.5 rounded-3xl flex justify-between items-center shadow-sm border border-white active:scale-[0.99] transition-all hover:bg-gray-50">
-              <div className="flex items-center">
-                <div className="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mr-3.5 shadow-inner">
-                  <Wrench size={20} />
-                </div>
-                <div className="text-left">
-                  <div className="text-sm font-black text-gray-800 leading-none">报修工单评价</div>
-                  <div className="text-[10px] text-gray-400 mt-1.5 font-bold">查看已评价记录</div>
-                </div>
-              </div>
-              <ChevronRight size={16} className="text-gray-300" />
-           </button>
+            ))}
+          </div>
         </div>
 
-        {/* Global Settings Group */}
         <div className="bg-white rounded-[32px] shadow-sm border border-white overflow-hidden">
           {menuItems.map((item, idx) => (
              <button 
                key={idx} 
+               onClick={item.onClick}
                className={`w-full flex justify-between items-center px-6 py-5 active:bg-gray-50 transition-colors ${
                  idx !== menuItems.length - 1 ? 'border-b border-gray-50/50' : ''
                }`}
              >
                 <div className="flex items-center space-x-3.5">
-                   <div className="bg-gray-50 p-2 rounded-lg">
-                      <item.icon size={18} className="text-gray-400" />
+                   <div className="bg-gray-50 p-2 rounded-lg text-gray-400">
+                      <item.icon size={18} />
                    </div>
                    <span className="text-sm font-bold text-gray-700">{item.label}</span>
                 </div>
@@ -352,38 +264,27 @@ export default function Profile() {
           ))}
         </div>
 
-        {/* Update Log */}
-        <div className="space-y-4">
+        <div className="space-y-4 font-sans">
           {updateLogs.map((log) => (
-            <div key={log.date} className="bg-white rounded-[32px] p-6 shadow-sm border border-white overflow-hidden">
+            <div key={log.date} className="bg-white rounded-[32px] p-6 shadow-sm border border-white">
               <button 
                 onClick={() => toggleDate(log.date)}
-                className="w-full flex items-center justify-between group"
+                className="w-full flex items-center justify-between"
               >
                 <div className="flex items-center space-x-2">
                   <div className="w-1.5 h-4 bg-[#FF8C00] rounded-full" />
-                  <h3 className="font-extrabold text-gray-900 text-sm">{log.date} 更新日志</h3>
+                  <h3 className="font-extrabold text-gray-900 text-sm whitespace-nowrap">{log.date} 更新日志</h3>
                 </div>
-                <div className={`p-1 rounded-full transition-colors ${expandedDates.includes(log.date) ? 'bg-orange-50 text-orange-500' : 'bg-gray-50 text-gray-300 group-hover:bg-gray-100'}`}>
-                  {expandedDates.includes(log.date) ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </div>
+                {expandedDates.includes(log.date) ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
               </button>
-              
               <AnimatePresence>
                 {expandedDates.includes(log.date) && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  >
-                    <div className="space-y-4 pt-6">
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
+                    <div className="space-y-4 pt-6 overflow-hidden">
                       {log.items.map((item, i) => (
                         <div key={i} className="border-l-2 border-orange-100 pl-4 py-1">
                           <h4 className="text-xs font-black text-gray-800 mb-1">{item.title}</h4>
-                          <p className="text-[10px] text-gray-500 leading-relaxed">
-                            {item.desc}
-                          </p>
+                          <p className="text-[10px] text-gray-500">{item.desc}</p>
                         </div>
                       ))}
                     </div>
@@ -397,4 +298,3 @@ export default function Profile() {
     </div>
   );
 }
-

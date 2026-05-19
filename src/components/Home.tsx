@@ -34,7 +34,7 @@ function HomeSenior({ onOpenSnapReport, onToggleSeniorMode, community, onToggleC
   const [showShare, setShowShare] = useState(false);
 
   const seniorLinks = [
-    { label: '一键呼救', icon: Phone, color: 'bg-red-500 text-white', desc: '紧急联系人' },
+    { label: '一键呼叫', icon: Phone, color: 'bg-red-500 text-white', desc: '紧急联系人' },
     { label: '助餐服务', icon: Heart, color: 'bg-orange-500 text-white', desc: '预约午餐' },
     { label: '共享维修', icon: Wrench, color: 'bg-blue-600 text-white', desc: '疏通修灯' },
     { label: '预约挂号', icon: ShieldCheck, color: 'bg-blue-500 text-white', desc: '医院就诊' },
